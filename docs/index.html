@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://speedrun-talent-network.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="Read a job posting for pay, scope and unanswered questions before you spend time applying.">
+  <title>Worth Your Time</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./css/app.css">
+  <link rel="stylesheet" href="./css/print.css" media="print">
+  <script type="module" src="./js/app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a href="#/" class="brand">
+        <img src="./favicon.svg" width="32" height="32" alt="">
+        <span>Worth Your Time</span>
+      </a>
+      <nav class="navigation" aria-label="Main">
+        <a href="#/" data-nav="/">Check a role</a>
+        <a href="#/founder" data-nav="/founder">Founder template</a>
+        <a href="#/how" data-nav="/how">How it works</a>
+      </nav>
+      <button type="button" id="open-shortcuts" class="shortcut-button" aria-label="Keyboard shortcuts"><kbd aria-hidden="true">?</kbd></button>
+    </div>
+  </header>
+
+  <main id="main" class="shell" tabindex="-1">
+    <section id="check-view" aria-labelledby="check-title">
+      <div id="check-intro" class="view-intro">
+        <h1 id="check-title" tabindex="-1">Read the role<br> <em>before you apply.</em></h1>
+        <p>Turn a job posting into a practical brief. See what’s clear, what’s missing, and what to ask before you invest time.</p>
+      </div>
+      <div id="check-inputs" class="intake-grid">
+        <section class="editor panel" aria-labelledby="intake-title">
+          <h2 id="intake-title">Check a posting</h2>
+          <label for="paste-input">Paste the job posting</label>
+          <textarea id="paste-input" rows="7" placeholder="Paste the full description, including pay, location and interview details if listed." aria-describedby="paste-help paste-error"></textarea>
+          <p id="paste-error" class="field-error" role="alert" hidden></p>
+          <p id="paste-help" class="field-help" hidden>Sample loaded. Get the brief when you’re ready.</p>
+          <div class="divider" aria-hidden="true"><span>or</span></div>
+          <label for="job-url">Speedrun job link</label>
+          <input id="job-url" type="url" placeholder="https://speedrun-talent-network.com/jobs/…" spellcheck="false" autocomplete="off" aria-describedby="url-error">
+          <p id="url-error" class="field-error" role="alert" hidden></p>
+          <div class="intake-footer">
+            <button class="primary" type="button" id="generate">Get the brief <span aria-hidden="true">→</span></button>
+            <span class="muted" id="intake-status" role="status"></span>
+          </div>
+        </section>
+        <aside class="sample-panel panel" aria-labelledby="samples-title">
+          <div class="sample-heading">
+            <h2 id="samples-title">Try a sample</h2>
+            <p>Sample — fictional company</p>
+          </div>
+          <div id="samples"></div>
+        </aside>
+      </div>
+    </section>
+
+    <article id="result-view" hidden aria-labelledby="result-title"></article>
+
+    <section id="founder-view" hidden aria-labelledby="founder-view-title">
+      <div class="view-intro">
+        <h1 id="founder-view-title" tabindex="-1">Honest first-hire brief</h1>
+        <p>Give candidates the details they need to decide. Your draft saves in this browser as you type.</p>
+      </div>
+      <div class="founder-grid">
+        <section class="panel editor founder-editor" aria-labelledby="founder-fields-title">
+          <h2 id="founder-fields-title">Write your brief</h2>
+          <div id="founder-fields" class="founder-fields"></div>
+          <button type="button" id="clear-founder" class="quiet">Clear draft</button>
+        </section>
+        <section class="panel founder-paper" aria-labelledby="preview-title">
+          <div class="preview-header">
+            <h2 id="preview-title">Live preview</h2>
+            <p class="muted">Blank fields stay out of the published brief.</p>
+          </div>
+          <div id="founder-preview"></div>
+          <div id="founder-actions" class="actions">
+            <button type="button" id="check-founder" class="primary">Check it with Worth Your Time <span aria-hidden="true">→</span></button>
+            <button type="button" id="copy-founder">Copy as Markdown</button>
+            <button type="button" id="download-founder">Download .md</button>
+            <button type="button" id="print-founder">Print</button>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section id="how-view" hidden aria-labelledby="how-title">
+      <div class="view-intro">
+        <h1 id="how-title" tabindex="-1">How the assessment works</h1>
+        <p>The score reflects what the posting tells you and where it leaves you guessing. Use the brief to decide what to ask.</p>
+      </div>
+      <div class="panel method">
+        <h2>Scoring</h2>
+        <p>The score starts at 50. Each criterion adds points for a Signal, subtracts points for a Risk, or adds zero for Unknown. The final score is capped at 0 and 100.</p>
+        <ul>
+          <li><strong>70–100</strong> · Worth a conversation</li>
+          <li><strong>50–69</strong> · Worth it if they answer the open questions</li>
+          <li><strong>0–49</strong> · Proceed with caution</li>
+        </ul>
+        <p>Postings under 350 characters or with fewer than three core facts get “Not enough to judge.” Confidence is based on observed criteria. Five or more gives medium confidence, and nine or more gives high. Short or sparse postings always have low confidence.</p>
+        <div class="table-wrap">
+          <table>
+            <caption>Points by criterion</caption>
+            <thead><tr><th scope="col">Criterion</th><th scope="col">Signal</th><th scope="col">Risk</th><th scope="col">Unknown</th></tr></thead>
+            <tbody id="weights"></tbody>
+          </table>
+        </div>
+        <h2>Privacy</h2>
+        <p>Everything runs in your browser. Only speedrun board URLs call their public, no-auth jobs API. The last pasted posting and founder draft are stored on this device. A paste share link contains the posting text in its fragment, which anyone with the link can decode.</p>
+        <h2>Keyboard shortcuts</h2>
+        <dl class="shortcut-list">
+          <div><dt><kbd>Enter</kbd> in the link field</dt><dd>Check that job URL</dd></div>
+          <div><dt><kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>Enter</kbd> in the posting field</dt><dd>Check pasted text</dd></div>
+          <div><dt><kbd>?</kbd> outside input fields</dt><dd>Open shortcuts</dd></div>
+          <div><dt><kbd>Esc</kbd></dt><dd>Close shortcuts and restore focus</dd></div>
+        </dl>
+      </div>
+    </section>
+    <noscript><p>Enable JavaScript to generate a brief or use the founder template.</p></noscript>
+  </main>
+
+  <footer class="site-footer shell">
+    <span>Worth Your Time</span>
+    <a href="#/how">Scoring and privacy</a>
+  </footer>
+  <div id="notice" class="notice" role="status"></div>
+
+  <dialog id="shortcuts" aria-labelledby="shortcuts-title">
+    <h2 id="shortcuts-title">Keyboard shortcuts</h2>
+    <dl class="shortcut-list">
+      <div><dt><kbd>Enter</kbd> in the link field</dt><dd>Check that job URL</dd></div>
+      <div><dt><kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>Enter</kbd> in the posting field</dt><dd>Check pasted text</dd></div>
+      <div><dt><kbd>?</kbd> outside input fields</dt><dd>Open shortcuts</dd></div>
+      <div><dt><kbd>Esc</kbd></dt><dd>Close shortcuts and restore focus</dd></div>
+    </dl>
+    <button type="button" id="close-shortcuts" autofocus>Close</button>
+  </dialog>
+
+  <dialog id="clear-dialog" aria-labelledby="clear-title">
+    <h2 id="clear-title">Clear this draft?</h2>
+    <p>This removes the draft from this browser.</p>
+    <div class="actions">
+      <button type="button" id="cancel-clear" autofocus>Keep draft</button>
+      <button type="button" class="primary" id="confirm-clear">Clear draft</button>
+    </div>
+  </dialog>
+</body>
+</html>

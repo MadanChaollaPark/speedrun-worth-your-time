@@ -284,7 +284,7 @@ def call(role: str, prompt: str, tag: str, timeout: int) -> bool:
                     continue
                 # Builder may have left useful work; reviewer/orchestrator must not be treated as success.
                 return role == "builder"
-            out = ansi.sub(out or "")
+            out = ansi.sub("", out or "")
             last_out = out
             logp.write_text(out)
             elapsed = int(time.time() - t0)

@@ -1,0 +1,15 @@
+{
+  "name": "worth-your-time",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:unit": "node --test \"tests/unit/*.test.js\"",
+    "test:e2e": "playwright test",
+    "serve": "node scripts/serve.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1"
+  }
+}

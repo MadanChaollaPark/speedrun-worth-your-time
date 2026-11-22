@@ -26,3 +26,8 @@ research/inline_scripts/
 .env
 .env.*
 !.env.example
+
+# Playwright runner output (walkthrough screenshots live in tests/screenshots/)
+test-results/
+playwright-report/
+blob-report/

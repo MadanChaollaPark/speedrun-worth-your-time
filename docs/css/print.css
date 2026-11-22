@@ -1,0 +1,30 @@
+:root {
+  color-scheme: light;
+  --paper: white;
+  --sheet: white;
+  --ink: #171717;
+  --muted: #3c3c3c;
+  --line: #b5b5b5;
+  --control: #747474;
+  --accent: #233e34;
+  --wash: white;
+  --pale: white;
+  --risk: #632719;
+  --risk-wash: white;
+}
+
+@page { margin: 15mm; }
+body { background: white; font-size: 10pt; }
+.shell { width: 100%; min-height: 0; }
+.site-header, .site-footer, .skip, .notice, dialog, #check-view, #how-view,
+.view-intro, .result-jump, .founder-editor, .preview-header, .actions, button { display: none !important; }
+.founder-grid, .checklist { display: block; }
+.result-heading, #founder-preview { padding: 0; }
+.result-heading { margin-bottom: .75rem; }
+.result-title { font-size: 26pt; }
+.verdict, .panel { outline: none; }
+.founder-paper { border: 0; }
+.result-section { margin-top: .8rem; }
+.check-item, .question-list li, .published-brief dl div { break-inside: avoid; margin-bottom: .25rem; }
+.question-list li { padding-inline-end: .9rem; }
+h2, h3 { break-after: avoid; }
