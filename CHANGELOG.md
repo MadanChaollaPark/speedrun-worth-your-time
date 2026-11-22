@@ -1,5 +1,12 @@
 # Changelog
 
+## Iteration 3 · 2026-11-23
+
+- Rechecked the public iteration 2 deployment in Chromium. The live founder test waits for the form and retains a trace if a run fails.
+- Added room between the brief actions link and the focused heading at desktop and mobile widths.
+- Calibrated on 25 public postings and improved reporting-line, workplace and customer-traction evidence.
+- Covered hourly contract pay and GBP, EUR and KRW ranges. Generic competitive-salary wording leaves the range unknown.
+
 ## Iteration 2 · 2026-11-23
 
 - Verified the public GitHub Pages demo in Chromium and added a standalone smoke suite with screenshots for sample, paste, and founder flows.

@@ -57,6 +57,7 @@ test('generates a brief from pasted text with Ctrl+Enter', async ({ page }) => {
 test('updates the public founder template preview', async ({ page }) => {
   await page.goto('./');
   await page.getByRole('link', { name: 'Founder template' }).click();
+  await expect(page.locator('#founder-company')).toBeVisible();
   await page.getByLabel('Role title').fill(founderDraft.title);
   await page.locator('#founder-company').fill(founderDraft.company);
   const preview = page.locator('#founder-preview');

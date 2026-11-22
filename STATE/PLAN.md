@@ -1,101 +1,88 @@
-# PLAN — Iteration 2 (builder work package, ~40–70 min)
+# PLAN — Iteration 3 (builder work package, ~40–70 min)
 
 Orchestrator and reviewer are Kiro Claude Opus 5.5; builder is Codex gpt-6.2-sol at high reasoning effort / slow mode, by owner decision 2026-11-22; do not revert
 
-Read `GOAL.md`, `STATE/REVIEW.md` (iteration 1, verdict PARTIAL) and `STATE/CHECKLIST.md` first. Work only in `/workspace/speedrun-pe`. Do not commit, tag, or push (the driver does that). Do not edit `speedrun_pe_loop.py` (or its `.bak` copies), `LOOP_LOG.md`, or write `STATE/ALL_DONE`. Never submit any form, contact anyone, or sign in to speedrun-talent-network.com. Never fake results: every claim in `STATE/BUILD_REPORT.md` must come from a command you ran, with its real exit code and output.
+Read `GOAL.md`, `STATE/REVIEW.md` (iteration 2, verdict PASS) and `STATE/CHECKLIST.md` first. Work only in `/workspace/speedrun-pe`. Do not touch `/workspace/garamjigi` or `/workspace/kumgang`. Do not commit, tag, or push (the driver does that). Do not edit `speedrun_pe_loop.py` (or its `.bak` copies), `LOOP_LOG.md`, or `STATE/ALL_DONE`. Never submit any form, contact anyone, or sign in to speedrun-talent-network.com. Never fake results: every claim in `STATE/BUILD_REPORT.md` must come from a command you ran, with its real exit code and output.
+
+## Timebox
+
+Iteration 2's build ran 27,218 s against a 4,500 s timeout. Keep this round to **about 60 minutes of work**. Do the steps in order. If a step runs past its budget, stop it, record what is left in `BUILD_REPORT.md`, and move on. Steps 1, 2, 5 and 6 are required. Steps 3 and 4 are best-effort.
 
 ## Where we are
 
-- Iteration 1 built the full app in `docs/` and all DoD items were met locally. The only blocker was DoD 4 (live link), because nothing had been pushed.
-- The driver pushed `6fff783` (tag `v01-iter01`). The orchestrator checked at 2026-11-22 23:35 KST: the Pages build for `6fff783` is `built`, `https://madanchaollapark.github.io/speedrun-worth-your-time/` returns **200** without a login, and every JS/CSS/SVG asset returns 200 and is byte-identical to `docs/`.
-- Still missing: proof the app *works* in a browser on the live URL, the README and draft still say "pending", and three polish items from the review.
-
-Goal of this round: prove the live app works with a scripted browser run, flip docs to live, fix the review's polish items, add an accessibility scan, and leave both driver suites green.
+- Iteration 2 got a PASS. Pages now serves iteration 2: orchestrator check at 2026-11-23 07:26 KST, `gh api repos/MadanChaollaPark/speedrun-worth-your-time/pages/builds/latest` → `built`, commit `abecb7164e…`, live URL → HTTP 200.
+- Open review items: re-run the live smoke on the new deploy, stabilize the flaky live founder test, and fix the "Brief actions ↓" link that overlaps the focused heading outline.
+- This round is polish and calibration. Package mode starts 2026-11-23 17:47 KST.
 
 ## Locked decisions (unchanged; do not re-open)
 
-1. Zero-build static site in `docs/`, relative asset paths, `docs/.nojekyll`. Pages deploys from `main:/docs`. **Never create anything under `.github/workflows/`**: the token lacks `workflow` scope and the driver's push would be rejected.
-2. The pure engine stays in `docs/js/brief.js` (no DOM, no fetch). DOM code stays in `docs/js/app.js`.
-3. Driver suites stay exactly `npm run test:unit` and `npx playwright test` (the two lines in `STATE/TEST_COMMANDS`). They must stay offline and deterministic. **Do not add network-dependent tests to them.**
-4. Do not add new product features this round. Polish and verification only.
-5. Keep the original design (paper background, deep green accent, serif headings, monospace evidence). Copy nothing from the talent-network site.
+1. Zero-build static site in `docs/`, relative asset paths, `docs/.nojekyll`, Pages from `main:/docs`. **Never create anything under `.github/workflows/`** (the token lacks `workflow` scope).
+2. Pure engine in `docs/js/brief.js` (no DOM, no fetch). DOM code in `docs/js/app.js`.
+3. Driver suites stay exactly `npm run test:unit` and `npx playwright test` (the two lines in `STATE/TEST_COMMANDS`). They stay offline and deterministic. Live checks stay in `npm run test:live`.
+4. No new product features. Do not change the CSP `connect-src`, the API host allow-list, or the scoring weights beyond what a step requires.
+5. Do not commit any text fetched from the speedrun API. Fixtures stay fictional or paraphrased.
 
-## Ordered work
+## Steps
 
-### Step 1 — Live smoke test, opt-in (≈15 min)
+### 1. Live smoke on the iteration 2 deploy, and stabilize the founder test (≈10 min, required)
 
-Create a separate Playwright config so the live check never runs inside `npx playwright test`:
+- In `tests/live/live.spec.js`, make the founder test wait for the founder section to be visible (for example `await expect(page.locator('#founder-company')).toBeVisible()` after clicking the link) before filling fields. Give live tests an explicit timeout in `playwright.live.config.js` (`timeout: 60_000`, `expect: { timeout: 15_000 }`) and `trace: 'retain-on-failure'`. Keep `retries: 1`.
+- Run `gh api repos/MadanChaollaPark/speedrun-worth-your-time/pages/builds/latest --jq '{status,commit}'` and record the commit.
+- Run `npm run test:live -- --retries=0` **twice**. Record both exit codes and pass counts. If a test fails, save the error text and trace path in the report. Do not hide a failure with retries.
+- Acceptance: both runs exit 0 with 4 passed. `tests/screenshots/live-*.png` are regenerated. `CI=1 npx playwright test --list | grep -c live` still prints 0.
 
-- `playwright.live.config.js`: `testDir: 'tests/live'`, chromium only, `retries: 1`, **no `webServer`**, `use.baseURL = process.env.LIVE_URL || 'https://madanchaollapark.github.io/speedrun-worth-your-time/'`. Keep the trailing slash and use relative `page.goto('./')` so the `/speedrun-worth-your-time/` base path is kept.
-- Confirm the default `playwright.config.js` has `testDir: 'tests/e2e'`, so `tests/live` is excluded from the driver suite.
-- `package.json` script: `"test:live": "playwright test -c playwright.live.config.js"`.
-- `tests/live/live.spec.js`. In each test, first block every request whose host is not `madanchaollapark.github.io` (`page.route('**/*', …)` → `route.abort()` for other hosts). The live smoke must not call the speedrun API or anything else. Tests:
-  1. **Opens without a login:** response status 200, the final URL is still on `madanchaollapark.github.io`, the page title or h1 contains "Worth Your Time", and there are no console errors or page errors (collect `page.on('pageerror')` and `console` type `error`; CSP violations count as errors).
-  2. **Sample → brief:** open the founding-role sample, generate, and assert the brief heading, the score, and at least one Signal/Risk/Unknown item are visible. Screenshot `tests/screenshots/live-a-sample-brief.png`.
-  3. **Paste → brief:** paste a short realistic posting (reuse a fixture from `tests/fixtures.js`), generate with Ctrl+Enter, and assert the brief renders. Screenshot `tests/screenshots/live-b-paste-brief.png`.
-  4. **Founder template:** open the founder view, fill two fields, and assert the preview updates. Screenshot `tests/screenshots/live-c-founder.png`.
-- The live site serves the **iteration 1** code until the driver pushes this round. Use selectors that exist in both the current deployed code and your updated code (roles, labels and visible text that you are not changing). Do not change those labels this round.
+### 2. "Brief actions ↓" spacing (≈10 min, required)
 
-Acceptance:
-```sh
-npm run test:live            # exit 0, 4 passed, 0 skipped (record real counts)
-ls -la tests/screenshots/live-*.png
-CI=1 npx playwright test --list | grep -c live   # expect 0: live specs are not in the driver suite
-```
-If the live run fails because of the deployed iteration 1 code (not your test), record the exact failure in BUILD_REPORT and fix the app. Do **not** weaken the assertion.
+- The link is built in `docs/js/app.js` around line 355 (class `result-jump`). Adjust `docs/css/app.css` so the link no longer touches the focus outline of the result heading at desktop (1280 px) and mobile (390 px) widths. For example, put it on its own row, or add a margin larger than the outline width plus offset. Keep the link keyboard-reachable and in the same tab order.
+- Regenerate screenshots with `CI=1 npx playwright test`. Open `tests/screenshots/a-sample-brief.png` and check it. Describe what you saw in the report.
+- Acceptance: no overlap is visible in `a-sample-brief.png`. Axe tests still report zero serious or critical violations. The mobile overflow test still passes.
 
-### Step 2 — Flip docs to live (≈5 min, only after Step 1 passes)
+### 3. Calibration against real public postings (≈20 min, best-effort)
 
-- `README.md:5`: drop "available after the first deploy…" and state the live URL plainly. Add a "Live check" line under the Test section: `npm run test:live` (optional, needs network; checks the deployed site, not part of the driver suite).
-- `APPLICATION_DRAFT.md:5`: drop "(awaiting first app deployment)". Leave it marked DRAFT, not submitted.
-- Update `PRODUCT.md` or `CHANGELOG.md` if they say "pending".
-- `grep -n "pending\|awaiting\|after the first" README.md APPLICATION_DRAFT.md PRODUCT.md CHANGELOG.md` → no remaining matches about the deploy.
+- Write a throwaway script **outside the repo** (for example `/tmp/wyt-calibrate.mjs`). It imports `docs/js/brief.js` by absolute path. It fetches `https://speedrun-talent-network.com/api/v1/jobs?limit=20` with plain GET, no auth, no keys. Check `/api/v1/openapi.json` for a filter that returns founding or early roles and include up to 5 of those if one exists. For each job, call `GET /api/v1/jobs/{id}`, then `normalizeFromApi` and `analyze`. Make at most 30 requests in total, sequentially.
+- Print one line per job: short id, title, verdict band, score, the counts of signals, risks and unknowns, and whether pay, location and employment type were detected. Read 5 of the briefs alongside their `description_text` and find clear misreads. Examples: a risk on negated language, pay missed when `comp_*` fields exist, a "thin" verdict for a long posting, or a wrong stage.
+- Fix **at most 3** clear misreads in `docs/js/brief.js`. Add a regression unit test for each, using **paraphrased, fictional** text, not API text.
+- Paste the summary table (ids, titles, bands, scores only, no description text) and the list of fixes into `BUILD_REPORT.md`. Delete `/tmp/wyt-calibrate.mjs` when done.
+- Acceptance: the script ran against the live API and the table is real output. Every fix has a passing unit test. No API text is in the repo (`git diff` shows only paraphrased fixtures).
 
-### Step 3 — Review polish (≈15 min)
+### 4. Contractor and non-USD pay cases (≈10 min, best-effort)
 
-a. **Skip link in screenshots.** `.skip` (`docs/css/app.css:62-71`) is `position: fixed` and shows in full-page screenshots a and c when it has focus. It covers the "Write your brief" heading, and there is a stray white bar top-left in screenshot a. Fix the root cause:
-   - In the e2e spec, make sure focus is not left on the skip link before a screenshot. After generating, focus should already be on the result heading. Check why it isn't, and fix the app if focus handling is wrong.
-   - Make sure the skip link is fully off-screen when it is not focused (for example `transform: translateY(-200%)` is not enough when `top: 1rem` and the element is tall; prefer `top:-100%` → `top:1rem` on `:focus`, or clip it). It must still appear and work when tabbed to (keep the existing keyboard test, or add an assertion that the first Tab focuses the skip link and Enter moves focus to `#main` or the equivalent).
-   - Find the white bar's source in screenshot a and remove it.
-b. **Evidence trimming.** `evidenceFor` (`docs/js/brief.js:134-138`) cuts mid-word ("Three payi", "Ask us abou"). Trim the window to word boundaries. Add a leading `…` when the start is cut and a trailing `…` when the end is cut. Keep the result ≤ ~170 chars and keep the anchor match inside the window.
-   - Add unit tests: a long line whose snippet starts and ends at word boundaries with ellipses, the anchor match is contained, and short lines are returned unchanged.
-c. Regenerate all screenshots (`CI=1 npx playwright test`). Then **open** `a-sample-brief.png`, `b-paste-brief.png` and `c-founder-template.png` and look at them: no skip link overlay, no white bar, no cut words in the evidence. Say in BUILD_REPORT what you saw.
+This role is a contractor role, so hourly pay matters. Add unit tests in `tests/unit/brief.test.js` for pasted text with:
+- `$80–$120/hr, 6-month contract` → pay detected and the range kept intact; employment type `contract`.
+- `£70,000 – £90,000` and `€65k–€80k` → pay detected without guessing USD.
+- `₩60,000,000–₩80,000,000` or `KRW 60M–80M` → either detected verbatim or left unknown. Never mis-parsed into a different number.
+- `Competitive salary` with no numbers → pay stays unknown and the salary-range question is asked.
 
-### Step 4 — Accessibility scan (≈10 min)
+Fix `docs/js/brief.js` only where a test exposes a real bug. Acceptance: all new tests pass under `npm run test:unit`.
 
-- `npm install --save-dev @axe-core/playwright` (public package; commit the lockfile change).
-- Add `tests/e2e/a11y.spec.js`, which runs axe on: the home/empty state, a generated brief (sample), the founder template, and the `?` shortcuts dialog open. Assert **zero `serious` or `critical` violations**. Print any `moderate`/`minor` ones to the test output.
-- Fix any violations in the app (contrast in light **and** dark scheme: run one pass with `colorScheme: 'dark'`). Do not disable axe rules to make it pass. If a rule truly does not apply, explain it in BUILD_REPORT with the rule id and reason.
+### 5. Docs (≈5 min, required)
 
-### Step 5 — Draft and docs touch-up (≈5 min)
+- `README.md`: add one screenshot under the live demo link, `![Brief for the fictional founding-role sample](tests/screenshots/a-sample-brief.png)`, and keep the rest unchanged.
+- `CHANGELOG.md`: add an `## Iteration 3 · 2026-11-23` entry. It lists only changes you verified (live re-check, spacing fix, calibration fixes, pay tests).
+- If calibration changed scoring behavior, update the matching sentence in `PRODUCT.md`.
+- Do not change `APPLICATION_DRAFT.md` unless a fact in it is now wrong. Its `ideas` must stay ≤1500 characters.
 
-- Recount `ideas` in `APPLICATION_DRAFT.md` with the counting command from the iteration 1 BUILD_REPORT. It must be ≤1500, and the draft must still contain the live demo link and ALL-CAPS placeholders for unknowns. Do not invent personal facts (GOAL.md lists the known ones).
-- `CHANGELOG.md`: add "Iteration 2 · 2026-11-23": live verification, skip-link and evidence fixes, axe scan.
-- README Test section: list unit, e2e (including a11y), and optional live. `STATE/TEST_COMMANDS` stays exactly two lines.
+### 6. Final verification and report (≈5 min, required)
 
-### Step 6 — Final verification and report (≈5 min)
+Run and record exit code and pass/fail/skip counts for:
 
-Run, in order, and record the real exit codes and counts:
 ```sh
 CI=1 npm run test:unit
 CI=1 npx playwright test
-npm run test:live
-cat STATE/TEST_COMMANDS                     # exactly: npm run test:unit / npx playwright test
-grep -rn "innerHTML\|outerHTML\|insertAdjacentHTML\|document.write\|eval(\|new Function" docs/js   # expect exit 1
-ls .github 2>/dev/null                      # expect absent
-curl -sS -o /dev/null -w '%{http_code}\n' https://madanchaollapark.github.io/speedrun-worth-your-time/   # expect 200
-git status --short                          # only intended files; no test-results/ or playwright-report/ tracked
-pgrep -af '[s]erve.mjs'                     # expect none left running
-rg -n '^Orchestrator and reviewer are Kiro Claude Opus 5\.5; builder is Codex gpt-6\.2-sol at high reasoning effort / slow mode, by owner decision 2026-11-22; do not revert$' GOAL.md STATE/PLAN.md
+npm run test:live -- --retries=0
+cmp -s STATE/TEST_COMMANDS <(printf '%s\n' 'npm run test:unit' 'npx playwright test'); echo $?
+grep -rnE 'innerHTML|outerHTML|insertAdjacentHTML|document\.write|eval\(' docs/js || echo "no unsafe sinks"
+ls .github 2>&1
+grep -c 'Orchestrator and reviewer are Kiro Claude Opus 5.5; builder is Codex gpt-6.2-sol at high reasoning effort / slow mode, by owner decision 2026-11-22; do not revert' GOAL.md STATE/PLAN.md
+git status --short
 ```
-Write `STATE/BUILD_REPORT.md` (Iteration 2): files changed, a table of every command above with its real exit code and result, what you saw in the screenshots, and anything still open. Note that the live smoke ran against the iteration 1 deployment. The reviewer re-runs it after the driver pushes.
 
-## Acceptance criteria for this round (the reviewer checks all of these)
+Write `STATE/BUILD_REPORT.md` with: the changes per step, the full command table (command, exit code, result), the calibration table from step 3 (or why it was skipped), the screenshots you opened and what you saw, and anything left undone. Leave no temporary files in the repo (`test-results/` must stay untracked).
 
-1. `CI=1 npm run test:unit` exits 0, with ≥1 new evidence-trimming test, 0 failed, 0 skipped.
-2. `CI=1 npx playwright test` exits 0, including the axe spec, 0 failed, 0 skipped, and no live specs listed.
-3. `npm run test:live` exits 0 against the public Pages URL, and `tests/screenshots/live-{a,b,c}-*.png` exist.
-4. README and APPLICATION_DRAFT.md give the live URL with no "pending" wording. The draft's `ideas` is ≤1500 chars and still unsubmitted.
-5. Screenshots a/b/c show no skip-link overlay, no stray bar, and no mid-word evidence cuts.
-6. Zero serious/critical axe violations in light and dark.
-7. No workflow files, no secrets, no unsafe DOM sinks, worktree clean apart from intended changes, owner role line intact in GOAL.md and STATE/PLAN.md.
+## Acceptance for the round
+
+- Both driver suites exit 0 with 0 failed and 0 skipped.
+- The live smoke ran twice on the current deploy and passed, or the report records the exact failure.
+- The "Brief actions" overlap is gone in the regenerated screenshot.
+- README has the screenshot, and CHANGELOG has an iteration 3 entry.
+- The role line is intact in `GOAL.md` and `STATE/PLAN.md`. No `.github/`, no secrets, no API text committed, and no form submitted.

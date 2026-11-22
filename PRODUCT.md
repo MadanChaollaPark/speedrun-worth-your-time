@@ -27,7 +27,7 @@ The engine starts at 50, adds or subtracts the weights below, and caps the resul
 | Customers and traction | +3 | −4 | 0 |
 | Technical stack | +2 | −2 | 0 |
 
-The same weights appear in the app. Some criteria currently recognize only a clear statement or an unknown, so the risk weight is reserved until a rule identifies a specific risk for that criterion. An explicit sponsorship policy, for example, is a signal of disclosure whichever answer it gives.
+The same weights appear in the app. Some criteria currently recognize only a clear statement or an unknown, so the risk weight is reserved until a rule identifies a specific risk for that criterion. Reporting-line evidence looks for an explicit manager or reporting relationship, and a stated count of organizations using the product contributes to traction. Office details and structured job location take precedence over general workplace wording. A description of salary as competitive leaves the range unknown. An explicit sponsorship policy is a signal of disclosure whichever answer it gives.
 
 - **70–100** · Worth a conversation
 - **50–69** · Worth it if they answer the open questions

@@ -4,6 +4,8 @@ Worth Your Time is a free browser tool for deciding whether a job posting is wor
 
 [Live demo on GitHub Pages](https://madanchaollapark.github.io/speedrun-worth-your-time/)
 
+![Brief for the fictional founding-role sample](tests/screenshots/a-sample-brief.png)
+
 ## Run locally
 
 Use Node.js 24 and npm.

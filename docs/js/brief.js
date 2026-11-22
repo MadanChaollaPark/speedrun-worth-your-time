@@ -6,9 +6,10 @@ const shareLimit = 6000;
 const textValue = value => typeof value === 'string' && value.trim() ? value.trim() : null;
 const linesOf = text => text.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
 const matchLine = (lines, pattern) => lines.find(line => pattern.test(line));
-const workMode = /\b(?:hybrid|remote|on[- ]?site|in[- ]office|in[- ]person)\b/i;
+const workMode = /\b(?:hybrid(?![- ]+(?:multi[- ]?cloud|cloud)\b)|remote|on[- ]?site|in[- ]office|in[- ]person)\b/i;
 const apiEmploymentLabels = new Map([['FullTime', 'Full-time'], ['PartTime', 'Part-time'], ['Intern', 'Internship']]);
 const employmentType = /\b(?:full[- ]time|part[- ]time|contract(?:or)?|internship|temporary)\b/i;
+const fixedTermContract = /\b\d+[- ](?:days?|weeks?|months?|years?)[- ](contract)\b/i;
 const moneyUnit = '(?:[$€£¥₩]\\s*|(?:USD|CAD|AUD|GBP|EUR|KRW)\\s+)';
 const amount = '\\d+(?:[,.]\\d+)*\\s*[kKmM]?';
 const payRange = new RegExp(
@@ -56,15 +57,17 @@ export function normalizeFromText(text) {
     !/^(?:company|location|team|salary|about|we |you )\b/i.test(firstLine);
   const named = titleLike ? firstLine.match(/^(.+?)\s+(?:at|\|)\s+(.+)$/i) : null;
   const location = field(/^(?:location(?: and on-site days)?|based in)\s*[:：]\s*/i) ??
-    first.find(line => /^(?:remote\b|hybrid\b|on[- ]?site\b|in[- ]person\b)/i.test(line) && line.length < 100) ?? null;
+    first.find(line => line.length < 100 && workMode.exec(line)?.index === 0) ?? null;
   const comp = getPayLine(linesOf(description)) ?? null;
+  const employment = field(/^(?:employment(?: type)?|job type)\s*[:：]\s*/i) ||
+    first[1]?.match(employmentType)?.[0] || comp?.match(fixedTermContract)?.[1] || null;
   return {
     source: 'paste',
     title: field(/^(?:job title|role title|position|role|title)\s*[:：]\s*/i) || named?.[1] || (titleLike ? firstLine : null),
     company: field(/^(?:company|employer|organization)\s*[:：]\s*/i) || named?.[2] || null,
     location: location || null,
     workplace: location?.match(workMode)?.[0] ?? null,
-    employment: field(/^(?:employment(?: type)?|job type)\s*[:：]\s*/i) || first[1]?.match(employmentType)?.[0] || null,
+    employment,
     comp,
     description,
   };
@@ -208,7 +211,7 @@ function inspect(posting, lines, responsibilities) {
 
   const pay = getPayLine(lines);
   const apiPay = posting.source === 'api' ? posting.compSummary : null;
-  const weakPay = /\b(?:competitive|market rate|depends on experience|unpaid|equity[- ]only|no (?:cash|salary|base pay)|not disclosed)\b/i;
+  const weakPay = /\b(?:market rate|depends on experience|unpaid|equity[- ]only|no (?:cash|salary|base pay)|not disclosed)\b/i;
   const boundedPay = [pay, apiPay].find(line =>
     line && payRange.test(line) && !/\b(?:bonus|commission|equity)[- ](?:only|range)\b/i.test(line),
   );
@@ -241,7 +244,7 @@ function inspect(posting, lines, responsibilities) {
   const shortRunway = runway && /\b[1-5]\s*months?\b/i.test(runway) && !/\d\s*[-–]/.test(runway);
   const teamPattern = /\b(?:\d+[- ]person team|team of\s+\d+|\d+\s+(?:people|employees|engineers)\b|team size(?: today)?\s*:\s*\d+|work (?:directly |closely )?with (?:our |the )?(?:co[- ]?founders?|[\w-]+ team|product|design|engineering|customers))\b/i;
   const team = hit(teamPattern);
-  const reportingPattern = /\b(?:reports? (?:directly )?to|reporting\s+(?:line|to)|your manager(?: will be| is))\s*:?\s*(?=(\S.*))/i;
+  const reportingPattern = /\b(?:reports? (?:directly )?to|you(?: (?:will be|are)|['’]ll be) reporting (?:directly )?to|reporting\s+line|^reporting\s+to(?=\s*:)|your manager(?: will be| is))\s*:?\s*(?=([^:\s].*))/i;
   const reporting = lines.find(line => {
     const value = line.match(reportingPattern)?.[1];
     return value && !placeholder.test(value);
@@ -278,7 +281,7 @@ function inspect(posting, lines, responsibilities) {
   const visaPattern = /\b(?:visa(?:s| sponsorship)?|sponsor(?:ship)? (?:work )?visa|work (?:permit|authorization)|h[- ]?1b)\b/i;
   const visa = hit(visaPattern);
   const visaClear = /\b(?:yes|no|case[- ]by[- ]case|available|provided|offered|sponsor\b|cannot|can['’]t|unable|without|must (?:already )?have|required|consider)\b/i;
-  const tractionPattern = /\b(?:\d[\d.,kKmM]*\+?\s*(?:paying |active |pilot |enterprise |existing )?(?:customers|users|pilots|design partners|deployments)|paying customers|pre[- ]launch|pre[- ]revenue|no (?:paying )?customers|\barr\s*(?::| of| reached)|revenue\s*(?::| of| reached)|customers? (?:include|are|across)|used by \S+)\b/i;
+  const tractionPattern = /\b(?:\d[\d.,kKmM]*\+?\s*(?:(?:paying |active |pilot |enterprise |existing )?(?:customers|users|pilots|design partners|deployments)|(?:companies|organi[sz]ations)\s+(?:use|run on))|paying customers|pre[- ]launch|pre[- ]revenue|no (?:paying )?customers|\barr\s*(?::| of| reached)|revenue\s*(?::| of| reached)|customers? (?:include|are|across)|used by \S+)\b/i;
   const traction = hit(tractionPattern);
   const stackPattern = /\b(?:typescript|javascript|python|rust|golang|react|vue|angular|svelte|postgres(?:ql)?|mysql|redis|sqlite|ruby|rails|django|flask|kubernetes|docker|kotlin|swift|jvm|java|terraform|aws|gcp|azure|node\.js|next\.js|graphql|supabase|grpc|elixir|phoenix)\b|(?:c\+\+|c#|\.net)\b/i;
   const stack = hit(stackPattern);
@@ -299,7 +302,7 @@ function inspect(posting, lines, responsibilities) {
     interview: interviewEvidence ? signal(interviewEvidence, 'The posting gives interview steps or timing. Confirm the full commitment before starting.', stageDetail)
       : unknown('Steps and timing help you budget your time.', processLine, interview),
     location: loc || office || posting.location || posting.workplace
-      ? signal(office ?? loc ?? posting.location ?? posting.workplace, 'The posting gives a location or work arrangement. Confirm any office days or geographic limits.', office ? officePattern : workMode)
+      ? signal(office ?? posting.location ?? posting.workplace ?? loc, 'The posting gives a location or work arrangement. Confirm any office days or geographic limits.', office ? officePattern : workMode)
       : unknown('Office expectations are a practical deal-breaker for some candidates.'),
     hours: pressure ? risk(pressure, 'The wording suggests intensity. Ask for the actual schedule and examples of crunch.', timePressure)
       : hours ? signal(hours, 'The posting sets an expectation about hours, nights, weekends or on-call work.', regularHours)

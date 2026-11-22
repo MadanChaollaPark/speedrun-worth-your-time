@@ -206,3 +206,64 @@ test('pay extraction selects a later numeric range over generic benefits languag
   assert.equal(row(brief, 'salary').evidence, '$95,000–$125,000 annually');
   assert.equal(brief.reading.summary.find(fact => fact.label === 'Pay').text, '$95,000–$125,000 annually');
 });
+
+test('financial reporting does not count as the role’s reporting line', () => {
+  const description = 'Role: Product Engineer\nBuild tools for teams that handle bookkeeping and reporting to auditors.';
+  assert.equal(row(fromText(description), 'reporting').status, 'unknown');
+  const explicit = row(fromText(description + '\nReporting to: Head of Engineering'), 'reporting');
+  assert.equal(explicit.status, 'signal');
+  assert.equal(explicit.evidence, 'Reporting to: Head of Engineering');
+  assert.equal(row(fromText('You’ll be reporting to our CTO.'), 'reporting').status, 'signal');
+});
+
+test('hybrid cloud terminology does not supply workplace evidence', () => {
+  const description = 'Deploy our monitoring agents across hybrid cloud infrastructure.';
+  assert.equal(row(fromText(description), 'location').status, 'unknown');
+  assert.equal(normalizeFromText('Hybrid cloud operations are our focus.').location, null);
+  const brief = analyze(normalizeFromApi({
+    description_text: description, location: 'Bristol, UK', workplace_type: 'Hybrid',
+  }));
+  assert.equal(row(brief, 'location').evidence, 'Bristol, UK');
+  assert.equal(brief.reading.summary.find(fact => fact.label === 'Where and how').text, 'Bristol, UK · Hybrid');
+});
+
+test('a count of organizations using the product is evidence of traction', () => {
+  const line = 'Over 180 organizations use our scheduling service each week.';
+  const traction = row(fromText(line), 'traction');
+  assert.equal(traction.status, 'signal');
+  assert.equal(traction.evidence, line);
+  assert.equal(row(fromText('We hope 180 organizations will use our scheduling service.'), 'traction').status, 'unknown');
+});
+
+test('a pasted hourly range retains both bounds and discloses a fixed-term contract', () => {
+  const pay = '$80–$120/hr, 6-month contract';
+  const posting = normalizeFromText('Role: Product Engineer\nLocation: Remote\n' + pay);
+  const brief = analyze(posting);
+  assert.equal(posting.employment, 'contract');
+  assert.equal(row(brief, 'salary').status, 'signal');
+  assert.equal(row(brief, 'salary').evidence, pay);
+  assert.equal(brief.reading.summary.find(fact => fact.label === 'Pay').text, pay);
+});
+
+test('pasted GBP and EUR pay ranges retain their original currencies and amounts', () => {
+  for (const pay of ['£70,000 – £90,000', '€65k–€80k']) {
+    const brief = fromText('Role: Product Engineer\n' + pay);
+    assert.equal(row(brief, 'salary').status, 'signal', pay);
+    assert.equal(brief.reading.summary.find(fact => fact.label === 'Pay').text, pay);
+  }
+});
+
+test('pasted won ranges are preserved verbatim', () => {
+  for (const pay of ['₩60,000,000–₩80,000,000', 'KRW 60M–80M']) {
+    const brief = fromText('Role: Product Engineer\n' + pay);
+    assert.equal(row(brief, 'salary').status, 'signal', pay);
+    assert.equal(brief.reading.summary.find(fact => fact.label === 'Pay').text, pay);
+  }
+});
+
+test('competitive salary without amounts leaves the range unknown and asks for it', () => {
+  const brief = fromText('Role: Product Engineer\nCompetitive salary');
+  assert.equal(row(brief, 'salary').status, 'unknown');
+  assert.equal(row(brief, 'salary').evidence, 'Competitive salary');
+  assert.ok(brief.unanswered.some(item => item.question === 'What is the salary range for this role?'));
+});
