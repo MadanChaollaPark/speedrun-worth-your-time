@@ -122,7 +122,7 @@ const optionTerms = /\b(?:exercis\w*|strike(?: price)?|409a)\b/i;
 const equityPattern = /\b(?:equity|stock options|share options|employee options|rsus?)\b/i;
 const noEquity = /\b(?:no (?:equity|stock options)|equity\s*:\s*(?:none|no)\b|(?:equity|stock options) (?:is |are )?not (?:offered|included|available))\b/i;
 const vesting = /\b(?:vest(?:ing|s|ed)?|cliff)\b/i;
-const vagueScope = /\b(?:wear (?:many|multiple|all) hats|whatever it takes|do it all|everything from .* to .*|anything and everything|no job is too small)\b/i;
+const vagueScope = /\b(?:wear (?:many|multiple|all) hats|whatever it takes|do it all|everything from(?= .* to .*\b)|anything and everything|no job is too small)\b/i;
 const timePressure = /\b(?:crunch|hustle|grind|work hard|(?:move|work) at breakneck speed|(?:6|six)[ -]days|(?:nights and weekends|weekends (?:expected|required))|long hours|(?:50|55|60|65|70|80)\+?\s*hours|always on|rockstar|fast[ -]paced)\b/i;
 const regularHours = /\b(?:no (?:routine )?(?:nights|weekends|after-hours|overtime)|standard (?:working|business) hours|\d{1,2}[- ]hour (?:work)?week|on-call (?:rotation|schedule))\b/i;
 const interview = /\b(?:interview(?:s|ing)?|hiring process|recruiter screen|phone screen|take[- ]home|technical screen|onsite loop)\b/i;
@@ -131,10 +131,27 @@ const placeholder = /^(?:tbd|tba|unknown|n\/a|not (?:provided|specified|disclose
 const negated = /\b(?:no|never|without|not expected to|don['’]t|do not|won['’]t|will not)\b/i;
 
 function evidenceFor(line, anchor) {
+  const limit = 160;
   if (!line) return missing;
-  if (line.length <= 160) return line;
-  const at = anchor ? (typeof anchor === 'number' ? anchor : line.search(anchor)) : 0;
-  return line.slice(Math.max(0, at - 42), Math.max(0, at - 42) + 160);
+  if (line.length <= limit) return line;
+
+  const match = anchor?.exec(line);
+  const matchStart = match?.index ?? 0;
+  const matchEnd = matchStart + (match?.[0].length ?? 0);
+  const words = [...line.matchAll(/\S+/g)];
+  if (!words.length) return missing;
+  const wordEnd = word => word.index + word[0].length;
+  const anchorStart = words.findLast(word => word.index <= matchStart) ?? words[0];
+  const anchorEnd = words.findLast(word => word.index < matchEnd) ?? anchorStart;
+  const capacity = limit - 4; // Leave room for an ellipsis and space on either side.
+  const minStart = Math.max(matchStart - 42, wordEnd(anchorEnd) - capacity);
+  const first = words.find(word => word.index >= minStart && word.index <= anchorStart.index) ?? anchorStart;
+  const last = words.findLast(word => word.index >= first.index && wordEnd(word) <= first.index + capacity);
+  if (!last) return '…';
+
+  const start = first.index;
+  const end = wordEnd(last);
+  return (start > 0 ? '… ' : '') + line.slice(start, end) + (end < line.length ? ' …' : '');
 }
 
 export const criteria = [
@@ -195,9 +212,8 @@ function inspect(posting, lines, responsibilities) {
   const boundedPay = [pay, apiPay].find(line =>
     line && payRange.test(line) && !/\b(?:bonus|commission|equity)[- ](?:only|range)\b/i.test(line),
   );
-  const payAnchor = boundedPay?.search(payRange);
   const salary = boundedPay || posting.compRange
-    ? signal(boundedPay ?? String(posting.compMin), boundedPay ? 'A numeric pay range gives you something concrete to weigh.' : 'The excerpt shows the lower bound from the public job record. The posted range is ' + posting.comp + '.', payAnchor)
+    ? signal(boundedPay ?? String(posting.compMin), boundedPay ? 'A numeric pay range gives you something concrete to weigh.' : 'The excerpt shows the lower bound from the public job record. The posted range is ' + posting.comp + '.', payRange)
     : weakPay.test(pay ?? apiPay ?? '')
       ? risk(pay ?? apiPay, 'The post describes pay without usable cash bounds.', weakPay)
       : unknown(pay || posting.comp ? 'Pay is referenced without a clear range.' : 'A posted range helps you decide whether to invest time.', pay ?? apiPay, payLabel);
@@ -223,8 +239,9 @@ function inspect(posting, lines, responsibilities) {
   const funding = hit(fundingPattern);
   const runway = hit(runwayPattern);
   const shortRunway = runway && /\b[1-5]\s*months?\b/i.test(runway) && !/\d\s*[-–]/.test(runway);
-  const team = hit(/\b(?:\d+[- ]person team|team of\s+\d+|\d+\s+(?:people|employees|engineers)\b|team size(?: today)?\s*:\s*\d+|work (?:directly |closely )?with (?:our |the )?(?:co[- ]?founders?|[\w-]+ team|product|design|engineering|customers))\b/i);
-  const reportingPattern = /\b(?:reports? (?:directly )?to|reporting\s+(?:line|to)|your manager(?: will be| is))\s*:?\s*(\S.*)/i;
+  const teamPattern = /\b(?:\d+[- ]person team|team of\s+\d+|\d+\s+(?:people|employees|engineers)\b|team size(?: today)?\s*:\s*\d+|work (?:directly |closely )?with (?:our |the )?(?:co[- ]?founders?|[\w-]+ team|product|design|engineering|customers))\b/i;
+  const team = hit(teamPattern);
+  const reportingPattern = /\b(?:reports? (?:directly )?to|reporting\s+(?:line|to)|your manager(?: will be| is))\s*:?\s*(?=(\S.*))/i;
   const reporting = lines.find(line => {
     const value = line.match(reportingPattern)?.[1];
     return value && !placeholder.test(value);
@@ -272,7 +289,7 @@ function inspect(posting, lines, responsibilities) {
     funding: shortRunway ? risk(runway, 'The posted runway is under six months. Ask how hiring is funded.', runwayPattern)
       : funding || runway ? signal(runway ?? funding, runway ? 'The posting gives a runway figure.' : 'The posting gives a funding detail. Ask how many months of runway remain.', runway ? runwayPattern : fundingPattern)
         : unknown('Funding and runway affect how much time the team has to make the plan work.'),
-    team: team ? signal(team, 'The posting names a team size or day-to-day collaborators.') : unknown('It is hard to estimate support and ownership without a picture of the team.'),
+    team: team ? signal(team, 'The posting names a team size or day-to-day collaborators.', teamPattern) : unknown('It is hard to estimate support and ownership without a picture of the team.'),
     reporting: reporting ? signal(reporting, 'The posting tells you who manages the role.', reportingPattern) : unknown('A reporting line tells you who sets priorities and evaluates your work.'),
     scope: scope ? risk(scope, 'Broad ownership language makes it worth establishing boundaries.', vagueScope)
       : responsibilities.length >= 2 ? signal(responsibilityLine, responsibilities.length + ' distinct responsibilities are stated.')

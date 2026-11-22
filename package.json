@@ -7,9 +7,11 @@
     "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "node --test \"tests/unit/*.test.js\"",
     "test:e2e": "playwright test",
+    "test:live": "playwright test -c playwright.live.config.js",
     "serve": "node scripts/serve.mjs"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@playwright/test": "^1.65.1"
   }
 }

@@ -16,3 +16,12 @@ export const founderDraft = {
   contact: 'https://lantern-narwhal.example/apply',
 };
 export const hostileText = '<script>alert(1)</script><img src=x onerror=alert(1)>';
+
+export const pastedPosting = `Role: Product Engineer
+Company: Pencil Cloud Studio
+Location: Hybrid in Chicago, two office days per week
+Salary: $125,000–$155,000 USD per year
+Responsibilities
+- Build a scheduling tool for clinic administrators.
+- Work with the product designer to test the new calendar with five customers.
+Interview process: 30-minute introductory call and a 60-minute pairing session.`;

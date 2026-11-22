@@ -2,7 +2,7 @@
 
 Worth Your Time is a free browser tool for deciding whether a job posting is worth an application or a first call. Paste a posting, open a fictional sample, or use a speedrun job link to get a plain-language brief, a checklist with evidence, and questions to ask. Founders can draft, preview, and export an honest first-hire brief.
 
-[GitHub Pages demo](https://madanchaollapark.github.io/speedrun-worth-your-time/) · available after the first deploy containing the app from `main:/docs`.
+[Live demo on GitHub Pages](https://madanchaollapark.github.io/speedrun-worth-your-time/)
 
 ## Run locally
 
@@ -30,7 +30,9 @@ npm run test:unit
 npx playwright test
 ```
 
-The two commands are also in [STATE/TEST_COMMANDS](STATE/TEST_COMMANDS). The browser suite mocks the jobs API, tests keyboard, clipboard, exports and fallback flows, and writes six full-page PNGs to [tests/screenshots](tests/screenshots/).
+The two commands are also in [STATE/TEST_COMMANDS](STATE/TEST_COMMANDS). The browser suite tests keyboard, clipboard, exports, and jobs API behavior with fixtures. It runs axe in light and dark modes and writes six full-page PNGs to [tests/screenshots](tests/screenshots/).
+
+**Live check** (optional, requires network). Run `npm run test:live` to check the deployed GitHub Pages app and save three screenshots. It runs separately from the driver suite.
 
 ## Deploy
 

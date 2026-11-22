@@ -1,167 +1,101 @@
-# PLAN — Iteration 1 (builder work package, ~40–70 min)
+# PLAN — Iteration 2 (builder work package, ~40–70 min)
 
 Orchestrator and reviewer are Kiro Claude Opus 5.5; builder is Codex gpt-6.2-sol at high reasoning effort / slow mode, by owner decision 2026-11-22; do not revert
 
-Read `GOAL.md` and `RESEARCH.md` first. Work only in `/workspace/speedrun-pe`. Do not commit, tag, or push (the driver does that after this round). Do not edit `speedrun_pe_loop.py`, `LOOP_LOG.md`, or write `STATE/ALL_DONE`. Never submit any form, contact anyone, or sign in to speedrun-talent-network.com. Never fake results: every claim in `STATE/BUILD_REPORT.md` must come from a command you ran.
+Read `GOAL.md`, `STATE/REVIEW.md` (iteration 1, verdict PARTIAL) and `STATE/CHECKLIST.md` first. Work only in `/workspace/speedrun-pe`. Do not commit, tag, or push (the driver does that). Do not edit `speedrun_pe_loop.py` (or its `.bak` copies), `LOOP_LOG.md`, or write `STATE/ALL_DONE`. Never submit any form, contact anyone, or sign in to speedrun-talent-network.com. Never fake results: every claim in `STATE/BUILD_REPORT.md` must come from a command you ran, with its real exit code and output.
 
-Goal of this round: a working static Worth Your Time app in `docs/` with sample postings, the brief engine, the founder template, unit tests, a Playwright walkthrough with screenshots, `STATE/TEST_COMMANDS`, GitHub Pages enabled from `main:/docs`, and an updated README. `APPLICATION_DRAFT.md` is a stretch item (step 9).
+## Where we are
 
-## Locked decisions (do not re-open)
+- Iteration 1 built the full app in `docs/` and all DoD items were met locally. The only blocker was DoD 4 (live link), because nothing had been pushed.
+- The driver pushed `6fff783` (tag `v01-iter01`). The orchestrator checked at 2026-11-22 23:35 KST: the Pages build for `6fff783` is `built`, `https://madanchaollapark.github.io/speedrun-worth-your-time/` returns **200** without a login, and every JS/CSS/SVG asset returns 200 and is byte-identical to `docs/`.
+- Still missing: proof the app *works* in a browser on the live URL, the README and draft still say "pending", and three polish items from the review.
 
-1. **Stack: zero-build static site.** Vanilla HTML + CSS + native ES modules, served as-is from `docs/`. No framework, no bundler, no CDN, no web fonts from third parties. Reason: GitHub Pages "deploy from branch" serves `docs/` directly, and the GitHub token on this box has scopes `repo, gist, read:org` but **not `workflow`**. **Do not create anything under `.github/workflows/`**: the driver's atomic push would be rejected and the whole round lost.
-2. **All asset paths relative** (`./css/app.css`, `./js/app.js`) because the site lives under `/speedrun-worth-your-time/`. Add `docs/.nojekyll`.
-3. **Brief engine is pure** (no DOM, no fetch) in `docs/js/brief.js` so Node can unit test it directly. DOM code lives in `docs/js/app.js` (and small view modules if you like).
-4. **Tests:** Node built-in runner (`node --test`) for unit tests, `@playwright/test` (devDependency) for e2e. Root `package.json` with `"type": "module"` and `"private": true`. Commit `package-lock.json`. `node_modules/` is already gitignored.
-5. **API path:** only for URLs whose host is exactly `speedrun-talent-network.com` (or `www.`) and path matches `/jobs/<slug>`. Fetch `https://speedrun-talent-network.com/api/v1/jobs/<slug>` (verified at iter 1: accepts the full slug, the 8-hex short id, or the UUID; CORS `*`; fields listed in RESEARCH.md "API re-check"). Timeout ~8 s via `AbortController`. Any failure (network, non-200, `status !== "open"`, bad JSON, missing `description_text`) → keep the URL, show a plain error, and move focus to the paste textarea. Any other URL → "We don't fetch other sites. Paste the posting text instead." No proxies, no scraping.
-6. **Samples are fictional** and labeled "Sample — fictional company" in the UI. Never present invented company facts as real. Company names should be obviously made up.
-7. **Design direction (original):** editorial "field notes" feel. Warm off-white paper background, near-black ink text, one strong accent (e.g. deep teal or brick), system serif for headings (`ui-serif, Georgia, …`), system sans for body, monospace for quoted evidence. Checklist statuses use icon + word + colour (never colour alone): **Signal** / **Risk** / **Unknown**. Visible focus rings. Light and dark (`prefers-color-scheme`). Print stylesheet that prints just the brief. Look at `research/screenshots/site_jobs.png` and `site_home.png` only to make sure you are **not** resembling them; copy nothing (no CSS, copy, assets, layout).
-8. **localStorage keys** are our own: `wyt-founder-v1` (founder draft), `wyt-last-v1` (last pasted text). Never reuse `tsp-draft-v1`.
+Goal of this round: prove the live app works with a scripted browser run, flip docs to live, fix the review's polish items, add an accessibility scan, and leave both driver suites green.
+
+## Locked decisions (unchanged; do not re-open)
+
+1. Zero-build static site in `docs/`, relative asset paths, `docs/.nojekyll`. Pages deploys from `main:/docs`. **Never create anything under `.github/workflows/`**: the token lacks `workflow` scope and the driver's push would be rejected.
+2. The pure engine stays in `docs/js/brief.js` (no DOM, no fetch). DOM code stays in `docs/js/app.js`.
+3. Driver suites stay exactly `npm run test:unit` and `npx playwright test` (the two lines in `STATE/TEST_COMMANDS`). They must stay offline and deterministic. **Do not add network-dependent tests to them.**
+4. Do not add new product features this round. Polish and verification only.
+5. Keep the original design (paper background, deep green accent, serif headings, monospace evidence). Copy nothing from the talent-network site.
 
 ## Ordered work
 
-### Step 1 — Scaffold (≈5 min)
-Create:
+### Step 1 — Live smoke test, opt-in (≈15 min)
+
+Create a separate Playwright config so the live check never runs inside `npx playwright test`:
+
+- `playwright.live.config.js`: `testDir: 'tests/live'`, chromium only, `retries: 1`, **no `webServer`**, `use.baseURL = process.env.LIVE_URL || 'https://madanchaollapark.github.io/speedrun-worth-your-time/'`. Keep the trailing slash and use relative `page.goto('./')` so the `/speedrun-worth-your-time/` base path is kept.
+- Confirm the default `playwright.config.js` has `testDir: 'tests/e2e'`, so `tests/live` is excluded from the driver suite.
+- `package.json` script: `"test:live": "playwright test -c playwright.live.config.js"`.
+- `tests/live/live.spec.js`. In each test, first block every request whose host is not `madanchaollapark.github.io` (`page.route('**/*', …)` → `route.abort()` for other hosts). The live smoke must not call the speedrun API or anything else. Tests:
+  1. **Opens without a login:** response status 200, the final URL is still on `madanchaollapark.github.io`, the page title or h1 contains "Worth Your Time", and there are no console errors or page errors (collect `page.on('pageerror')` and `console` type `error`; CSP violations count as errors).
+  2. **Sample → brief:** open the founding-role sample, generate, and assert the brief heading, the score, and at least one Signal/Risk/Unknown item are visible. Screenshot `tests/screenshots/live-a-sample-brief.png`.
+  3. **Paste → brief:** paste a short realistic posting (reuse a fixture from `tests/fixtures.js`), generate with Ctrl+Enter, and assert the brief renders. Screenshot `tests/screenshots/live-b-paste-brief.png`.
+  4. **Founder template:** open the founder view, fill two fields, and assert the preview updates. Screenshot `tests/screenshots/live-c-founder.png`.
+- The live site serves the **iteration 1** code until the driver pushes this round. Use selectors that exist in both the current deployed code and your updated code (roles, labels and visible text that you are not changing). Do not change those labels this round.
+
+Acceptance:
+```sh
+npm run test:live            # exit 0, 4 passed, 0 skipped (record real counts)
+ls -la tests/screenshots/live-*.png
+CI=1 npx playwright test --list | grep -c live   # expect 0: live specs are not in the driver suite
 ```
-package.json            scripts: "test": "npm run test:unit && npm run test:e2e", "test:unit": "node --test tests/unit/", "test:e2e": "playwright test", "serve": "node scripts/serve.mjs"
-playwright.config.js    webServer: node scripts/serve.mjs on 127.0.0.1:4173 (reuseExistingServer: !process.env.CI), testDir tests/e2e, chromium only, retries 0
-scripts/serve.mjs       tiny static server for docs/ (no deps). Reject path traversal (resolve + startsWith docs root), correct MIME types for .html .css .js .json .svg .png .ico .md, 404 otherwise. PORT env, default 4173.
-docs/index.html
-docs/.nojekyll
-docs/css/app.css
-docs/css/print.css      (or @media print inside app.css)
-docs/js/brief.js        pure engine
-docs/js/samples.js      sample postings + one API-shaped fixture
-docs/js/founder.js      pure founder-template → markdown/posting text helpers
-docs/js/app.js          DOM wiring, routing, rendering
-docs/favicon.svg        original simple mark
-tests/unit/*.test.js
-tests/e2e/*.spec.js
-tests/screenshots/      committed PNGs written by the e2e run
+If the live run fails because of the deployed iteration 1 code (not your test), record the exact failure in BUILD_REPORT and fix the app. Do **not** weaken the assertion.
+
+### Step 2 — Flip docs to live (≈5 min, only after Step 1 passes)
+
+- `README.md:5`: drop "available after the first deploy…" and state the live URL plainly. Add a "Live check" line under the Test section: `npm run test:live` (optional, needs network; checks the deployed site, not part of the driver suite).
+- `APPLICATION_DRAFT.md:5`: drop "(awaiting first app deployment)". Leave it marked DRAFT, not submitted.
+- Update `PRODUCT.md` or `CHANGELOG.md` if they say "pending".
+- `grep -n "pending\|awaiting\|after the first" README.md APPLICATION_DRAFT.md PRODUCT.md CHANGELOG.md` → no remaining matches about the deploy.
+
+### Step 3 — Review polish (≈15 min)
+
+a. **Skip link in screenshots.** `.skip` (`docs/css/app.css:62-71`) is `position: fixed` and shows in full-page screenshots a and c when it has focus. It covers the "Write your brief" heading, and there is a stray white bar top-left in screenshot a. Fix the root cause:
+   - In the e2e spec, make sure focus is not left on the skip link before a screenshot. After generating, focus should already be on the result heading. Check why it isn't, and fix the app if focus handling is wrong.
+   - Make sure the skip link is fully off-screen when it is not focused (for example `transform: translateY(-200%)` is not enough when `top: 1rem` and the element is tall; prefer `top:-100%` → `top:1rem` on `:focus`, or clip it). It must still appear and work when tabbed to (keep the existing keyboard test, or add an assertion that the first Tab focuses the skip link and Enter moves focus to `#main` or the equivalent).
+   - Find the white bar's source in screenshot a and remove it.
+b. **Evidence trimming.** `evidenceFor` (`docs/js/brief.js:134-138`) cuts mid-word ("Three payi", "Ask us abou"). Trim the window to word boundaries. Add a leading `…` when the start is cut and a trailing `…` when the end is cut. Keep the result ≤ ~170 chars and keep the anchor match inside the window.
+   - Add unit tests: a long line whose snippet starts and ends at word boundaries with ellipses, the anchor match is contained, and short lines are returned unchanged.
+c. Regenerate all screenshots (`CI=1 npx playwright test`). Then **open** `a-sample-brief.png`, `b-paste-brief.png` and `c-founder-template.png` and look at them: no skip link overlay, no white bar, no cut words in the evidence. Say in BUILD_REPORT what you saw.
+
+### Step 4 — Accessibility scan (≈10 min)
+
+- `npm install --save-dev @axe-core/playwright` (public package; commit the lockfile change).
+- Add `tests/e2e/a11y.spec.js`, which runs axe on: the home/empty state, a generated brief (sample), the founder template, and the `?` shortcuts dialog open. Assert **zero `serious` or `critical` violations**. Print any `moderate`/`minor` ones to the test output.
+- Fix any violations in the app (contrast in light **and** dark scheme: run one pass with `colorScheme: 'dark'`). Do not disable axe rules to make it pass. If a rule truly does not apply, explain it in BUILD_REPORT with the rule id and reason.
+
+### Step 5 — Draft and docs touch-up (≈5 min)
+
+- Recount `ideas` in `APPLICATION_DRAFT.md` with the counting command from the iteration 1 BUILD_REPORT. It must be ≤1500, and the draft must still contain the live demo link and ALL-CAPS placeholders for unknowns. Do not invent personal facts (GOAL.md lists the known ones).
+- `CHANGELOG.md`: add "Iteration 2 · 2026-11-23": live verification, skip-link and evidence fixes, axe scan.
+- README Test section: list unit, e2e (including a11y), and optional live. `STATE/TEST_COMMANDS` stays exactly two lines.
+
+### Step 6 — Final verification and report (≈5 min)
+
+Run, in order, and record the real exit codes and counts:
+```sh
+CI=1 npm run test:unit
+CI=1 npx playwright test
+npm run test:live
+cat STATE/TEST_COMMANDS                     # exactly: npm run test:unit / npx playwright test
+grep -rn "innerHTML\|outerHTML\|insertAdjacentHTML\|document.write\|eval(\|new Function" docs/js   # expect exit 1
+ls .github 2>/dev/null                      # expect absent
+curl -sS -o /dev/null -w '%{http_code}\n' https://madanchaollapark.github.io/speedrun-worth-your-time/   # expect 200
+git status --short                          # only intended files; no test-results/ or playwright-report/ tracked
+pgrep -af '[s]erve.mjs'                     # expect none left running
+rg -n '^Orchestrator and reviewer are Kiro Claude Opus 5\.5; builder is Codex gpt-6\.2-sol at high reasoning effort / slow mode, by owner decision 2026-11-22; do not revert$' GOAL.md STATE/PLAN.md
 ```
-Append to `.gitignore`: `test-results/`, `playwright-report/`, `blob-report/`.
+Write `STATE/BUILD_REPORT.md` (Iteration 2): files changed, a table of every command above with its real exit code and result, what you saw in the screenshots, and anything still open. Note that the live smoke ran against the iteration 1 deployment. The reviewer re-runs it after the driver pushes.
 
-Install: `npm install --save-dev @playwright/test`. Then `npx playwright --version` and check whether its Chromium build is already in `~/.cache/ms-playwright` (currently `chromium-1255` and `chromium_headless_shell-1255` exist). If not, run `npx playwright install chromium` (public package download is allowed). Record which you did.
+## Acceptance criteria for this round (the reviewer checks all of these)
 
-### Step 2 — Brief engine `docs/js/brief.js` (≈15 min)
-Exports (names can vary slightly; document them):
-
-- `normalizeFromText(text)` → `{ source: "paste", title, company, location, workplace, employment, comp, description }` with best-effort extraction of title/company/location from the first lines; unknowns are `null`, never guessed.
-- `normalizeFromApi(job)` → same shape from the `/api/v1/jobs/{id}` object (`title, company, location, workplace_type, employment_type, comp_min/comp_max/comp_currency/comp_period/comp_summary, description_text, labels, url, apply.url, published_at, status`). Treat every field as untrusted and possibly missing/null.
-- `parseSpeedrunJobUrl(input)` → `{ slug }` or `null`. Accept only `https:` (and `http:` upgraded), host `speedrun-talent-network.com` / `www.speedrun-talent-network.com`, path `/jobs/<[a-z0-9-]+>` with optional trailing slash, query/hash ignored. Reject `javascript:`, `data:`, look-alike hosts (`speedrun-talent-network.com.evil.io`, `evil.io/speedrun-talent-network.com/jobs/x`), userinfo tricks (`https://speedrun-talent-network.com@evil.io/jobs/x`).
-- `analyze(posting)` → brief object:
-  - `status`: `"ok" | "thin" | "empty"`. `empty` for blank/whitespace. `thin` when the description is under ~350 characters or fewer than 3 of the core facts (pay, location/workplace, responsibilities, team/stage, process) are present.
-  - `reading`: `{ headline, summary[] }` — plain-language "what this job is": role, company (or "Company not named"), where/how (on-site / hybrid / remote + location), pay as posted (or "Pay not posted"), up to 5 concrete responsibilities pulled from bullet/sentence lines that start with action verbs or sit under "responsibilities/what you'll do" headings.
-  - `isEarlyStage`: boolean + `earlyEvidence[]` (founding, first/first few engineers, seed, pre-seed, Series A, "employee #N", "<N person team", "0 to 1").
-  - `checklist[]`: each `{ id, label, status: "signal"|"risk"|"unknown", evidence, why }`. `evidence` is a short **verbatim** snippet (≤160 chars) from the posting or the literal string "Not mentioned in the posting". Cover at least: posted salary range; equity stated (and whether it gives %/range, vesting, strike/409A); funding stage / runway / investors; team size and who you'd work with; reporting line; scope clarity (count of responsibilities, presence of "wear many hats" style language); success criteria (30/60/90, first-quarter goals); interview process and timeline; location / on-site expectation; hours / intensity language ("work hard", "hustle", "grind", "6 days", "nights and weekends"); visa sponsorship; customers / traction; tech stack named.
-  - `unanswered[]`: `{ question, why }` generated from every `unknown` (and some `risk`) item, phrased as a question the seeker can send or ask in the first call (e.g. "What is the salary range for this role?", "What equity range, as a percentage, and what are the vesting and exercise terms?", "How many months of runway do you have at current burn?"). Early-stage roles get the extra founder questions (runway, who the first hires are, what happens if the next round slips).
-  - `assessment`: `{ score (0–100), band, label, ledger[] , confidence }`. Start at 50; each checklist item adds or subtracts a fixed, documented weight; `ledger[]` lists `{ id, delta, reason }` so the UI can show exactly why. Bands (wording can be refined): ≥70 "Worth a conversation", 50–69 "Worth it if they answer the open questions", <50 "Proceed with caution". For `thin`, band is "Not enough to judge" and `confidence` is `"low"`; do not output a confident verdict on a thin post. `confidence` = low/medium/high from how many items are known.
-  - Deterministic: same input → same output. No randomness, no network, no LLM.
-- `briefToMarkdown(brief, posting)` → Markdown for copy/download. It must not emit raw HTML from the posting (escape `<`, `>` or put evidence in backticks/quotes safely).
-- `encodeShare(text)` / `decodeShare(fragment)` → base64url of UTF-8 text for `#paste=` links (cap ~6000 chars; above that the UI says "Too long to share as a link, use Copy or Download"). Decoding must never throw to the UI; bad input → `null`.
-
-### Step 3 — Samples `docs/js/samples.js` (≈5 min)
-At least four fictional postings, realistic in length and tone:
-1. **Founding Product Engineer**, seed-stage, 6-person team, on-site 4 days, posted salary band + equity range in %, vesting, clear first-90-days, interview steps. (Should land "Worth a conversation".)
-2. **"First engineering hire / rockstar"**, pre-seed, no pay, "equity-heavy", "wear many hats", "fast-paced, work hard", no process, no team info. (Should land "Proceed with caution", with many unanswered questions.)
-3. **Product Engineer at a Series B company** (not early-stage), decent detail, salary posted, hybrid. (Exercise the non-early path.)
-4. **Thin post**: 2–3 lines only. (Must be `thin` / "Not enough to judge".)
-Plus `apiFixture`: one object in the exact `/api/v1/jobs/{id}` shape (fictional company, `url` on `speedrun-talent-network.com/jobs/...`), used by unit tests and the mocked e2e route.
-
-### Step 4 — UI `docs/index.html` + `docs/js/app.js` + CSS (≈15 min)
-Views via hash routes: `#/` (Check a role, default), `#/founder` (Honest first-hire brief), `#/how` (how the assessment works, the weights, privacy: "everything runs in your browser; only speedrun board URLs call their public API"). Deep links: `#/?sample=<id>`, `#/?paste=<base64url>`, `#/?job=<slug>` (the last triggers the API path).
-
-Check a role:
-- One URL input + one large textarea ("Paste the job posting"), a **Get the brief** button, and a sample picker (buttons or a list) with "Sample — fictional company" labels.
-- Errors inline next to the field with `aria-describedby` and `role="alert"`: empty ("Paste a posting or a speedrun job link first."), not a URL, unsupported site (see decision 5), API failure (fall back to paste and focus the textarea), very short text (still runs, shows the thin state).
-- Loading state for the API call (button disabled, `aria-busy`).
-- Result: heading with `tabindex="-1"` that receives focus after generation. Sections in this order: Verdict + score + confidence with the ledger ("Why this score") expandable; Plain-language reading; Questions the posting leaves unanswered (each with a per-question copy button and one "Copy all questions"); Signal/Risk/Unknown checklist with evidence quotes. Actions: **Copy as Markdown**, **Download .md**, **Print**, **Copy share link** (sample/job/paste link per decision above), **Check another**.
-- For API jobs show "Source: speedrun talent network public API" and the role link (`https` only, `rel="noopener noreferrer"`, `target="_blank"`).
-
-Founder template (`#/founder`):
-- Fields: role title, company (or "stealth"), stage, team size today, funding raised / months of runway (ranges OK), salary range, equity range (%), vesting + cliff + exercise window, location and on-site days, who they report to, first 90 days, what's genuinely hard about this job, interview steps and total time, visa sponsorship (yes/no/case-by-case), contact or apply link.
-- Live preview of the published brief, autosave to `wyt-founder-v1`, **Copy as Markdown**, **Download .md**, **Print**, **Clear** (with confirm), and **Check it with Worth Your Time**, which feeds the generated text into the analyzer and navigates to the result. A fully filled template should score in the top band; this is a nice consistency check to unit test.
-
-Keyboard: skip link to main; logical tab order; `Ctrl+Enter` / `Cmd+Enter` in the textarea generates; `Enter` in the URL field generates; `?` (when not typing in a field) opens a shortcuts dialog (native `<dialog>`), `Esc` closes it and returns focus; `g` then `f` / `g` then `c` optional. Document shortcuts in the dialog, in `#/how`, and in README.
-
-Security (must hold, reviewer will check):
-- Never assign untrusted text through `innerHTML`/`outerHTML`/`insertAdjacentHTML`/`document.write`. Build nodes with `createElement` + `textContent`. `grep -n "innerHTML" docs/js` should return nothing (or only static, literal templates with no interpolation).
-- CSP `<meta http-equiv="Content-Security-Policy">`: `default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://speedrun-talent-network.com; base-uri 'none'; form-action 'none'; object-src 'none'`. No inline scripts or inline `style=""` attributes (use classes).
-- `<meta name="referrer" content="no-referrer">`.
-- Links built from API data: only if `new URL(x).protocol === "https:"`.
-
-### Step 5 — Unit tests `tests/unit/` (≈7 min)
-Import from `../../docs/js/brief.js` (and `founder.js`, `samples.js`). Minimum cases, each a separate `test()`:
-1. Founding sample → `isEarlyStage === true`, band "Worth a conversation", salary/equity items `signal`, evidence strings are substrings of the input.
-2. Rockstar sample → band "Proceed with caution", salary item `unknown` or `risk`, ≥6 `unanswered`, intensity language flagged `risk` with verbatim evidence.
-3. Series B sample → `isEarlyStage === false`, founder-only questions absent.
-4. Thin sample → `status === "thin"`, band "Not enough to judge", `confidence === "low"`.
-5. Empty / whitespace input → `status === "empty"`, no throw.
-6. Missing fields: posting with no pay, no location → those items `unknown`, matching questions present.
-7. API-shaped input: `normalizeFromApi(apiFixture)` maps fields; comp built from `comp_min/max/currency/period`; nulls tolerated; object with `description_text: null` handled without throw.
-8. `parseSpeedrunJobUrl` accept/reject table (include every reject case in Step 2).
-9. Hostile input: posting containing `<script>alert(1)</script><img src=x onerror=alert(1)>` → engine returns it only as plain strings; `briefToMarkdown` output contains no raw `<script` or `<img`.
-10. `encodeShare`/`decodeShare` round-trip with non-ASCII (Korean + emoji) text; garbage fragment → `null`.
-11. Determinism: `analyze` twice on same input → deep-equal.
-12. Founder template fully filled → analyzer band is the top band; empty template → not top band.
-
-Run: `npm run test:unit` → all pass.
-
-### Step 6 — Playwright walkthrough `tests/e2e/` (≈8 min)
-Use the `webServer` from the config. Block real network to `speedrun-talent-network.com` in every test with `page.route` (fulfil from `apiFixture` or abort), so the suite is offline and deterministic. Save full-page screenshots to `tests/screenshots/`:
-- `a-sample-brief.png`: open `/`, pick the founding sample **with the keyboard** (Tab/Enter), generate, assert focus is on the result heading, the verdict band text, ≥1 checklist item of each status shown; click Copy as Markdown (grant clipboard permissions in the context and assert clipboard text starts with `#`).
-- `b-paste-brief.png`: type a pasted posting into the textarea, press `Control+Enter`, assert brief; also paste the hostile `<script>/<img onerror>` text and assert no dialog fired (`page.on("dialog")` fails the test) and the text appears literally.
-- `c-founder-template.png`: open `#/founder`, fill every field, assert live preview, reload and assert autosave restored, click "Check it with Worth Your Time" and assert top band.
-- `d-api-brief.png`: enter `https://speedrun-talent-network.com/jobs/<fixture-slug>`, route fulfils with fixture JSON, assert "Source: speedrun talent network public API".
-- `e-api-fallback.png`: route aborts / returns 500, assert error message and that focus is in the paste textarea.
-- `f-empty-error.png`: click generate with nothing → inline error with `role="alert"`.
-- Plus: `?` opens the shortcuts dialog, `Escape` closes it.
-- Optional: one `@axe-core/playwright` scan if quick; skip if it adds friction.
-
-Run: `npx playwright test` → all pass, PNGs exist. Commit-worthy screenshots stay under `tests/screenshots/` (not gitignored).
-
-### Step 7 — STATE/TEST_COMMANDS (≈1 min)
-Exactly these lines (driver runs each from repo root with `CI=1`):
-```
-npm run test:unit
-npx playwright test
-```
-Then run both lines yourself exactly as written, with `CI=1`, and paste the pass/fail counts into BUILD_REPORT.md.
-
-### Step 8 — GitHub Pages (≈3 min)
-Enable Pages from branch `main`, folder `/docs` (repo is public: `MadanChaollaPark/speedrun-worth-your-time`):
-```
-gh api -X POST repos/MadanChaollaPark/speedrun-worth-your-time/pages -f "source[branch]=main" -f "source[path]=/docs"
-# if it returns 409 (already exists):
-gh api -X PUT  repos/MadanChaollaPark/speedrun-worth-your-time/pages -f "source[branch]=main" -f "source[path]=/docs"
-gh api repos/MadanChaollaPark/speedrun-worth-your-time/pages --jq '.html_url,.source,.status'
-```
-Expected URL: `https://madanchaollapark.github.io/speedrun-worth-your-time/`. It will only serve the app after the driver pushes this round, so in BUILD_REPORT say "Pages enabled; live check pending driver push" (do not claim it is live). Do **not** push, do **not** create a `gh-pages` branch, do **not** add workflows. Local proof instead: start `node scripts/serve.mjs` in the background, `curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:4173/` and `/js/brief.js` → 200, then kill the server.
-
-### Step 9 — Docs (≈5 min), then stretch
-- `README.md`: what it is (2–3 sentences), live URL (marked "after first deploy"), how to run (`npm install`, `npm run serve` → http://127.0.0.1:4173), how to test (the two commands, plus `npx playwright install chromium` if browsers are missing), how to deploy (Pages from `main:/docs`, no build step), keyboard shortcuts table, privacy note (runs in browser; only speedrun board URLs call their public no-auth API), "not in v1" list. Keep the existing License section.
-- `docs/PRODUCT.md` (or `PRODUCT.md` at root): the idea, who it's for, how the score is computed (weights table, matches the code), what is not in v1 (no accounts, no LLM, no scraping of other sites, no resume matching, no jobs board), why it fits the speedrun talent team's three goals.
-- `CHANGELOG.md`: "Iteration 1" entry.
-- **Stretch, only if all above pass:** `APPLICATION_DRAFT.md` per GOAL.md DoD 6: (a) step-2 `ideas` pitch ≤1500 characters (print `wc -m` / a node count in BUILD_REPORT) + `demo_url` = the Pages URL; (b) About You (email `EMAIL_PLACEHOLDER`, full name Madan Chaolla Park, LinkedIn `LINKEDIN_URL_PLACEHOLDER`, website `PERSONAL_WEBSITE_PLACEHOLDER`, shipped_url https://16ram.com and/or the Pages URL, GitHub https://github.com/MadanChaollaPark) and Last Few Questions (region, availability, sponsorship, usage, join_network as ALL-CAPS placeholders with the exact option lists from RESEARCH.md). Header line: "DRAFT — not submitted. Do not submit from this repo." Use only the known facts in GOAL.md; invent nothing.
-
-## Acceptance criteria for this round (builder self-check before writing BUILD_REPORT)
-
-| # | Check | Command / evidence |
-|---|---|---|
-| A1 | Unit tests pass, ≥12 tests | `CI=1 npm run test:unit` exit 0; paste summary line |
-| A2 | E2E passes, screenshots a–f exist | `CI=1 npx playwright test` exit 0; `ls -la tests/screenshots` |
-| A3 | `STATE/TEST_COMMANDS` has exactly the two lines | `cat STATE/TEST_COMMANDS` |
-| A4 | No untrusted `innerHTML` | `grep -rn "innerHTML\|outerHTML\|insertAdjacentHTML\|document.write" docs/js` → none (or explain each literal-only use) |
-| A5 | No workflows, no secrets | `ls .github 2>/dev/null`; `grep -rniE "gh[pousr]_[A-Za-z0-9]{20,}\|api[_-]?key\|secret" --exclude-dir=node_modules --exclude-dir=research .` → nothing real |
-| A6 | Relative asset paths only | `grep -n 'src="/\|href="/' docs/index.html` → none |
-| A7 | Pages enabled from main:/docs | `gh api repos/MadanChaollaPark/speedrun-worth-your-time/pages --jq '.source'` |
-| A8 | Local server serves the app | curl 200 for `/` and `/js/brief.js` |
-| A9 | README + PRODUCT + CHANGELOG present and accurate | file list |
-| A10 | Tree clean of temp files | `git status --short` shows only intended files; no `test-results/` or `playwright-report/` tracked; no stray servers (`pgrep -af serve.mjs` empty) |
-
-## BUILD_REPORT.md must contain
-What you built; files created/changed; each command above with its real exit code and pass/fail counts; Playwright/Chromium version used and whether you installed a browser; the Pages API response; anything not done, skipped, or uncertain (be explicit). Reply in 5 lines.
-
-## Next iterations (for context, not this round)
-- Iter 2: verify live Pages URL after driver push (+ Playwright smoke against the live URL), APPLICATION_DRAFT.md if not done, reviewer must-fixes.
-- Iter 3+: polish (copywriting, design details, accessibility audit, more sample variety, print layout), live API smoke test kept optional (not in TEST_COMMANDS, so the driver suite stays offline).
-- From 2026-11-23 17:47 KST: package mode only (docs, draft, deploy, tests; no new features).
+1. `CI=1 npm run test:unit` exits 0, with ≥1 new evidence-trimming test, 0 failed, 0 skipped.
+2. `CI=1 npx playwright test` exits 0, including the axe spec, 0 failed, 0 skipped, and no live specs listed.
+3. `npm run test:live` exits 0 against the public Pages URL, and `tests/screenshots/live-{a,b,c}-*.png` exist.
+4. README and APPLICATION_DRAFT.md give the live URL with no "pending" wording. The draft's `ideas` is ≤1500 chars and still unsubmitted.
+5. Screenshots a/b/c show no skip-link overlay, no stray bar, and no mid-word evidence cuts.
+6. Zero serious/critical axe violations in light and dark.
+7. No workflow files, no secrets, no unsafe DOM sinks, worktree clean apart from intended changes, owner role line intact in GOAL.md and STATE/PLAN.md.

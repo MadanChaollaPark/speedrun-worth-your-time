@@ -14,6 +14,15 @@ test.beforeEach(async ({ page, context }) => {
 
 test('keyboard sample to brief, with verdict, checklist and Markdown copy', async ({ page }) => {
   await page.goto('/');
+  const skip = page.getByRole('link', { name: 'Skip to content' });
+  await expect(skip).toHaveCSS('clip-path', 'inset(50%)');
+  await page.keyboard.press('Tab');
+  await expect(skip).toBeFocused();
+  await expect(skip).toHaveCSS('clip-path', 'none');
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('main')).toBeFocused();
+  await expect(skip).toHaveCSS('clip-path', 'inset(50%)');
+
   const sample = page.getByRole('button', { name: /Founding Product Engineer/ });
   for (let step = 0; step < 14 && !(await sample.evaluate(element => element === document.activeElement)); step++) {
     await page.keyboard.press('Tab');
@@ -59,7 +68,7 @@ test('pasted posting shortcut and hostile markup rendered as text', async ({ pag
   expect(dialogAppeared).toBe(false);
 });
 
-test('founder fields, live preview, autosave and analyzer handoff', async ({ page }) => {
+test('founder fields, preview updates, autosave and analyzer handoff', async ({ page }) => {
   await page.goto('/#/founder');
   for (const [key, value] of Object.entries(founderDraft)) {
     const field = page.locator('#founder-' + key);
@@ -72,6 +81,7 @@ test('founder fields, live preview, autosave and analyzer handoff', async ({ pag
   await page.reload();
   for (const [key, value] of Object.entries(founderDraft)) await expect(page.locator('#founder-' + key)).toHaveValue(value);
   await expect(preview).toContainText('two pilot customers');
+  await expect(page.getByRole('link', { name: 'Skip to content' })).not.toBeFocused();
   await screenshot(page, 'c-founder-template');
   await page.getByRole('button', { name: 'Check it with Worth Your Time' }).click();
   await expect(resultTitle(page)).toBeFocused();

@@ -1,6 +1,6 @@
 # Checklist (orchestrator-owned)
 
-Statuses: TODO / IN-PROGRESS / VERIFIED (with evidence). Only mark VERIFIED after a command or inspection actually confirmed it. Last updated: iteration 1 review, 2026-11-23 KST.
+Statuses: TODO / IN-PROGRESS / VERIFIED (with evidence). Only mark VERIFIED after a command or inspection actually confirmed it. Last updated: iteration 2 review, 2026-11-23 07:20 KST.
 
 ## DoD 1 — Research captured
 - [VERIFIED] RESEARCH.md records live page, role/values, wizard map, existing products, inspiration board (#step-3), exact step-2 (`demo_url`, `ideas` ≤1500) and step-3 (About You, Last Few Questions) prompts and fields, with sources. Evidence: read in full at iter 1; screenshots and text dumps present under `research/`.
@@ -23,10 +23,13 @@ Statuses: TODO / IN-PROGRESS / VERIFIED (with evidence). Only mark VERIFIED afte
 
 ## DoD 4 — Live public link
 - [VERIFIED] GitHub Pages enabled from `main` `/docs` (no Actions workflow: token lacks `workflow` scope). Evidence: iter 1 `gh api .../pages` source main:/docs, status building; repo public.
-- [TODO] https://madanchaollapark.github.io/speedrun-worth-your-time/ opens without login and app works there (verify after driver push). Iter 1 review: HTTP 404, origin/main still 9ebd021 (not pushed).
-- [IN-PROGRESS] URL recorded in README and APPLICATION_DRAFT.md. Recorded in README:5 and APPLICATION_DRAFT.md:5 but marked pending; flip to live after deploy is verified.
+- [VERIFIED] https://madanchaollapark.github.io/speedrun-worth-your-time/ opens without login. Evidence: iter 2 orchestrator, 2026-11-22 23:35 KST: driver pushed 6fff783 (v01-iter01); `gh api .../pages/builds/latest` status `built`, commit 6fff783, no error; unauthenticated `curl` of `/` → 200; `js/{app,brief,samples,founder}.js`, `css/{app,print}.css`, `favicon.svg` → 200 with correct content types and byte-identical to `docs/` (`cmp`).
+- [VERIFIED] App works end-to-end on the live URL (sample → brief, paste → brief, founder template) in a real browser. Evidence: iter 2 reviewer `npm run test:live` exit 0 (4 passed with --retries=0; an earlier run had 1 flaky founder test that passed on retry), screenshots `tests/screenshots/live-*.png`; deployed commit 6fff783.
+- [VERIFIED] URL recorded in README and APPLICATION_DRAFT.md. Evidence: iter 2 reviewer read README.md:5 and APPLICATION_DRAFT.md:5; no pending wording.
 
 ## DoD 5 — Quality and original design
+- [VERIFIED] Polish from iter 1 review: skip link clipped when unfocused (docs/css/app.css:62-71), evidence trimmed at word boundaries with ellipses (docs/js/brief.js:133-155). Evidence: iter 2 reviewer viewed regenerated a/c screenshots; `CI=1 npm run test:unit` exit 0 (18 pass).
+- [VERIFIED] Automated accessibility scan (axe via `@axe-core/playwright`) on home, brief, founder and shortcuts dialog, light and dark: zero serious/critical violations. Evidence: iter 2 reviewer `CI=1 npx playwright test` exit 0 (19 passed incl. 8 axe).
 - [VERIFIED] Original visual design (not default theme, not talent-network look), print stylesheet, responsive. Evidence: iter 1 review — `CI=1 npm run test:unit` exit 0 (15 pass), `CI=1 npx playwright test` exit 0 (11 passed), code inspection; see STATE/REVIEW.md.
 - [VERIFIED] No invented company data presented as fact; samples labeled fictional. Evidence: iter 1 review — `CI=1 npm run test:unit` exit 0 (15 pass), `CI=1 npx playwright test` exit 0 (11 passed), code inspection; see STATE/REVIEW.md.
 - [VERIFIED] Security pass: no `innerHTML` with untrusted text, CSP meta, http(s)-only links with `rel="noopener noreferrer"`, host allow-list for API fetch, safe share-link decoding, no secrets in repo. Evidence: iter 1 review — `CI=1 npm run test:unit` exit 0 (15 pass), `CI=1 npx playwright test` exit 0 (11 passed), code inspection; see STATE/REVIEW.md.

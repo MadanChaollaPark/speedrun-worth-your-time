@@ -66,9 +66,9 @@ p, li, dd, h1, h2, h3, blockquote { overflow-wrap: anywhere; }
   z-index: 10;
   padding: .5rem 1rem;
   background: var(--sheet);
-  transform: translateY(-200%);
+  clip-path: inset(50%);
 }
-.skip:focus { transform: translateY(0); }
+.skip:focus { clip-path: none; }
 
 .site-header { border-block-end: 1px solid var(--line); }
 .header-inner { min-height: 4.6rem; display: flex; align-items: center; gap: 1.7rem; }

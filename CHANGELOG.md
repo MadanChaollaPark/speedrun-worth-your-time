@@ -1,5 +1,11 @@
 # Changelog
 
+## Iteration 2 · 2026-11-23
+
+- Verified the public GitHub Pages demo in Chromium and added a standalone smoke suite with screenshots for sample, paste, and founder flows.
+- Kept the skip link keyboard-accessible and hid it from full-page captures when unfocused. Trimmed evidence excerpts at word boundaries with ellipses.
+- Added axe scans for the empty intake, generated brief, founder template, and shortcuts dialog in light and dark modes.
+
 ## Iteration 1 · 2026-11-22
 
 - Built the static role checker with paste input, four fictional samples, public speedrun job lookup, and paste fallback.

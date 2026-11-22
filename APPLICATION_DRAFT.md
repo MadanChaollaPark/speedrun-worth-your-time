@@ -2,7 +2,7 @@ DRAFT — not submitted. Do not submit from this repo.
 
 ## Step 2 · Your idea
 
-`demo_url` · https://madanchaollapark.github.io/speedrun-worth-your-time/ (awaiting first app deployment)
+`demo_url` · https://madanchaollapark.github.io/speedrun-worth-your-time/
 
 ### ideas
 

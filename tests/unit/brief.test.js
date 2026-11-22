@@ -10,6 +10,7 @@ import { founderDraft, hostileText } from '../fixtures.js';
 
 const fromText = text => analyze(normalizeFromText(text));
 const row = (brief, id) => brief.checklist.find(item => item.id === id);
+const excerptText = evidence => evidence.replace(/^… | …$/g, '');
 
 test('founding role is detailed, early and supported by verbatim evidence', () => {
   const { text } = samples[0];
@@ -20,8 +21,38 @@ test('founding role is detailed, early and supported by verbatim evidence', () =
   assert.equal(row(brief, 'equity').status, 'signal');
   for (const { evidence } of brief.checklist) {
     assert.ok(evidence.length <= 160);
-    if (evidence !== 'Not mentioned in the posting') assert.ok(text.includes(evidence), evidence);
+    if (evidence !== 'Not mentioned in the posting') {
+      assert.ok(text.includes(excerptText(evidence)), evidence);
+    }
   }
+});
+
+test('long evidence trims whole words on both sides of its match', () => {
+  const line = 'Our onboarding includes a series of hands-on workshops for new engineers across the product organization. ' +
+    'We use TypeScript for the scheduling tools that help dispatchers coordinate multiple locations and give clinic administrators a reliable view of their queue. ' +
+    'The systems are deployed weekly alongside improvements proposed by clinic staff across the pilot program.';
+  const { evidence } = row(fromText(line), 'stack');
+  assert.match(evidence, /^… .+ …$/);
+  assert.ok(evidence.length <= 160);
+  const excerpt = evidence.slice(2, -2);
+  assert.match(excerpt, /\bTypeScript\b/);
+  const start = line.indexOf(excerpt);
+  assert.ok(start > 0);
+  assert.match(line[start - 1], /\s/);
+  assert.match(line[start + excerpt.length], /\s/);
+});
+
+test('a long line keeps the complete salary range near the end', () => {
+  const line = 'Base salary reflects the scope of the position and the experience needed to guide the technical roadmap. '.repeat(2) +
+    'The range for this role is $135,000 to $170,000 USD per year.';
+  const { evidence } = row(fromText(line), 'salary');
+  assert.match(evidence, /^… .+\$135,000 to \$170,000 USD per year\.$/);
+  assert.ok(evidence.length <= 160);
+});
+
+test('short evidence is returned unchanged', () => {
+  const line = 'You will work with React and TypeScript.';
+  assert.equal(row(fromText(line), 'stack').evidence, line);
 });
 
 test('rockstar language earns a caution with useful questions about missing terms', () => {
@@ -31,7 +62,7 @@ test('rockstar language earns a caution with useful questions about missing term
   assert.ok(['unknown', 'risk'].includes(row(brief, 'salary').status));
   assert.ok(brief.unanswered.length >= 6);
   assert.equal(row(brief, 'hours').status, 'risk');
-  assert.ok(text.includes(row(brief, 'hours').evidence));
+  assert.ok(text.includes(excerptText(row(brief, 'hours').evidence)));
   assert.ok(brief.unanswered.some(item => item.question.includes('next funding round')));
 });
 
