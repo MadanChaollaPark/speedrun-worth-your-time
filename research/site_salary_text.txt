@@ -1,0 +1,438 @@
+Companies
+Jobs
+Join the Network
+Apply to
+speedrun
+Sign in
+← All roles
+Founding Engineer Salary & Equity (2026)
+Data from
+35 real startup job postings
+with posted pay bands, computed live from the
+speedrun
+and a16z portfolio jobs board. No survey, no self-reported numbers: every figure below comes from an open role you can click into.
+$200k
+Median posted salary
+$160k
+-
+$227k
+Typical posted band
+82
+Open founding roles
+9%
+Open to remote
+01 · The role
+What Is a Founding Engineer?
+A founding engineer is one of the first engineers at a startup, usually somewhere in the first five hires, brought on before the product has proven itself. The work is not a slice of a system; it is the system. You ship version one of everything, own whatever breaks, make the architecture calls that stick for years, and interview the engineers who come after you.
+It is not a founder role. Founders hold founder stock and take the cap-table risk; a founding engineer is the earliest kind of employee, with a real salary plus an options grant that is large by employee standards and small by founder standards. The trade is deliberate: less cash than a big company would pay, more ownership and more surface area than a big company could ever offer.
+The "founding" prefix has also spread past engineering. On this board right now there are 82 founding-titled roles: 38 in engineering, plus founding account executives, founding designers, founding recruiters, and first hires of most other crafts. The chart below covers all of them, and you can filter down to engineering in one click.
+02 · Salary
+What Founding Engineers Actually Get Paid
+35 of the 82 open founding roles publish an annual pay band. Each bar below is the count of roles whose band midpoint falls in that $25k range. Hover for the exact numbers;
+click a bar to see the real roles behind it
+in the list further down.
+Posted Salary Bands, Open Founding Roles
+midpoint of each posted band · n = 35 · USD, annual
+0
+3
+6
+9
+12
+$50k
+$100k
+$150k
+$200k
+$250k
+$300k
+p25
+$175k
+median
+$200k
+p75
+$219k
+View the same data as a table
+Band midpoint
+Open roles
+Share
+$50k to $75k
+2
+6%
+$75k to $100k
+1
+3%
+$100k to $125k
+0
+0%
+$125k to $150k
+3
+9%
+$150k to $175k
+2
+6%
+$175k to $200k
+9
+26%
+$200k to $225k
+11
+31%
+$225k to $250k
+3
+9%
+$250k to $275k
+2
+6%
+$275k to $300k
+0
+0%
+$300k to $325k
+1
+3%
+$325k to $350k
+1
+3%
+47 more founding roles are open without a posted band. They appear in the roles list below but are excluded from every salary figure on this page.
+03 · Equity
+Founding Engineer Equity, and What It Might Be Worth
+Salary is the posted half of founding compensation. The other half almost never appears in a posting: of the 82 founding roles open right now, essentially none publish an equity number. Market practice is roughly
+0.5% to 3%
+, highest for the very first engineer at a pre-seed company, stepping down with each hire and each priced round. Grants are almost always stock options on a four-year vest with a one-year cliff.
+Two things eat a grant between offer and exit: dilution, because every priced round issues new shares (commonly 15% to 25% per round), and the strike price you pay to exercise. The calculator below does the dilution math honestly. It ignores liquidation preferences, strike price, and taxes, so read it as an upper bound on the grant itself.
+Equity grant
+1.00%
+Exit valuation
+$500m
+Priced rounds after you join
+3
+Dilution per round
+20%
+Ownership at exit
+0.51%
+Gross value at exit
+$2.6m
+Years of median founding salary
+12.8
+Illustrative math only, not advice: real outcomes depend on preference stacks, option strike, refresh grants, taxes, and the terms of your specific offer.
+04 · Open now
+Open Founding Roles Right Now
+Founding engineer jobs →
+Every founding seat on the board →
+All · 82
+Engineering · 38
+Sales · 15
+Operations · 11
+Design · 6
+Other · 5
+Product · 4
+Marketing · 2
+Research · 1
+Showing all 82 roles
+Founding Engineer (Fullstack TypeScript)
+Cluely · San Francisco
+$250k - $350k
+View role →
+Founding Security Engineer
+Rillet · New York City
+$200k - $260k
+View role →
+Founding GRC Analyst
+Rillet · New York City
+$190k - $250k
+View role →
+Founding Engineer
+Omi Health · New York City, NY
+$150k - $250k
+View role →
+Founding Forward Deployment Engineer
+Glimpse · NYC HQ
+$195k - $250k
+View role →
+Founding Engineer
+Cascade · New York City, NY
+$150k - $250k
+View role →
+Founding Engineer
+KiloForge · San Francisco
+$185k - $250k
+View role →
+Founding Developer Tooling Engineer - Middle East
+Applied Intuition · KSA - RYD G
+SAR 180k - SAR 850k
+View role →
+Founding Software Integration Engineer - Middle East
+Applied Intuition · KSA - RYD G
+SAR 180k - SAR 850k
+View role →
+Founding Product Growth Engineer
+HappyRobot · San Francisco
+$170k - $220k
+View role →
+Founding Security Engineer
+Odyssey · New York, NY · Remote OK
+$180k - $220k
+View role →
+Founding Software Engineer
+Clouted (fka - Clout Kitchen) · San Francisco
+$140k - $210k
+View role →
+Founding Engineer
+Motherboard · San Francisco, CA
+$150k - $200k
+View role →
+Founding Engineer
+Taya · San Francisco, CA
+$150k - $200k
+View role →
+Founding ML Engineer
+Philyron · San Francisco, CA
+$140k - $180k
+View role →
+Founding Fleet Reliability Engineer - Middle East
+Applied Intuition · KSA - RYD G
+SAR 180k - SAR 275k
+View role →
+Founding ML Engineer, Post-Training
+Aghanim · Belgrade
+View role →
+Founding AI Agent Engineer
+Alleviate Health · San Francisco
+View role →
+Founding Machine Learning Engineer
+Adaptive Security · NYC
+View role →
+Founding AI Engineer
+Corlen · San Francisco, CA
+View role →
+Founding Engineer
+Corlen · San Francisco, CA
+View role →
+Founding Software Engineer
+Basis · San Francisco, CA
+View role →
+Founding Senior Engineer
+Baro · New York City, NY
+View role →
+Founding ML Engineer
+Munari Labs · San Francisco, CA
+View role →
+Founding Engineer (Physical AI Infrastructure)
+Munari Labs · San Francisco, CA
+View role →
+Founding Robotics Engineer
+Munari Labs · San Francisco, CA
+View role →
+Founding Engineer
+Maestro · Austin, TX
+View role →
+Founding Engineer
+Stealth · London, UK
+View role →
+Member of Technical Staff, Founding Engineer
+Primitive Labs · San Francisco, CA
+View role →
+Founding iOS Engineer
+Sekai · San Francisco
+View role →
+Founding Product Infrastructure Engineer
+Emanate (fka- Highstride AI) · San Francisco
+View role →
+Founding ML Engineer
+ElectroKare · New York City, NY
+View role →
+Founding Member of Technical Staff
+Tenera · San Francisco, CA
+View role →
+Founding Forward Deployed Engineer
+Emanate (fka- Highstride AI) · San Francisco
+View role →
+Founding Product Engineer
+Alleviate Health · San Francisco
+View role →
+Founding Senior Software Engineer (Full Stack) | Healthcare
+EliseAI · New York City
+View role →
+Founding Software Engineer | Healthcare
+EliseAI · New York City
+View role →
+Founding Backend Engineer
+Intro · Venice Beach, CA
+View role →
+Founding Account Executive
+Sola · New York City
+$275k - $375k
+View role →
+Founding Solutions Engineer
+Sola · New York City
+$225k - $300k
+View role →
+Founding Product Manager
+TypeSafe · San Francisco Office
+$204k - $285k
+View role →
+Founding Legal
+TypeSafe · San Francisco Office
+$226k - $280k
+View role →
+Channel Sales Manager (founding)
+Sprig · San Francisco, CA
+$220k - $260k
+View role →
+Founding Product Designer
+Intro · Venice Beach, CA
+$175k - $250k
+View role →
+Founding Product Manager, Life Sciences Workflows
+Turquoise Health · Remote · Remote OK
+$185k - $245k
+View role →
+Founding Member of Operations Staff, GTM
+Preference Model · San Francisco
+$180k - $240k
+View role →
+Founding Product Manager
+Svix · San Francisco (On-Site)
+$180k - $230k
+View role →
+Founding Producer, Design Operations
+Town · San Francisco
+$150k - $225k
+View role →
+Founding Commercial Account Manager
+Hex · New York
+$200k - $215k
+View role →
+Founding Role, Multifamily Partnerships
+Snag · New York City, NY
+$150k - $210k
+View role →
+Founding GTM Recruiter
+Fal · San Francisco
+$160k - $200k
+View role →
+Founding GTM Recruiter
+Town · San Francisco
+$150k - $200k
+View role →
+Founding Technical Recruiter
+Town · San Francisco
+$150k - $200k
+View role →
+Founding Product Designer
+Sentra · San Francisco / Bay Area
+$150k - $170k
+View role →
+Founding Design Engineer
+Sirius Technology · San Francisco
+$120k - $160k
+View role →
+Founding Creator Strategy & Partnerships
+Clouted (fka - Clout Kitchen) · New York
+$70k - $90k
+View role →
+Founding Customer Experience Associate
+Clair Health · New York, NY Menlo Park, CA
+$60k - $85k
+View role →
+Founding Head of Go-to-Market
+Emanate (fka- Highstride AI) · San Francisco
+View role →
+Founding Head of Sales
+Emanate (fka- Highstride AI) · San Francisco
+View role →
+Founding Content Creator
+K-ID · United States · Remote OK
+View role →
+Founding Finance
+Mirendil · San Francisco
+View role →
+Member of Technical Staff, Founding GTM
+Mirendil · San Francisco
+View role →
+Founding GTM Recruiter
+Prosper AI · New York City
+View role →
+Founding GTM Lead
+Schemata (Traverse3d) · Remote · Remote OK
+View role →
+Founding Recruiter
+Prosper AI · Barcelona
+View role →
+Founding Proposal Manager
+Schemata (Traverse3d) · Remote · Remote OK
+View role →
+Founding Design Engineer
+Probook · Manhattan
+View role →
+Founding Strategic Account Executive
+HappyRobot · Sydney
+View role →
+Recruiting Coordinator (Founding Talent Operations)
+Arena · SF Bay Area
+View role →
+Founding Team Builder
+Unlimited Industries · San Francisco
+View role →
+Founding Recruiter
+Forgepoint · New York City
+View role →
+Founding Research Engineer
+Basis · San Francisco, CA
+View role →
+Founding GTM Recruiter - Japan
+Cognition Technologies · Tokyo
+View role →
+Founding Recruiting Operations Coordinator - APJ
+Cognition Technologies · Singapore
+View role →
+Founding Account Executive
+Flexport · Warsaw, Poland
+View role →
+Founding Deployment Strategist
+Specter · San Francisco
+View role →
+Founding AI Product Design Lead
+Maestro · Austin, TX
+View role →
+Founding Account Executive
+Bead · San Francisco, CA
+View role →
+Open Call for Founders / Founding Teams - Product Management and Engineering
+Mercury Technologies · San Francisco, CA, New York, NY, Portland, OR, or Remote within Canada or United States · Remote OK
+View role →
+Founding Account Executive
+Emanate (fka- Highstride AI) · San Francisco
+View role →
+Founding Account Executive
+Concourse · New York City
+View role →
+Founding Product Marketer
+Mem · Remote – PST Working Hours · Remote OK
+View role →
+05 · FAQ
+Founding Engineer Questions, Answered With Data
+What Is a Founding Engineer?
+A founding engineer is one of the first engineers at a startup, usually employee one through five, hired before the product has found its market. The job is to build version one across the whole stack, set the technical culture every later hire inherits, and trade some cash compensation for a meaningful equity stake. It is an employee role, not a co-founder role: you get a salary and options rather than founder stock.
+How Much Does a Founding Engineer Make?
+Across the 35 open founding roles with posted pay on the a16z speedrun talent network right now, the median posted band runs $160k to $227k, and the median band midpoint is $200k. The middle half of postings sits between $175k and $219k at the midpoint. These are posted figures from live job postings, recomputed continuously, not survey estimates.
+How Much Equity Does a Founding Engineer Get?
+Typical founding engineer equity runs roughly 0.5% to 3%, highest for the first engineer at a pre-seed company and stepping down with each hire and each funding round. Almost no posting publishes an exact equity number, so treat the range as market practice rather than a posted figure, and use the calculator on this page to reason about what a grant could be worth after dilution.
+Is a Founding Engineer a Founder?
+No. Founders hold founder stock, sit on the cap table from day zero, and usually take below-market salaries. A founding engineer is the earliest flavor of employee: real salary, an options grant measured in single-digit percentages or less, and typically a four-year vest with a one-year cliff. The title signals scope and timing, not ownership class.
+Where Are Founding Engineer Jobs Located?
+Of the 82 founding roles open across the a16z portfolio right now, the top cities are San Francisco (39), New York (19), KSA - RYD G (3), and 9% are open to remote. Founding roles concentrate where the earliest-stage companies are, which in this corpus means San Francisco and New York first.
+Methodology: salary figures are computed from the 35 open founding-titled roles with a posted annual compensation band on the a16z
+speedrun
+talent network jobs board, November 2026, out of 82 founding roles at 57 companies. Bands are USD-normalized; midpoints are the average of each band's posted floor and ceiling. Roles without a posted band, with non-annual pay periods, or with implausible bands are listed but excluded from the math. The page recomputes as postings change.
+Want a founding seat without cold outreach? One signup, and we route you to the founders most likely to need you.
+Join The Network
+© 2026 a16z
+speedrun
+speedrun
+→
+Portfolio →
+Network stats →
+a16z portfolio jobs →
+Layoff tracker →
+Developers →
+State of Talent 2026 →
+Legal
+Report a problem

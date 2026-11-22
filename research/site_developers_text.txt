@@ -1,0 +1,164 @@
+Companies
+Jobs
+Join the Network
+Apply to
+speedrun
+Sign in
+for_your_agents
+Everything the jobs board knows, readable by machines: live open roles across the
+speedrun
+and a16z portfolios, hiring companies, curated collections, and aggregate comp data. Two doors, same data, same freshness. No auth, no keys, no cost.
+01 · REST API
+/api/v1
+Versioned JSON over HTTPS at
+https://speedrun-talent-network.com/api/v1
+. Read-only. Open CORS, so it works straight from a browser or an agent runtime. Responses are edge-cached for 1 to 5 minutes. The spec at
+/api/v1/openapi.json
+is complete and accurate to the implementation.
+Endpoint
+What it returns
+GET /api/v1/jobs
+Search open roles: q, fn, spec, sen, lvl, emp, loc, metro, wp (remote | hybrid | onsite), comp, comp_max, comp_any, posted (24h | 7d | 30d), stage, size, industry, lab, bigtech, portfolio, cohort, company, stealth, scope (speedrun | portfolio | everywhere), sort, page. Returns jobs + live facet counts + total.
+GET /api/v1/jobs/{id}
+One role: full description text, posted pay band, how to apply. Closed roles return status:"closed".
+GET /api/v1/companies
+Every portfolio company with at least one live role, most open roles first.
+GET /api/v1/companies/{slug}
+Company profile + all of its live roles.
+GET /api/v1/collections
+Curated collections: portfolio tiers, core industries, hubs, investors, signals. Live counts.
+GET /api/v1/collections/{slug}
+One collection with ranked member companies.
+GET /api/v1/stats/hiring
+Aggregate hiring data: demand mix, posted pay bands by function, remote share, top cities.
+GET /api/v1/openapi.json
+The complete OpenAPI 3.1 spec.
+Try it:
+curl "https://speedrun-talent-network.com/api/v1/jobs?fn=engineering&loc=remote&comp=200000&source=my-agent"
+Errors come back as
+{"error":{"code","message"}}
+with a matching HTTP status.
+Every list is capped and paginated; responses carry
+page
+,
+page_size
+,
+total_pages
+. Job searches also carry
+has_more
+and
+next_page
+: stop paging when
+has_more
+is false (pages stop at 200).
+Jobs search speaks the board's exact filter vocabulary, and every response includes live facet counts so you can discover valid values instead of guessing.
+Pass
+?source=your-agent-name
+on any call. It is optional, echoed back in the response, and how we notice (and prioritize) your integration. On
+/api/v1/jobs
+it also stamps
+utm_source=<your name>&utm_medium=agent
+onto each job
+url
+, so clicks from your integration are attributable; omit
+source
+for clean canonical urls.
+Unannounced companies appear as
+"Stealth"
+with masked titles. That masking happens in the query layer; there is no parameter that reveals them.
+scope
+on jobs search takes three values:
+speedrun
+narrows results to
+speedrun
+portfolio companies only,
+portfolio
+(the default) covers the full a16z portfolio, and
+everywhere
+widens past the portfolio into the broader startup universe when that scope is live on the site.
+02 · MCP server
+mcp.speedrun-talent-network.com
+A remote MCP server (streamable HTTP, no auth) for Claude and any other MCP client. Same data and guards as the REST API, packaged as tools with descriptions agents can use well. Beyond reads, it can also act for a candidate who asks:
+join_network
+signs them up (idempotent, safe to retry), and
+express_interest
+takes a job id and returns the canonical apply info plus a link where the candidate can join the network with their own details. It stores no personal data.
+join_network
+is consent-first: your agent should only call it at the candidate's explicit direction. Neither tool ever submits a job application anywhere.
+https://mcp.speedrun-talent-network.com/mcp
+claude.ai / Claude Desktop:
+Settings > Connectors > Add custom connector, then paste the URL above.
+Claude Code:
+claude mcp add --transport http speedrun-talent https://mcp.speedrun-talent-network.com/mcp
+Any client that reads an
+mcpServers
+config:
+{ "mcpServers": { "speedrun-talent": { "type": "http", "url": "https://mcp.speedrun-talent-network.com/mcp" } } }
+Tool
+Does
+search_jobs
+mirrors /api/v1/jobs: full-text + facet search over every live role
+get_job
+one role with description and how to apply
+get_company
+company profile + open roles
+list_collections
+curated collections with live counts
+get_collection
+ranked members of one collection
+get_hiring_stats
+aggregate hiring + comp data
+list_companies
+raw roster of hiring companies
+get_network_info
+what the talent network is and why candidates join
+join_network
+add a candidate to the network, with their consent
+express_interest
+get the canonical apply info for a role plus a link to join the network
+Example prompts
+(once connected, try these in your client):
+"Find senior ML engineering roles at a16z portfolio startups that pay at least $250k and are open to remote."
+"Tell me about the companies hiring in the defense collection, then pull the full posting for the most senior role at one of them."
+"What do a16z portfolio startups pay for product roles right now?"
+"I like these roles. Add me to the speedrun talent network." (the agent will collect your details and ask before calling
+join_network
+)
+03 · Ground rules
+fair_use
+Reads are open and unauthenticated. The candidate action
+join_network
+is consent-first: call it only at the candidate's explicit direction.
+express_interest
+takes only a job id and stores no personal data. Neither submits a job application anywhere, and abuse gets the write surface switched off.
+Link people to the canonical
+url
+fields on
+speedrun
+-talent-network.com rather than re-hosting listings; that is where roles stay live and current.
+Data refreshes continuously from each company's own job board; cached responses can lag a few minutes.
+Please identify yourself with
+?source=
+. Heavy anonymous scraping gets rate-limited at the edge; the API is the better deal.
+Also machine-readable:
+/llms.txt
+,
+/jobs.md
+(every open role as markdown), and
+/jobs.rss
+.
+Building something on this? The talent team reads
+write-sr-talent@a16z.com
+.
+© 2026 a16z
+speedrun
+speedrun
+→
+Portfolio →
+Network stats →
+a16z portfolio jobs →
+Layoff tracker →
+Developers →
+State of Talent 2026 →
+Legal
+Report a problem

@@ -1,0 +1,28 @@
+# Loop / machine
+STATE/logs/
+STATE/HEARTBEAT
+STATE/driver.out
+STATE/DRIVER_SHA256
+STATE/ALL_DONE
+loop.out
+__pycache__/
+*.pyc
+.venv/
+venv/
+node_modules/
+dist-cache/
+.DS_Store
+*.bak.*
+
+# Do not republish the talent-network client bundles used only as research artifacts
+research/TalentSystemsPitch*.js
+research/client.*.js
+research/page.*.js
+research/jsx-runtime*.js
+research/index.C5BVv2q5.js
+research/inline_scripts/
+
+# Local env / secrets
+.env
+.env.*
+!.env.example

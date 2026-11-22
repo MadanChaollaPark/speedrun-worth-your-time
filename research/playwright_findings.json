@@ -1,0 +1,1150 @@
+{
+  "notes": [],
+  "user_hash_step3": {
+    "url": "https://speedrun-talent-network.com/product-engineer/#step-3",
+    "heading": "Where This Could Go",
+    "text": "Companies\nJobs\nJoin the Network\nApply to\nspeedrun\nSign in\nStep 2 of 8: Where This Could Go\nWhere This Could Go\n2\nof\n8\nWhere This Could Go\nThere are a lot of directions we could take this. The goal is to help both founders and job seekers, and a handful of products out there have really inspired us.\nFor job seekers\ncareer-ops\n(opens in a new tab)\nis an open-source job search agent that runs in your terminal. It scores each job against your CV and tailors your resume, and you still press Submit.\nTsenta\n(opens in a new tab)\nis an AI career agent that finds roles that fit and applies for you.\nFor both sides\nJack & Jill\n(opens in a new tab)\ngives each side of the market its own AI agent. Jack works for the job seeker, Jill works for the company, and together they make the introduction.\nFor founders\nJuicebox\n(opens in a new tab)\nand\nParaform\n(opens in a new tab)\nhelp founders hit their hiring goals: Juicebox with AI search and sourcing agents, Paraform by putting their hardest roles in front of a network of expert recruiters.\nAnd a nod to\ngstack\n(opens in a new tab)\n. It has nothing to do with hiring, but it is genuinely useful to builders, and that kind of usefulness builds a brand people want to work with.\nNext up\nWhat you'd build.\n←\nBack\nContinue\n© 2026 a16z\nspeedrun\nspeedrun\n→\nPortfolio →\nNetwork stats →\na16z portfolio jobs →\nLayoff tracker →\nDevelopers →\nState of Talent 2026 →\nLegal\nReport a problem"
+  },
+  "steps": [
+    {
+      "step": "intro-load",
+      "hash": "",
+      "heading": "The a16z speedrun Talent Team Is Hiring a Product Engineer",
+      "fields": {
+        "heading": "The a16z speedrun Talent Team Is Hiring a Product Engineer",
+        "hash": "",
+        "progress": null,
+        "url": "https://speedrun-talent-network.com/product-engineer/",
+        "inputs": [
+          {
+            "tag": "textarea",
+            "type": "textarea",
+            "name": null,
+            "id": null,
+            "placeholder": "What happened? (optional — we can see the technical details)",
+            "required": false,
+            "maxLength": 2000,
+            "accept": null,
+            "label": "What happened?",
+            "describedBy": [],
+            "value": ""
+          }
+        ],
+        "buttons": [
+          {
+            "type": "button",
+            "text": "",
+            "className": "srn-menu-btn",
+            "disabled": false,
+            "aria": "Menu"
+          },
+          {
+            "type": "button",
+            "text": "",
+            "className": "tn-id-trigger",
+            "disabled": false,
+            "aria": "Your account"
+          },
+          {
+            "type": "button",
+            "text": "Sign out",
+            "className": "tn-id-menu-item tn-id-menu-item--signout sr-text-button",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "submit",
+            "text": "GET STARTED",
+            "className": "sr-btn sr-btn-hud sr-btn--lg tsp-cta",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "Legal",
+            "className": "tn-footer-legal-btn",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "REPORT A PROBLEM",
+            "className": "tn-footer-bug-btn",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "Close",
+            "className": "tn-footer-bug-close",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "submit",
+            "text": "Submit",
+            "className": "sr-btn sr-btn--md sr-btn-primary",
+            "disabled": false,
+            "aria": null
+          }
+        ],
+        "groups": []
+      },
+      "text": "Companies\nJobs\nJoin the Network\nApply to\nspeedrun\nSign in\nNow hiring · Contractor · In person in San Francisco · Students and co-ops welcome\nThe\na16z speedrun\nTalent Team Is Hiring a\nProduct Engineer\na16z speedrun\ninvests up to $1M in new startups and backs them with customers and talent. We're the talent part: we help\nspeedrun\nfounders build their early teams, the first engineers, designers, and operators.\nWhat drives us\nFounders first.\nHiring an early team is hard, and it matters. We help founders do it well.\nEarly teams, built right.\nThe first hires shape everything that comes after. We help get them right.\nJob hunting sux.\nFor job seekers and founders alike. We build tools that are genuinely useful to job seekers, not ads for our own companies, and that trust is what earns us the right to point people to\nspeedrun\nroles worth their time.\nAs our Product Engineer, you'd own the products candidates and founders use, end to end: from the idea and the design to shipping and deploying it. It's an in-person contract role in San Francisco, and students and co-ops are welcome.\nHow it works\nSee what we've built.\nShare one idea, with a link.\nTell us about yourself.\nGet started\n© 2026 a16z\nspeedrun\nspeedrun\n→\nPortfolio →\nNetwork stats →\na16z portfolio jobs →\nLayoff tracker →\nDevelopers →\nState of Talent 2026 →\nLegal\nReport a problem"
+    },
+    {
+      "step": 1,
+      "hash": "#step-1",
+      "heading": "The a16z speedrun Talent Team Is Hiring a Product Engineer",
+      "fields": {
+        "heading": "The a16z speedrun Talent Team Is Hiring a Product Engineer",
+        "hash": "#step-1",
+        "progress": null,
+        "url": "https://speedrun-talent-network.com/product-engineer/#step-1",
+        "inputs": [
+          {
+            "tag": "textarea",
+            "type": "textarea",
+            "name": null,
+            "id": null,
+            "placeholder": "What happened? (optional — we can see the technical details)",
+            "required": false,
+            "maxLength": 2000,
+            "accept": null,
+            "label": "What happened?",
+            "describedBy": [],
+            "value": ""
+          }
+        ],
+        "buttons": [
+          {
+            "type": "button",
+            "text": "",
+            "className": "srn-menu-btn",
+            "disabled": false,
+            "aria": "Menu"
+          },
+          {
+            "type": "button",
+            "text": "",
+            "className": "tn-id-trigger",
+            "disabled": false,
+            "aria": "Your account"
+          },
+          {
+            "type": "button",
+            "text": "Sign out",
+            "className": "tn-id-menu-item tn-id-menu-item--signout sr-text-button",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "submit",
+            "text": "GET STARTED",
+            "className": "sr-btn sr-btn-hud sr-btn--lg tsp-cta",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "Legal",
+            "className": "tn-footer-legal-btn",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "REPORT A PROBLEM",
+            "className": "tn-footer-bug-btn",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "Close",
+            "className": "tn-footer-bug-close",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "submit",
+            "text": "Submit",
+            "className": "sr-btn sr-btn--md sr-btn-primary",
+            "disabled": false,
+            "aria": null
+          }
+        ],
+        "groups": []
+      },
+      "text": "Companies\nJobs\nJoin the Network\nApply to\nspeedrun\nSign in\nIntro\nNow hiring · Contractor · In person in San Francisco · Students and co-ops welcome\nThe\na16z speedrun\nTalent Team Is Hiring a\nProduct Engineer\na16z speedrun\ninvests up to $1M in new startups and backs them with customers and talent. We're the talent part: we help\nspeedrun\nfounders build their early teams, the first engineers, designers, and operators.\nWhat drives us\nFounders first.\nHiring an early team is hard, and it matters. We help founders do it well.\nEarly teams, built right.\nThe first hires shape everything that comes after. We help get them right.\nJob hunting sux.\nFor job seekers and founders alike. We build tools that are genuinely useful to job seekers, not ads for our own companies, and that trust is what earns us the right to point people to\nspeedrun\nroles worth their time.\nAs our Product Engineer, you'd own the products candidates and founders use, end to end: from the idea and the design to shipping and deploying it. It's an in-person contract role in San Francisco, and students and co-ops are welcome.\nHow it works\nSee what we've built.\nShare one idea, with a link.\nTell us about yourself.\nGet started\n© 2026 a16z\nspeedrun\nspeedrun\n→\nPortfolio →\nNetwork stats →\na16z portfolio jobs →\nLayoff tracker →\nDevelopers →\nState of Talent 2026 →\nLegal\nReport a problem"
+    },
+    {
+      "step": 2,
+      "hash": "#step-2",
+      "heading": "Job Hunting Sux. Here's What We've Built So Far.",
+      "fields": {
+        "heading": "Job Hunting Sux. Here's What We've Built So Far.",
+        "hash": "#step-2",
+        "progress": "WHAT WE'VE BUILT\n1 OF 8",
+        "url": "https://speedrun-talent-network.com/product-engineer/#step-2",
+        "inputs": [
+          {
+            "tag": "textarea",
+            "type": "textarea",
+            "name": null,
+            "id": null,
+            "placeholder": "What happened? (optional — we can see the technical details)",
+            "required": false,
+            "maxLength": 2000,
+            "accept": null,
+            "label": "What happened?",
+            "describedBy": [],
+            "value": ""
+          }
+        ],
+        "buttons": [
+          {
+            "type": "button",
+            "text": "",
+            "className": "srn-menu-btn",
+            "disabled": false,
+            "aria": "Menu"
+          },
+          {
+            "type": "button",
+            "text": "",
+            "className": "tn-id-trigger",
+            "disabled": false,
+            "aria": "Your account"
+          },
+          {
+            "type": "button",
+            "text": "Sign out",
+            "className": "tn-id-menu-item tn-id-menu-item--signout sr-text-button",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "Jobs board\n/jobs",
+            "className": "",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "Signup and profiles\n/join",
+            "className": "",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "Salary tool\n/founding-engineer-salary",
+            "className": "",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "Layoffs tracker\n/layoffs",
+            "className": "",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "job hunting sux\njobhuntingsux.com",
+            "className": "",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "MCP server for AI agents\n/developers",
+            "className": "",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "←\nBACK",
+            "className": "sr-btn sr-btn-ghost sr-btn--md tsp-back",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "submit",
+            "text": "CONTINUE",
+            "className": "sr-btn sr-btn-primary sr-btn--lg tsp-next",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "Legal",
+            "className": "tn-footer-legal-btn",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "REPORT A PROBLEM",
+            "className": "tn-footer-bug-btn",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "Close",
+            "className": "tn-footer-bug-close",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "submit",
+            "text": "Submit",
+            "className": "sr-btn sr-btn--md sr-btn-primary",
+            "disabled": false,
+            "aria": null
+          }
+        ],
+        "groups": []
+      },
+      "text": "Companies\nJobs\nJoin the Network\nApply to\nspeedrun\nSign in\nStep 1 of 8: What We've Built\nWhat We've Built\n1\nof\n8\nJob Hunting Sux. Here's What We've Built So Far.\nWe run a jobs board, signup and profiles, salary and layoff tools, job hunting sux, and an MCP server for AI agents.\nJobs board\n/jobs\nSignup and profiles\n/join\nSalary tool\n/founding-engineer-salary\nLayoffs tracker\n/layoffs\njob hunting sux\njobhuntingsux.com\nMCP server for AI agents\n/developers\nNot pictured: the tools\nspeedrun\nfounders use to hire from the network. Those stay behind the curtain, but you'd work on them too.\nNext up\nWhere this could go.\n←\nBack\nContinue\n© 2026 a16z\nspeedrun\nspeedrun\n→\nPortfolio →\nNetwork stats →\na16z portfolio jobs →\nLayoff tracker →\nDevelopers →\nState of Talent 2026 →\nLegal\nReport a problem"
+    },
+    {
+      "step": 3,
+      "hash": "#step-3",
+      "heading": "Where This Could Go",
+      "fields": {
+        "heading": "Where This Could Go",
+        "hash": "#step-3",
+        "progress": "WHERE THIS COULD GO\n2 OF 8",
+        "url": "https://speedrun-talent-network.com/product-engineer/#step-3",
+        "inputs": [
+          {
+            "tag": "textarea",
+            "type": "textarea",
+            "name": null,
+            "id": null,
+            "placeholder": "What happened? (optional — we can see the technical details)",
+            "required": false,
+            "maxLength": 2000,
+            "accept": null,
+            "label": "What happened?",
+            "describedBy": [],
+            "value": ""
+          }
+        ],
+        "buttons": [
+          {
+            "type": "button",
+            "text": "",
+            "className": "srn-menu-btn",
+            "disabled": false,
+            "aria": "Menu"
+          },
+          {
+            "type": "button",
+            "text": "",
+            "className": "tn-id-trigger",
+            "disabled": false,
+            "aria": "Your account"
+          },
+          {
+            "type": "button",
+            "text": "Sign out",
+            "className": "tn-id-menu-item tn-id-menu-item--signout sr-text-button",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "←\nBACK",
+            "className": "sr-btn sr-btn-ghost sr-btn--md tsp-back",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "submit",
+            "text": "CONTINUE",
+            "className": "sr-btn sr-btn-primary sr-btn--lg tsp-next",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "Legal",
+            "className": "tn-footer-legal-btn",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "REPORT A PROBLEM",
+            "className": "tn-footer-bug-btn",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "Close",
+            "className": "tn-footer-bug-close",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "submit",
+            "text": "Submit",
+            "className": "sr-btn sr-btn--md sr-btn-primary",
+            "disabled": false,
+            "aria": null
+          }
+        ],
+        "groups": []
+      },
+      "text": "Companies\nJobs\nJoin the Network\nApply to\nspeedrun\nSign in\nStep 2 of 8: Where This Could Go\nWhere This Could Go\n2\nof\n8\nWhere This Could Go\nThere are a lot of directions we could take this. The goal is to help both founders and job seekers, and a handful of products out there have really inspired us.\nFor job seekers\ncareer-ops\n(opens in a new tab)\nis an open-source job search agent that runs in your terminal. It scores each job against your CV and tailors your resume, and you still press Submit.\nTsenta\n(opens in a new tab)\nis an AI career agent that finds roles that fit and applies for you.\nFor both sides\nJack & Jill\n(opens in a new tab)\ngives each side of the market its own AI agent. Jack works for the job seeker, Jill works for the company, and together they make the introduction.\nFor founders\nJuicebox\n(opens in a new tab)\nand\nParaform\n(opens in a new tab)\nhelp founders hit their hiring goals: Juicebox with AI search and sourcing agents, Paraform by putting their hardest roles in front of a network of expert recruiters.\nAnd a nod to\ngstack\n(opens in a new tab)\n. It has nothing to do with hiring, but it is genuinely useful to builders, and that kind of usefulness builds a brand people want to work with.\nNext up\nWhat you'd build.\n←\nBack\nContinue\n© 2026 a16z\nspeedrun\nspeedrun\n→\nPortfolio →\nNetwork stats →\na16z portfolio jobs →\nLayoff tracker →\nDevelopers →\nState of Talent 2026 →\nLegal\nReport a problem"
+    },
+    {
+      "step": 4,
+      "hash": "#step-4",
+      "heading": "Who We're Looking For",
+      "fields": {
+        "heading": "Who We're Looking For",
+        "hash": "#step-4",
+        "progress": "WHO WE'RE LOOKING FOR\n3 OF 8",
+        "url": "https://speedrun-talent-network.com/product-engineer/#step-4",
+        "inputs": [
+          {
+            "tag": "textarea",
+            "type": "textarea",
+            "name": null,
+            "id": null,
+            "placeholder": "What happened? (optional — we can see the technical details)",
+            "required": false,
+            "maxLength": 2000,
+            "accept": null,
+            "label": "What happened?",
+            "describedBy": [],
+            "value": ""
+          }
+        ],
+        "buttons": [
+          {
+            "type": "button",
+            "text": "",
+            "className": "srn-menu-btn",
+            "disabled": false,
+            "aria": "Menu"
+          },
+          {
+            "type": "button",
+            "text": "",
+            "className": "tn-id-trigger",
+            "disabled": false,
+            "aria": "Your account"
+          },
+          {
+            "type": "button",
+            "text": "Sign out",
+            "className": "tn-id-menu-item tn-id-menu-item--signout sr-text-button",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "←\nBACK",
+            "className": "sr-btn sr-btn-ghost sr-btn--md tsp-back",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "submit",
+            "text": "CONTINUE",
+            "className": "sr-btn sr-btn-primary sr-btn--lg tsp-next",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "Legal",
+            "className": "tn-footer-legal-btn",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "REPORT A PROBLEM",
+            "className": "tn-footer-bug-btn",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "Close",
+            "className": "tn-footer-bug-close",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "submit",
+            "text": "Submit",
+            "className": "sr-btn sr-btn--md sr-btn-primary",
+            "disabled": false,
+            "aria": null
+          }
+        ],
+        "groups": []
+      },
+      "text": "Companies\nJobs\nJoin the Network\nApply to\nspeedrun\nSign in\nStep 3 of 8: Who We're Looking For\nWho We're Looking For\n3\nof\n8\nWho We're Looking For\nOne person who can take an idea all the way to a live product.\nProduct\nYou can spot what's broken for job seekers and decide what's worth building.\nDesign\nYou have taste, and what you make looks and feels right.\nShip\nYou get it live, deployment included, using AI tools to move fast.\nLived It\nYou've been a job seeker recently and know the pain firsthand.\nNo specific tech stack required. Recruiting experience is neither necessary nor preferred.\n←\nBack\nContinue\n© 2026 a16z\nspeedrun\nspeedrun\n→\nPortfolio →\nNetwork stats →\na16z portfolio jobs →\nLayoff tracker →\nDevelopers →\nState of Talent 2026 →\nLegal\nReport a problem"
+    },
+    {
+      "step": 5,
+      "hash": "#step-5",
+      "heading": "We Want Your Opinion",
+      "fields": {
+        "heading": "We Want Your Opinion",
+        "hash": "#step-5",
+        "progress": "YOUR IDEA\n4 OF 8",
+        "url": "https://speedrun-talent-network.com/product-engineer/#step-5",
+        "inputs": [
+          {
+            "tag": "input",
+            "type": "url",
+            "name": "demo_url",
+            "id": "tsp-demo_url",
+            "placeholder": "https://",
+            "required": false,
+            "maxLength": null,
+            "accept": null,
+            "label": "Your link",
+            "describedBy": [
+              "This is optional!!!",
+              "Send one link: a concept, mockup, demo, or anything that shows your thinking.",
+              "Make sure it opens without requesting access."
+            ],
+            "value": ""
+          },
+          {
+            "tag": "textarea",
+            "type": "textarea",
+            "name": null,
+            "id": null,
+            "placeholder": "What happened? (optional — we can see the technical details)",
+            "required": false,
+            "maxLength": 2000,
+            "accept": null,
+            "label": "What happened?",
+            "describedBy": [],
+            "value": ""
+          }
+        ],
+        "buttons": [
+          {
+            "type": "button",
+            "text": "",
+            "className": "srn-menu-btn",
+            "disabled": false,
+            "aria": "Menu"
+          },
+          {
+            "type": "button",
+            "text": "",
+            "className": "tn-id-trigger",
+            "disabled": false,
+            "aria": "Your account"
+          },
+          {
+            "type": "button",
+            "text": "Sign out",
+            "className": "tn-id-menu-item tn-id-menu-item--signout sr-text-button",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "←\nBACK",
+            "className": "sr-btn sr-btn-ghost sr-btn--md tsp-back",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "submit",
+            "text": "CONTINUE",
+            "className": "sr-btn sr-btn-primary sr-btn--lg tsp-next",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "Legal",
+            "className": "tn-footer-legal-btn",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "REPORT A PROBLEM",
+            "className": "tn-footer-bug-btn",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "Close",
+            "className": "tn-footer-bug-close",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "submit",
+            "text": "Submit",
+            "className": "sr-btn sr-btn--md sr-btn-primary",
+            "disabled": false,
+            "aria": null
+          }
+        ],
+        "groups": []
+      },
+      "text": "Companies\nJobs\nJoin the Network\nApply to\nspeedrun\nSign in\nStep 4 of 8: Your Idea\nYour Idea\n4\nof\n8\nWe Want Your Opinion\nHere's what we're trying to do:\nHelp more job seekers find work they love.\nGrow the network: more signups, and more people landing jobs, at\nspeedrun\ncompanies and beyond.\nBring more great founders to\nspeedrun\nand the\nspeedrun\nalpha fellowship.\nShow us how you'd move one of those, by improving something we've already built or by building something new. Your idea is the best window into how you think and where you'd spend your time and calories.\nSend one link: a concept, mockup, demo, or anything that shows your thinking.\nYour link\nThis is optional!!!\nMake sure it opens without requesting access.\n←\nBack\nContinue\nPress Enter ↵\n© 2026 a16z\nspeedrun\nspeedrun\n→\nPortfolio →\nNetwork stats →\na16z portfolio jobs →\nLayoff tracker →\nDevelopers →\nState of Talent 2026 →\nLegal\nReport a problem"
+    },
+    {
+      "step": 6,
+      "hash": "#step-6",
+      "heading": "What Should We Change, Improve, or Add?",
+      "fields": {
+        "heading": "What Should We Change, Improve, or Add?",
+        "hash": "#step-6",
+        "progress": "THE SHORT VERSION\n5 OF 8",
+        "url": "https://speedrun-talent-network.com/product-engineer/#step-6",
+        "inputs": [
+          {
+            "tag": "textarea",
+            "type": "textarea",
+            "name": "ideas",
+            "id": "tsp-ideas",
+            "placeholder": null,
+            "required": false,
+            "maxLength": 1500,
+            "accept": null,
+            "label": "What Should We Change, Improve, or Add?",
+            "describedBy": [
+              "Anything candidate-facing: the jobs board, signup, profiles, intros, our tools and content, or something we don't do yet. Or how we could help speedrun founders hire better.",
+              "0 / 1500"
+            ],
+            "value": ""
+          },
+          {
+            "tag": "textarea",
+            "type": "textarea",
+            "name": null,
+            "id": null,
+            "placeholder": "What happened? (optional — we can see the technical details)",
+            "required": false,
+            "maxLength": 2000,
+            "accept": null,
+            "label": "What happened?",
+            "describedBy": [],
+            "value": ""
+          }
+        ],
+        "buttons": [
+          {
+            "type": "button",
+            "text": "",
+            "className": "srn-menu-btn",
+            "disabled": false,
+            "aria": "Menu"
+          },
+          {
+            "type": "button",
+            "text": "",
+            "className": "tn-id-trigger",
+            "disabled": false,
+            "aria": "Your account"
+          },
+          {
+            "type": "button",
+            "text": "Sign out",
+            "className": "tn-id-menu-item tn-id-menu-item--signout sr-text-button",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "←\nBACK",
+            "className": "sr-btn sr-btn-ghost sr-btn--md tsp-back",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "submit",
+            "text": "CONTINUE",
+            "className": "sr-btn sr-btn-primary sr-btn--lg tsp-next",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "Legal",
+            "className": "tn-footer-legal-btn",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "REPORT A PROBLEM",
+            "className": "tn-footer-bug-btn",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "Close",
+            "className": "tn-footer-bug-close",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "submit",
+            "text": "Submit",
+            "className": "sr-btn sr-btn--md sr-btn-primary",
+            "disabled": false,
+            "aria": null
+          }
+        ],
+        "groups": []
+      },
+      "text": "Companies\nJobs\nJoin the Network\nApply to\nspeedrun\nSign in\nStep 5 of 8: The Short Version\nThe Short Version\n5\nof\n8\nWhat Should We Change, Improve, or Add?\nAnything candidate-facing: the jobs board, signup, profiles, intros, our tools and content, or something we don't do yet. Or how we could help\nspeedrun\nfounders hire better.\n0\n/\n1500\n←\nBack\nContinue\n© 2026 a16z\nspeedrun\nspeedrun\n→\nPortfolio →\nNetwork stats →\na16z portfolio jobs →\nLayoff tracker →\nDevelopers →\nState of Talent 2026 →\nLegal\nReport a problem"
+    },
+    {
+      "step": 7,
+      "hash": "#step-7",
+      "heading": "What Should We Change, Improve, or Add?",
+      "fields": {
+        "heading": "What Should We Change, Improve, or Add?",
+        "hash": "#step-6",
+        "progress": "THE SHORT VERSION\n5 OF 8",
+        "url": "https://speedrun-talent-network.com/product-engineer/#step-6",
+        "inputs": [
+          {
+            "tag": "textarea",
+            "type": "textarea",
+            "name": "ideas",
+            "id": "tsp-ideas",
+            "placeholder": null,
+            "required": false,
+            "maxLength": 1500,
+            "accept": null,
+            "label": "What Should We Change, Improve, or Add?",
+            "describedBy": [
+              "Anything candidate-facing: the jobs board, signup, profiles, intros, our tools and content, or something we don't do yet. Or how we could help speedrun founders hire better.",
+              "0 / 1500"
+            ],
+            "value": ""
+          },
+          {
+            "tag": "textarea",
+            "type": "textarea",
+            "name": null,
+            "id": null,
+            "placeholder": "What happened? (optional — we can see the technical details)",
+            "required": false,
+            "maxLength": 2000,
+            "accept": null,
+            "label": "What happened?",
+            "describedBy": [],
+            "value": ""
+          }
+        ],
+        "buttons": [
+          {
+            "type": "button",
+            "text": "",
+            "className": "srn-menu-btn",
+            "disabled": false,
+            "aria": "Menu"
+          },
+          {
+            "type": "button",
+            "text": "",
+            "className": "tn-id-trigger",
+            "disabled": false,
+            "aria": "Your account"
+          },
+          {
+            "type": "button",
+            "text": "Sign out",
+            "className": "tn-id-menu-item tn-id-menu-item--signout sr-text-button",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "←\nBACK",
+            "className": "sr-btn sr-btn-ghost sr-btn--md tsp-back",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "submit",
+            "text": "CONTINUE",
+            "className": "sr-btn sr-btn-primary sr-btn--lg tsp-next",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "Legal",
+            "className": "tn-footer-legal-btn",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "REPORT A PROBLEM",
+            "className": "tn-footer-bug-btn",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "Close",
+            "className": "tn-footer-bug-close",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "submit",
+            "text": "Submit",
+            "className": "sr-btn sr-btn--md sr-btn-primary",
+            "disabled": false,
+            "aria": null
+          }
+        ],
+        "groups": []
+      },
+      "text": "Companies\nJobs\nJoin the Network\nApply to\nspeedrun\nSign in\nStep 5 of 8: The Short Version\nThe Short Version\n5\nof\n8\nWhat Should We Change, Improve, or Add?\nAnything candidate-facing: the jobs board, signup, profiles, intros, our tools and content, or something we don't do yet. Or how we could help\nspeedrun\nfounders hire better.\n0\n/\n1500\n←\nBack\nContinue\n© 2026 a16z\nspeedrun\nspeedrun\n→\nPortfolio →\nNetwork stats →\na16z portfolio jobs →\nLayoff tracker →\nDevelopers →\nState of Talent 2026 →\nLegal\nReport a problem"
+    },
+    {
+      "step": 8,
+      "hash": "#step-8",
+      "heading": "What Should We Change, Improve, or Add?",
+      "fields": {
+        "heading": "What Should We Change, Improve, or Add?",
+        "hash": "#step-6",
+        "progress": "THE SHORT VERSION\n5 OF 8",
+        "url": "https://speedrun-talent-network.com/product-engineer/#step-6",
+        "inputs": [
+          {
+            "tag": "textarea",
+            "type": "textarea",
+            "name": "ideas",
+            "id": "tsp-ideas",
+            "placeholder": null,
+            "required": false,
+            "maxLength": 1500,
+            "accept": null,
+            "label": "What Should We Change, Improve, or Add?",
+            "describedBy": [
+              "Anything candidate-facing: the jobs board, signup, profiles, intros, our tools and content, or something we don't do yet. Or how we could help speedrun founders hire better.",
+              "0 / 1500"
+            ],
+            "value": ""
+          },
+          {
+            "tag": "textarea",
+            "type": "textarea",
+            "name": null,
+            "id": null,
+            "placeholder": "What happened? (optional — we can see the technical details)",
+            "required": false,
+            "maxLength": 2000,
+            "accept": null,
+            "label": "What happened?",
+            "describedBy": [],
+            "value": ""
+          }
+        ],
+        "buttons": [
+          {
+            "type": "button",
+            "text": "",
+            "className": "srn-menu-btn",
+            "disabled": false,
+            "aria": "Menu"
+          },
+          {
+            "type": "button",
+            "text": "",
+            "className": "tn-id-trigger",
+            "disabled": false,
+            "aria": "Your account"
+          },
+          {
+            "type": "button",
+            "text": "Sign out",
+            "className": "tn-id-menu-item tn-id-menu-item--signout sr-text-button",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "←\nBACK",
+            "className": "sr-btn sr-btn-ghost sr-btn--md tsp-back",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "submit",
+            "text": "CONTINUE",
+            "className": "sr-btn sr-btn-primary sr-btn--lg tsp-next",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "Legal",
+            "className": "tn-footer-legal-btn",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "REPORT A PROBLEM",
+            "className": "tn-footer-bug-btn",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "Close",
+            "className": "tn-footer-bug-close",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "submit",
+            "text": "Submit",
+            "className": "sr-btn sr-btn--md sr-btn-primary",
+            "disabled": false,
+            "aria": null
+          }
+        ],
+        "groups": []
+      },
+      "text": "Companies\nJobs\nJoin the Network\nApply to\nspeedrun\nSign in\nStep 5 of 8: The Short Version\nThe Short Version\n5\nof\n8\nWhat Should We Change, Improve, or Add?\nAnything candidate-facing: the jobs board, signup, profiles, intros, our tools and content, or something we don't do yet. Or how we could help\nspeedrun\nfounders hire better.\n0\n/\n1500\n←\nBack\nContinue\n© 2026 a16z\nspeedrun\nspeedrun\n→\nPortfolio →\nNetwork stats →\na16z portfolio jobs →\nLayoff tracker →\nDevelopers →\nState of Talent 2026 →\nLegal\nReport a problem"
+    },
+    {
+      "step": 9,
+      "hash": "#step-9",
+      "heading": "What Should We Change, Improve, or Add?",
+      "fields": {
+        "heading": "What Should We Change, Improve, or Add?",
+        "hash": "#step-6",
+        "progress": "THE SHORT VERSION\n5 OF 8",
+        "url": "https://speedrun-talent-network.com/product-engineer/#step-6",
+        "inputs": [
+          {
+            "tag": "textarea",
+            "type": "textarea",
+            "name": "ideas",
+            "id": "tsp-ideas",
+            "placeholder": null,
+            "required": false,
+            "maxLength": 1500,
+            "accept": null,
+            "label": "What Should We Change, Improve, or Add?",
+            "describedBy": [
+              "Anything candidate-facing: the jobs board, signup, profiles, intros, our tools and content, or something we don't do yet. Or how we could help speedrun founders hire better.",
+              "0 / 1500"
+            ],
+            "value": ""
+          },
+          {
+            "tag": "textarea",
+            "type": "textarea",
+            "name": null,
+            "id": null,
+            "placeholder": "What happened? (optional — we can see the technical details)",
+            "required": false,
+            "maxLength": 2000,
+            "accept": null,
+            "label": "What happened?",
+            "describedBy": [],
+            "value": ""
+          }
+        ],
+        "buttons": [
+          {
+            "type": "button",
+            "text": "",
+            "className": "srn-menu-btn",
+            "disabled": false,
+            "aria": "Menu"
+          },
+          {
+            "type": "button",
+            "text": "",
+            "className": "tn-id-trigger",
+            "disabled": false,
+            "aria": "Your account"
+          },
+          {
+            "type": "button",
+            "text": "Sign out",
+            "className": "tn-id-menu-item tn-id-menu-item--signout sr-text-button",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "←\nBACK",
+            "className": "sr-btn sr-btn-ghost sr-btn--md tsp-back",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "submit",
+            "text": "CONTINUE",
+            "className": "sr-btn sr-btn-primary sr-btn--lg tsp-next",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "Legal",
+            "className": "tn-footer-legal-btn",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "REPORT A PROBLEM",
+            "className": "tn-footer-bug-btn",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "button",
+            "text": "Close",
+            "className": "tn-footer-bug-close",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "type": "submit",
+            "text": "Submit",
+            "className": "sr-btn sr-btn--md sr-btn-primary",
+            "disabled": false,
+            "aria": null
+          }
+        ],
+        "groups": []
+      },
+      "text": "Companies\nJobs\nJoin the Network\nApply to\nspeedrun\nSign in\nStep 5 of 8: The Short Version\nThe Short Version\n5\nof\n8\nWhat Should We Change, Improve, or Add?\nAnything candidate-facing: the jobs board, signup, profiles, intros, our tools and content, or something we don't do yet. Or how we could help\nspeedrun\nfounders hire better.\n0\n/\n1500\n←\nBack\nContinue\n© 2026 a16z\nspeedrun\nspeedrun\n→\nPortfolio →\nNetwork stats →\na16z portfolio jobs →\nLayoff tracker →\nDevelopers →\nState of Talent 2026 →\nLegal\nReport a problem"
+    }
+  ],
+  "built_pages": [
+    {
+      "name": "home",
+      "url": "https://speedrun-talent-network.com/",
+      "final_url": "https://speedrun-talent-network.com/",
+      "status": 200,
+      "title": "speedrun talent network",
+      "h1": "👋 welcome to the speedrun talent network",
+      "text_excerpt": "Companies\nJobs\nJoin the Network\nApply to\nspeedrun\nSign in\nspeedrun\n·\nTalent Network\n300+ startups.\none network.\nJoin the a16z\nspeedrun\ntalent network and get introduced to the founders hiring now.\n300+\nPortfolio companies\nHundreds\nAlready placed\n~1 min\nTo join\nFree\nFor candidates, always\nTalent Network · Signup\n01\n/\n06\nStart Over\n01\nWhat is your email address?\nBack\nJoin the network\nPress\nEnter ↵\nThe Portfolio\n300+\nspeedrun\nCompanies Hire Through This Network.\nSee The Full Portfolio\n2weeks\nGaming\nAdvocate\nAI\nAgent Astra\nAI\nAlike\nAI\nAmbiguous\nAI\nAnchr\nAI\nAntihero Studios\nGaming\nArtifact\nAI\nAtrios\nAI\nAuto\nAI\nAvatarOS\nAI\nAxon\nAI\nBead AI\nAI\nBilrost\nAI\nBota\nAI\nBraid\nGaming\nCanto Reality\nAI\nCedar\nAI\nCheddr\nAI\nCircle Games\nGaming\nClementine\nAI\nClubs Poker\nCommerce / Marketplaces\nCommunion\nGaming\nCoverd\nFintech\nCrater Studios\nAI\nCreed\nAI\nDare Drop\nConsumer\nDefinitely Games\nGaming\nDispatcher\nAI\nDoubleFifth\nDev Tools & DevOps\nDream Voyage\nAI\nEcho Chunk\nAI\nElse\nAI\nEmanate\nAI\nEverCurrent\nAI\nExia Labs\nAI\nFearn\nAI\nFirst Day Entertainment\nGaming\nFlat2VR Studios\nGaming\nGamebeast\nDev Tools & DevOps\nGenway AI\nAI\nGhosted\nConsumer\nGreathorn Games\nGaming\nGrove Tax\nAI\nHeavi\nAI\nHooper\nAI\nHousehunt\nGaming\nIdilio\nSR006\nIntangible\nAI\nJooba\nAI\nKaaro\nAI\nKeewano\nAI\nKitbash\nAI\nLegion\nGaming\nLevel Headed Games\nGaming\nLil Snack\nGaming\nLittle Umbrella\nGaming\nLoan Labs\nAI\nLoops AI\nAI\nMagic Circle\nAI\nManifest\nAI\nMargin\nAI\nMatchday\nGaming\nMeridian\nEnterprise SaaS\nMetal\nAI\nMini Studio\nAI\nMirror Mirror AI\nAI\nModern Industrials\nAI\nMoku\nWeb3 / DeFi\nNativ\nAI\nNeon Wild\nAI\nNexxa.ai\nAI\nNoMi\nHealthcare\nOasiz\nAI\nOleum\nAI\nOriginal Games\nGaming\nPanorama\nAI\nPartyHat\nAI\nPelago\nAI\nPicPet\nConsumer\nPlots\nConsumer\nPluvo\nAI\nPresia\nAI\nQloud Games (Loftia)\nGaming\nQuanto\nAI\nQuo Labs\nAI\nRay Browser\nConsumer\nRehearsals\nAI\nRork\nAI\nRUNREAL\nSR003\nSafeWorld\nAI\nSchemata\nAI\nSellara\nFintech\nShockwave\nGaming\nSirius Technology\nAI\nSloyd\nAI\nsnag\nCommerce / Marketplaces\nSonatic\nAI\nSoundmap\nSR003\nSpark Space\nAI\nSpekter Games\nGaming\nStraia"
+    },
+    {
+      "name": "jobs",
+      "url": "https://speedrun-talent-network.com/jobs",
+      "final_url": "https://speedrun-talent-network.com/jobs",
+      "status": 200,
+      "title": "Startup jobs across the a16z portfolio · search 22,800+ open roles",
+      "h1": "open_roles",
+      "text_excerpt": "Companies\nJobs\nJoin the Network\nApply to\nspeedrun\nSign in\nopen_roles\n22844 open roles across\na16z\nportfolio plus wider market\n·\nBrowse by company →\nThe\nspeedrun\ntalent team\nWe're hiring\nTwo roles on the team, both in person in San Francisco.\n>> send this to the best people you know <<\nProduct Engineer\nContract, in person in SF. Students and co-ops welcome.\n→\nPartner 18, Talent, Speedrun\nFull-time recruiting role, in person in SF.\n→\nIn:\na16z\nportfolio\n+ wider market\n/\na16z speedrun\n/\nEverywhere\nSearch\nEngineering\n4753\nHardware & manufacturing\n3787\nOperations\n2852\nSales\n1741\nCustomer\n932\nFinance\n795\nResearch\n747\nMarketing\n716\nRemote\n2212\nAll filters\n22844 roles\nRelevant\nNewest\nHighest comp\nTechnical Customer Support Specialist\nElevenLabs · Remote · Contract\ntoday\nApply →\nSr. People Systems Analyst, Advanced Comp\nHarvey · San Francisco · Full-time\n$136k - $187k\ntoday\nApply →\nSr. People Systems Analyst, Advanced Comp\nHarvey · Dallas · Full-time\n$136k - $187k\ntoday\nApply →\nDivision Operations, AFS\nAnduril Industries · Costa Mesa, California, United States +1 · Full-time\ntoday\nApply →\nSenior Technical Recruiter\nLabelbox · San Francisco Bay Area · Full-time\n$160k - $180k\ntoday\nApply →\nSr. People Systems Analyst, Advanced Comp\nHarvey · Chicago · Full-time\n$136k - $187k\ntoday\nApply →\nLead Launch Engineer\nApex Space · Los Angeles · Full-time\n$160k - $190k\ntoday\nApply →\nSales Development Representative (SDR) (Night Shift)\nOpenGov · India | Pune · Full-time\ntoday\nApply →\nSocial Media Strategist\nExa · San Francisco, California · Full-time\n$150k - $200k\ntoday\nApply →\nStaff Product Brand Designer\nHarvey · New York · Full-time\n$181k - $249k\ntoday\nApply →\nSr Mgr, Strategic Sourcing Manager, Corporate & Operations\nShield AI · Arlington, VA, US · Full-time\n$151k - $226k\ntoday\nApply →\nLaunch Engineer\nApex Space · Los Angeles · Full-time\n$125k - $175k\ntoday\nApply →\nPartner Account Director, South EMEA\nIllumio · London, United Kingdom · Full-time\n€104k - €130k\ntoday\nApply →\nSr. People Sy"
+    },
+    {
+      "name": "join",
+      "url": "https://speedrun-talent-network.com/join",
+      "final_url": "https://speedrun-talent-network.com/join/",
+      "status": 200,
+      "title": "Join the speedrun talent network",
+      "h1": null,
+      "text_excerpt": "← Back to roles\nJoin the Talent Network\n👋\nwelcome to the a16z\nspeedrun\ntalent network\nJoin to be considered for roles at 300+ a16z\nspeedrun\nstartups!\nJoin The Network\nTakes 1 minute 30 seconds\nWhy Join\n01 · Why Join\nHundreds\nof Placements Across the\nspeedrun\nPortfolio\nJoin the network and a\nspeedrun\npartner will introduce you to founders across our 300+ portfolio companies, alongside whatever roles you're already pursuing directly.\nJoin The Network\nRead Our FAQ\n300+\nPortfolio companies\nHundreds\nAlready placed\n~1 min\nTo join\nFree\nFor candidates, always\n02 · The Portfolio\n300+\nspeedrun\nCompanies Hire Through This Network.\nSee The Full Portfolio\n2weeks\nGaming\nAdvocate\nAI\nAgent Astra\nAI\nAlike\nAI\nAmbiguous\nAI\nAnchr\nAI\nAntihero Studios\nGaming\nArtifact\nAI\nAtrios\nAI\nAuto\nAI\nAvatarOS\nAI\nAxon\nAI\nBead AI\nAI\nBilrost\nAI\nBota\nAI\nBraid\nGaming\nCanto Reality\nAI\nCedar\nAI\nCheddr\nAI\nCircle Games\nGaming\nClementine\nAI\nClubs Poker\nCommerce / Marketplaces\nCommunion\nGaming\nCoverd\nFintech\nCrater Studios\nAI\nCreed\nAI\nDare Drop\nConsumer\nDefinitely Games\nGaming\nDispatcher\nAI\nDoubleFifth\nDev Tools & DevOps\nDream Voyage\nAI\nEcho Chunk\nAI\nElse\nAI\nEmanate\nAI\nEverCurrent\nAI\nExia Labs\nAI\nFearn\nAI\nFirst Day Entertainment\nGaming\nFlat2VR Studios\nGaming\nGamebeast\nDev Tools & DevOps\nGenway AI\nAI\nGhosted\nConsumer\nGreathorn Games\nGaming\nGrove Tax\nAI\nHeavi\nAI\nHooper\nAI\nHousehunt\nGaming\nIdilio\nSR006\nIntangible\nAI\nJooba\nAI\nKaaro\nAI\nKeewano\nAI\nKitbash\nAI\nLegion\nGaming\nLevel Headed Games\nGaming\nLil Snack\nGaming\nLittle Umbrella\nGaming\nLoan Labs\nAI\nLoops AI\nAI\nMagic Circle\nAI\n2weeks\nGaming\nAdvocate\nAI\nAgent Astra\nAI\nAlike\nAI\nAmbiguous\nAI\nAnchr\nAI\nAntihero Studios\nGaming\nArtifact\nAI\nAtrios\nAI\nAuto\nAI\nAvatarOS\nAI\nAxon\nAI\nBead AI\nAI\nBilrost\nAI\nBota\nAI\nBraid\nGaming\nCanto Reality\nAI\nCedar\nAI\nCheddr\nAI\nCircle Games\nGaming\nClementine\nAI\nClubs Poker\nCommerce / Marketplaces\nCommunion\nGaming\nCoverd\nFintech\nCrater Studios\nAI\nCreed\nAI\nDare Drop\nConsumer\nDefinitely Games\nGaming\nDispatcher\nAI\nDoubleFifth\nDev Tools & DevOps\nDream "
+    },
+    {
+      "name": "salary",
+      "url": "https://speedrun-talent-network.com/founding-engineer-salary",
+      "final_url": "https://speedrun-talent-network.com/founding-engineer-salary",
+      "status": 200,
+      "title": "Founding Engineer Salary & Equity (2026) · Data from 35 Real Startup Job Postings",
+      "h1": "Founding Engineer Salary & Equity (2026)",
+      "text_excerpt": "Companies\nJobs\nJoin the Network\nApply to\nspeedrun\nSign in\n← All roles\nFounding Engineer Salary & Equity (2026)\nData from\n35 real startup job postings\nwith posted pay bands, computed live from the\nspeedrun\nand a16z portfolio jobs board. No survey, no self-reported numbers: every figure below comes from an open role you can click into.\n$200k\nMedian posted salary\n$160k\n-\n$227k\nTypical posted band\n82\nOpen founding roles\n9%\nOpen to remote\n01 · The role\nWhat Is a Founding Engineer?\nA founding engineer is one of the first engineers at a startup, usually somewhere in the first five hires, brought on before the product has proven itself. The work is not a slice of a system; it is the system. You ship version one of everything, own whatever breaks, make the architecture calls that stick for years, and interview the engineers who come after you.\nIt is not a founder role. Founders hold founder stock and take the cap-table risk; a founding engineer is the earliest kind of employee, with a real salary plus an options grant that is large by employee standards and small by founder standards. The trade is deliberate: less cash than a big company would pay, more ownership and more surface area than a big company could ever offer.\nThe \"founding\" prefix has also spread past engineering. On this board right now there are 82 founding-titled roles: 38 in engineering, plus founding account executives, founding designers, founding recruiters, and first hires of most other crafts. The chart below covers all of them, and you can filter down to engineering in one click.\n02 · Salary\nWhat Founding Engineers Actually Get Paid\n35 of the 82 open founding roles publish an annual pay band. Each bar below is the count of roles whose band midpoint falls in that $25k range. Hover for the exact numbers;\nclick a bar to see the real roles behind it\nin the list further down.\nPosted Salary Bands, Open Founding Roles\nmidpoint of each posted band · n = 35 · USD, annual\n0\n3\n6\n9\n12\n$50k\n$100k\n$150k\n$200k\n$250k\n$"
+    },
+    {
+      "name": "layoffs",
+      "url": "https://speedrun-talent-network.com/layoffs",
+      "final_url": "https://speedrun-talent-network.com/layoffs",
+      "status": 200,
+      "title": "Tech Layoffs Tracker · 3,413 companies since 2020, and who's hiring now",
+      "h1": "The Layoff Tracker",
+      "text_excerpt": "Companies\nJobs\nJoin the Network\nApply to\nspeedrun\nSign in\nTalent Network · Live Data\nThe Layoff\nTracker\nEvery tech layoff since March 2020, and the 2,318 companies hiring on the other side of each one.\nBrowse Open Roles\nJoin the Network\nLaid Off in 2026\n710,357+\nreported headcounts only; some events report a percentage\n2026 Layoff Events\n938\nCompanies Tracked\n3,413\nsince March 2020\nAI-Company Share\n15%\nof 2026 events\n01 · Over Time\nEmployees Laid Off Over Time\n12 Months · Weekly\nAll Time · Monthly\n30K\n60K\n90K\n120K\n150K\nNov\nDec\n2026\nFeb\nMar\nApr\nMay\nJun\nJul\nAug\nSep\nOct\nNov\nBars sum reported headcounts. Roughly one event in three reports only a percentage, so every bar is a floor, not a ceiling.\nLaid Off? 2,318 Companies Are Hiring on the Board.\nOne signup puts you in front of the\na16z\nportfolio. Free for candidates, always.\nJoin the Network\nBrowse Open Roles →\n02 · Every Event\nEvery Event Since March 2020\nFinance\n551\nRetail\n366\nHealthcare\n339\nConsumer\n323\nOther\n3,332\nTransportation\n276\nAI companies\nShowing 50 of 5,187 events · newest first\nCompany\nLaid Off\nDate\nHQ\nIndustry\nStage · Raised\nSource\nOpen Roles\nAmpersand\nunknown\nNov 22, 2026\nUS\n-\nnews.google.com\nBrowse open roles\n→\nDole\n404\nNov 22, 2026\nUS\n-\nnews.google.com\nBrowse open roles\n→\nEnphase Energy\n320\nNov 22, 2026\nUS\n-\nnews.google.com\nBrowse open roles\n→\nGovTech\n38\nNov 22, 2026\n-\nnews.google.com\nBrowse open roles\n→\nJam City\nunknown\n10\n%\nNov 22, 2026\nUS\n-\nnews.google.com\nBrowse open roles\n→\nShell\n10,000\nNov 22, 2026\nNetherlands\n-\nnews.google.com\nBrowse open roles\n→\nCatholic Charities\n300\nNov 21, 2026\nUS\n-\nnews.google.com\nBrowse open roles\n→\nEvonik\n3,200\nNov 21, 2026\nGermany\n-\nnews.google.com\nBrowse open roles\n→\nGM\n506\nNov 21, 2026\nUS\n-\nnews.google.com\nBrowse open roles\n→\nGabor\n380\nNov 21, 2026\nSlovakia\n-\nnews.google.com\nBrowse open roles\n→\nKroger\nunknown\nNov 21, 2026\nUS\n-\nnews.google.com\nBrowse open roles\n→\nLufthansa\n1,000\nNov 21, 2026\nGermany\n-\nnews.google.com\nBrowse open roles\n→\nOprah Daily\nunknown\nNov 21, 2026\n"
+    },
+    {
+      "name": "developers",
+      "url": "https://speedrun-talent-network.com/developers",
+      "final_url": "https://speedrun-talent-network.com/developers",
+      "status": 200,
+      "title": "developers · speedrun talent network",
+      "h1": "for_your_agents",
+      "text_excerpt": "Companies\nJobs\nJoin the Network\nApply to\nspeedrun\nSign in\nfor_your_agents\nEverything the jobs board knows, readable by machines: live open roles across the\nspeedrun\nand a16z portfolios, hiring companies, curated collections, and aggregate comp data. Two doors, same data, same freshness. No auth, no keys, no cost.\n01 · REST API\n/api/v1\nVersioned JSON over HTTPS at\nhttps://speedrun-talent-network.com/api/v1\n. Read-only. Open CORS, so it works straight from a browser or an agent runtime. Responses are edge-cached for 1 to 5 minutes. The spec at\n/api/v1/openapi.json\nis complete and accurate to the implementation.\nEndpoint\nWhat it returns\nGET /api/v1/jobs\nSearch open roles: q, fn, spec, sen, lvl, emp, loc, metro, wp (remote | hybrid | onsite), comp, comp_max, comp_any, posted (24h | 7d | 30d), stage, size, industry, lab, bigtech, portfolio, cohort, company, stealth, scope (speedrun | portfolio | everywhere), sort, page. Returns jobs + live facet counts + total.\nGET /api/v1/jobs/{id}\nOne role: full description text, posted pay band, how to apply. Closed roles return status:\"closed\".\nGET /api/v1/companies\nEvery portfolio company with at least one live role, most open roles first.\nGET /api/v1/companies/{slug}\nCompany profile + all of its live roles.\nGET /api/v1/collections\nCurated collections: portfolio tiers, core industries, hubs, investors, signals. Live counts.\nGET /api/v1/collections/{slug}\nOne collection with ranked member companies.\nGET /api/v1/stats/hiring\nAggregate hiring data: demand mix, posted pay bands by function, remote share, top cities.\nGET /api/v1/openapi.json\nThe complete OpenAPI 3.1 spec.\nTry it:\ncurl \"https://speedrun-talent-network.com/api/v1/jobs?fn=engineering&loc=remote&comp=200000&source=my-agent\"\nErrors come back as\n{\"error\":{\"code\",\"message\"}}\nwith a matching HTTP status.\nEvery list is capped and paginated; responses carry\npage\n,\npage_size\n,\ntotal_pages\n. Job searches also carry\nhas_more\nand\nnext_page\n: stop paging when\nhas_more\nis false (pages s"
+    },
+    {
+      "name": "network",
+      "url": "https://speedrun-talent-network.com/network",
+      "final_url": "https://speedrun-talent-network.com/network",
+      "status": 200,
+      "title": "The speedrun talent network so far. Aggregate stats.",
+      "h1": "The speedrun talent network so far.",
+      "text_excerpt": "Companies\nJobs\nJoin the Network\nApply to\nspeedrun\nSign in\nTalent Network · live snapshot\nThe\nspeedrun\ntalent network so far.\nBuilders, designers, researchers, and operators who told us they want to work on early-stage software. Hundreds of placements across the portfolio so far.\nTotal in the network\n197,000\n+\nJoined this month\n3,146\nFounding-curious\n42\n%\nof recent signups\nCurrently students\n17\n%\nof recent signups\nWhat they do\nMany members span more than one craft, so the mix sums past 100%.\nEngineering\n88,914\n+ · 63%\nDesign\n58,362\n+ · 41%\nData & ML\n26,029\n+ · 18%\nProduct\n25,719\n+ · 18%\nMarketing\n23,845\n+ · 17%\nSales & GTM\n17,028\n+ · 12%\nOperations\n13,940\n+ · 10%\nWho's in the network\nTap a craft to see where those members have worked and studied.\nAll crafts\nEngineering\nDesign\nData & ML\nProduct\nMarketing\nSales & GTM\nOperations\nWhere they've worked\nAmazon\n6,361+\nGoogle\n3,858+\nMicrosoft\n3,582+\nMeta\n3,059+\nApple\n1,875+\nIBM\n1,724+\nJPMorgan\n1,359+\nElectronic Arts\n1,123+\nGoldman Sachs\n1,086+\nOracle\n1,023+\nRiot Games\n929+\nUber\n918+\nWhere they studied\nUC Berkeley\n3,709+\nStanford\n2,578+\nHarvard\n2,544+\nNYU\n2,522+\nUSC\n2,278+\nColumbia\n2,198+\nUPenn\n1,847+\nUCLA\n1,744+\nGeorgia Tech\n1,723+\nNortheastern\n1,660+\nUIUC\n1,605+\nCornell\n1,551+\nHiring across the portfolio\nLive aggregates from the\njobs board\n, computed from the jobs database on every render. Counts move as companies open and close roles.\nLive roles\n22,844\nCompanies hiring\n761\nRemote friendly\n10\n%\n2,212 roles open to remote\nPosted pay bands\n20\n%\n4,622 roles post a pay range\nDemand by function\nShare of the 22,844 live roles, by function.\nEngineering\n8,298\n· 36%\nOther\n6,086\n· 27%\nOperations\n4,153\n· 18%\nSales\n1,382\n· 6%\nMarketing\n897\n· 4%\nResearch\n836\n· 4%\nDesign\n767\n· 3%\nProduct\n425\n· 2%\nPosted pay by function\nMidpoints of posted pay bands (annual USD). Bar length tracks the median; only functions with 15 or more posted bands are shown.\nResearch\n97 bands\np25 $161k · median\n$238k\n· p75 $275k\nProduct\n176 bands\np25 $200k · median\n$2"
+    },
+    {
+      "name": "collections",
+      "url": "https://speedrun-talent-network.com/collections",
+      "final_url": "https://speedrun-talent-network.com/collections",
+      "status": 200,
+      "title": "Collections · browse startup companies hiring · speedrun talent network",
+      "h1": "all_collections",
+      "text_excerpt": "Companies\nJobs\nJoin the Network\nApply to\nspeedrun\nSign in\nCompanies · Collections\nall_collections\n1,343 companies\n22,844 open roles\n57 collections\nPinned · the home team · SR001-SR007\nspeedrun\ncompanies\n48\nCompanies →\nPinned · the broader a16z portfolio\nthe a16z portfolio\n292\nCompanies →\n01\nCore Industries\nFixed set · ranking curated quarterly\nFrontier AI Labs\n36 companies · 3,209 open roles\n+31 more\nBrowse →\nAI Infra\n16 companies · 278 open roles\n+11 more\nBrowse →\n16 in the a16z portfolio\nDefense\n9 companies · 152 open roles\n+4 more\nBrowse →\n9 in the a16z portfolio\nHealth & Bio\n30 companies · 641 open roles\n+25 more\nBrowse →\n30 in the a16z portfolio\nAero & Space\n4 companies · 344 open roles\nBrowse →\n4 in the a16z portfolio\nFintech\n27 companies · 505 open roles\n+22 more\nBrowse →\n27 in the a16z portfolio\nCrypto & Web3\n17 companies · 127 open roles\n+12 more\nBrowse →\n17 in the a16z portfolio\nEnterprise & B2B\n45 companies · 1,364 open roles\n+40 more\nBrowse →\n45 in the a16z portfolio\nDev Tools & Infra\n32 companies · 398 open roles\n+27 more\nBrowse →\n32 in the a16z portfolio\nConsumer & Social\n20 companies · 285 open roles\n+15 more\nBrowse →\n20 in the a16z portfolio\nGames & Entertainment\n11 companies · 71 open roles\n+6 more\nBrowse →\n11 in the a16z portfolio\nRobotics & Hardware\n8 companies · 863 open roles\n+3 more\nBrowse →\n8 in the a16z portfolio\nEnergy & Climate\n8 companies · 525 open roles\n+3 more\nBrowse →\n8 in the a16z portfolio\n02\nHubs\nWhere startup hiring concentrates · auto from job locations\nNew York\n1,113 roles · 158 companies →\nLos Angeles\n841 roles · 41 companies →\nAustin\n503 roles · 44 companies →\nSeattle\n523 roles · 21 companies →\nBoston\n205 roles · 34 companies →\nMiami\n31 roles · 10 companies →\nLondon\n458 roles · 78 companies →\nRemote\n2,212 roles · anywhere →\n03\nBy Investor\nBrowsable dimension · not an endorsement\nAbstract Ventures\n14 companies →\nBessemer Ventures\n61 companies →\nFelicis\n9 companies →\nGeneral Catalyst\n189 companies →\nGreylock Partners\n18 companies"
+    },
+    {
+      "name": "jhs",
+      "url": "https://www.jobhuntingsux.com/",
+      "final_url": "https://www.jobhuntingsux.com/",
+      "status": 200,
+      "title": "job hunting sux | Jordan Mazer | Substack",
+      "h1": "",
+      "text_excerpt": "Subscribe\nSign in\nHome\nAbout\nAPPLY TO SR BY SUNDAY + a brainrot intern + 133 jobs (46)\n+ 14 speedrun startups hiring, including a $3K/month brainrot intern\nREAD THE LATEST\nLatest\nTop\nDiscussions\nwe're investing up to $250k in dropouts + recent grads - apply by sunday!!\n+ 98 internships and new grad jobs at startups you haven’t heard of yet 🎓\nOct 6\n•\nJordan Mazer\n18\n7\nwhat's a $1 billion robot company doing on long island?\nWell, well, well.\nJun 13\n•\nJordan Mazer\n19\n2\n1\nlaundry robots + pi jobs + 12 founding gigs for non-engineers\n+ internships at a $5.6 billion 🥧 startup\nNov 27, 2025\n•\nJordan Mazer\n11\nif you apply to a job at ashby... on ashby... what happens?? (we must go deeper)\n+ browse literally hundreds of jobs\nNov 19, 2025\n•\nJordan Mazer\n20\nstartup salaries are going up... and computers can smell?? 👃\n+ startup salaries are on the up and up\nNov 12, 2025\n•\nJordan Mazer\n17\n2\n$500K sales gig + AI BFFs with bodies + that one intern who ran for student council\nPlus, how to make it past the phone screen\nNov 5, 2025\n•\nJordan Mazer\n11\n2\n1\n50 roles @ ElevenLabs + Paris/Toronto are hiring + \"we will never build a sex robot\"\nPlus, a spotlight on tech marketing jobs\nOct 29, 2025\n•\nJordan Mazer\n8\nSee all\njob hunting sux\nA curated resource for finding and landing the best jobs across tech, consumer and tech-enabled entertainment categories\nSubscribe\nRecommendations\nView all 10\nLenny's Newsletter\nLenny Rachitsky\nThe Bird's Nest\nRobin Guo\n@andrewchen\nAndrew Chen\nByteByteGo Newsletter\nAlex Xu\na16z Frontier\na16z Frontier\njob hunting sux\nSubscribe\nAbout\nArchive\nRecommendations\nSitemap\n©\n2026\nJordan\n·\nPrivacy\n∙\nTerms\n∙\nCollection notice\nStart your Substack\nGet the app\nSubstack\nis the home for\nwriting,\npodcasting,\nand\nmedia founders."
+    },
+    {
+      "name": "speedrun",
+      "url": "https://speedrun.a16z.com/",
+      "final_url": "https://speedrun.a16z.com/",
+      "status": 200,
+      "title": "speedrun",
+      "h1": "Your first believers",
+      "text_excerpt": "Founders\nInvestors\nPartners\nApply now\nYour first believers\nProviding you with capital, customers, and talent\nApply now\nWhat you get\nCapital\nUp to $1M in funding\ntargeting a two-week close\n$10M+ in credits\n$0M+ in credits\nfrom 200+ partners and growing\nThe easy button for growth\nThe first check is up to $1M, and we target a two-week close so you can get back to building. From there, the speedrun Marketplace offers credits to help reduce your startup's operating costs, and Demo Day puts you on stage in front of thousands of investors when it's time to raise your seed or Series A.\nExplore Capital\nCustomers\n10,000+\nbuyers and operators\n150+\n0+\nC-suite executives\n27+\n0+\ncreative partners on call\nYour unfair distribution advantage\nBrand Lab and Launch Lab help you craft your story and identity, then execute a rolling launch plan. Then SR Insiders gets you in front of buyers: senior executives from Fortune 500, the a16z portfolio, and other growth-stage companies, all actively looking for their next solutions. Spend a full day live demoing your tool at AI Faire, and meet hundreds of interested buyers.\nExplore Customers\nTalent\n171,000+\nengineers, designers, and product people\n230+\n0+\nhires so far\n$0\nin fees\nHire your first, and 100th, engineer\nThe speedrun Talent Network is engineers, designers, and product people from notable teams and universities. We scour the planet to find startup-ready humans - all you need to do is ask for an introduction. We also provide guidance on building and leading your team, and help navigate visas and banking for founders looking to Build in America.\nExplore Talent\nspeedrun insiders from:\nWhere talent in our network have worked and studied:\nThe residency\nThe community you'll build with\nFounders at your stage, the speedrun team, and the people who have done this before, on one floor. Sessions, office hours, and dinners in SF.\nSee the residency\nSpeakers and mentors who have come through\nDrag or swipe to explore. Use the left and right arrow key"
+    },
+    {
+      "name": "portfolio",
+      "url": "https://speedrun.a16z.com/companies",
+      "final_url": "https://speedrun.a16z.com/companies",
+      "status": 200,
+      "title": "Companies | speedrun",
+      "h1": "speedrun_companies",
+      "text_excerpt": "Founders\nInvestors\nPartners\nApply now\nspeedrun_companies\nFilter\nSR007\nClear all\nSorting on\nA-Z\n79 companies\nResidency\n007\nAbliteration.ai\n2 Employees\nLocated in\nPalo Alto, California\nAI Models / Research\nGov Tech / Defense\nDev Tools & DevOps\nUnrestricted LLMs for cybersecurity, agent testing, and defense—$7M ARR and grew 8x last month.\nResidency\n007\nAcaysia\n3 Employees\nLocated in\nSan Francisco, California\nManufacturing / Industrials\nHardware\nDeep Tech\nReal-time AI control layer to optimize industrial reactors.\nResidency\n007\nAgentCat\n5 Employees\nLocated in\nNew York City, New York\nAI Infra\nDev Tools & DevOps\nSession replay and observability for AI agents across MCP, Claude Connectors, and ChatGPT Apps.\nResidency\n007\nAlia\n6 Employees\nLocated in\nSan Francisco, California\nAI Agents\nFuture of Work\nAgents that coordinate teams towards company goals\nResidency\n007\nAlven\nAZ\n4 Employees\nLocated in\nSan Francisco, California\nAI Agents\nReal Estate / Prop Tech\nAlven is an AI employee that replaces the need for human property managers\nResidency\n007\nAthena\n6 Employees\nLocated in\nSan Francisco, California\nAI Agents\nLegal Tech\nThe AI-native law firm for M&A and commercial real estate.\nResidency\n007\nBanbury Road\n3 Employees\nLocated in\nSan Francisco, California\nAI Agents\nAI Models / Research\nDeep Tech\nMulti-agent civilizations that deliver frontier capability at a fraction of the cost and memory of monolithic models.\nResidency\n007\nBaro\n5 Employees\nLocated in\nNew York, New York\nAI Agents\nCommerce / Marketplaces\nBuilding the AI General Manager for Consumer Brands.\nResidency\n007\nBlueprint\n4 Employees\nLocated in\nSan Francisco, California\nAI Agents\nHardware\nDev Tools & DevOps\nHardware, as fast as thought. Turning plain language into physical machines.\nResidency\n007\nBounty\n2 Employees\nLocated in\nNew York City, New York\nAI Agents\nCommerce / Marketplaces\nFuture of Work\nBounty lets founders and small business owners hire AI agents and specialised teams, paying for completed work instead of tool "
+    }
+  ]
+}

@@ -1,0 +1,383 @@
+Companies
+Jobs
+Join the Network
+Apply to
+speedrun
+Sign in
+Companies · Collections
+all_collections
+1,343 companies
+22,844 open roles
+57 collections
+Pinned · the home team · SR001-SR007
+speedrun
+companies
+48
+Companies →
+Pinned · the broader a16z portfolio
+the a16z portfolio
+292
+Companies →
+01
+Core Industries
+Fixed set · ranking curated quarterly
+Frontier AI Labs
+36 companies · 3,209 open roles
++31 more
+Browse →
+AI Infra
+16 companies · 278 open roles
++11 more
+Browse →
+16 in the a16z portfolio
+Defense
+9 companies · 152 open roles
++4 more
+Browse →
+9 in the a16z portfolio
+Health & Bio
+30 companies · 641 open roles
++25 more
+Browse →
+30 in the a16z portfolio
+Aero & Space
+4 companies · 344 open roles
+Browse →
+4 in the a16z portfolio
+Fintech
+27 companies · 505 open roles
++22 more
+Browse →
+27 in the a16z portfolio
+Crypto & Web3
+17 companies · 127 open roles
++12 more
+Browse →
+17 in the a16z portfolio
+Enterprise & B2B
+45 companies · 1,364 open roles
++40 more
+Browse →
+45 in the a16z portfolio
+Dev Tools & Infra
+32 companies · 398 open roles
++27 more
+Browse →
+32 in the a16z portfolio
+Consumer & Social
+20 companies · 285 open roles
++15 more
+Browse →
+20 in the a16z portfolio
+Games & Entertainment
+11 companies · 71 open roles
++6 more
+Browse →
+11 in the a16z portfolio
+Robotics & Hardware
+8 companies · 863 open roles
++3 more
+Browse →
+8 in the a16z portfolio
+Energy & Climate
+8 companies · 525 open roles
++3 more
+Browse →
+8 in the a16z portfolio
+02
+Hubs
+Where startup hiring concentrates · auto from job locations
+New York
+1,113 roles · 158 companies →
+Los Angeles
+841 roles · 41 companies →
+Austin
+503 roles · 44 companies →
+Seattle
+523 roles · 21 companies →
+Boston
+205 roles · 34 companies →
+Miami
+31 roles · 10 companies →
+London
+458 roles · 78 companies →
+Remote
+2,212 roles · anywhere →
+03
+By Investor
+Browsable dimension · not an endorsement
+Abstract Ventures
+14 companies →
+Bessemer Ventures
+61 companies →
+Felicis
+9 companies →
+General Catalyst
+189 companies →
+Greylock Partners
+18 companies →
+GV
+9 companies →
+Index Ventures
+123 companies →
+Khosla Ventures
+114 companies →
+Kleiner Perkins
+24 companies →
+Lightspeed
+78 companies →
+Paradigm
+6 companies →
+Sequoia Capital
+56 companies →
+South Park Commons
+9 companies →
+Union Square Ventures
+7 companies →
+YC F24
+8 companies →
+YC F25
+3 companies →
+YC S23
+17 companies →
+YC S24
+14 companies →
+YC S25
+10 companies →
+YC W23
+22 companies →
+YC W24
+17 companies →
+YC W25
+7 companies →
+YC W26
+6 companies →
+YC X25
+6 companies →
+04
+Signals
+Auto · refreshed on every ingest
+New This Week
+2,269 fresh roles →
+Founding Roles
+87 founding roles →
+Early Career
+10,494 early-career roles →
+Remote-First
+90 companies →
+Hiring in Volume
+39 companies →
+05
+Curated Lists
+Companion pages to our hiring posts
+Remote · September 2026
+102 companies →
+Remote · October 2026
+168 companies →
+Remote · November 2026
+176 companies →
+GTM Hiring · September 2026
+33 companies →
+Energy · October 2026
+13 companies →
+06
+Browse roles
+Role lists · each opens a jobs page, not a company collection
+By craft
+Engineering
+4,753 roles
+AI Research
+747 roles
+Product
+470 roles
+Design
+320 roles
+Sales
+1,741 roles
+Marketing
+716 roles
+Operations
+2,852 roles
+By title
+GTM engineer
+7 roles
+Talent engineer
+351 roles
+Growth hacker
+232 roles
+Forward deployed
+216 roles
+Member of technical staff
+124 roles
+Design engineer
+216 roles
+Product engineer
+94 roles
+Research engineer
+88 roles
+Developer advocate
+14 roles
+Founding designer
+4 roles
+Growth engineer
+8 roles
+Chief of staff
+8 roles
+Deployment strategist
+31 roles
+Applied AI
+40 roles
+AI engineer
+72 roles
+Solutions engineer
+116 roles
+RevOps
+21 roles
+ML engineer
+348 roles
+Security
+386 roles
+Backend
+201 roles
+Frontend
+83 roles
+Full stack
+173 roles
+Account executive
+459 roles
+Customer success
+123 roles
+SDR / BD
+286 roles
+Mechanical
+471 roles
+Electrical
+421 roles
+Embedded
+163 roles
+Finance
+350 roles
+Legal
+236 roles
+DevOps & SRE
+99 roles
+Platform engineer
+71 roles
+Infrastructure
+78 roles
+Data engineer
+96 roles
+Data scientist
+185 roles
+Data analyst
+83 roles
+Hardware
+212 roles
+Quality & test
+440 roles
+Eng manager
+167 roles
+TPM
+131 roles
+Solutions architect
+79 roles
+Support engineer
+104 roles
+Partnerships
+192 roles
+Supply chain
+200 roles
+Manufacturing
+559 roles
+Robotics engineer
+159 roles
+By industry
+AI
+1,295 roles
+B2B SaaS
+4,060 roles
+Robotics
+1,943 roles
+Healthcare & bio
+2,073 roles
+Fintech
+2,075 roles
+Devtools
+1,422 roles
+Energy & climate
+1,579 roles
+Consumer
+2,831 roles
+Aerospace
+1,163 roles
+Defense
+3,849 roles
+Crypto
+181 roles
+Gaming
+495 roles
+By place
+Remote
+2,212 roles
+San Francisco
+2,016 roles
+New York
+1,113 roles
+London
+458 roles
+Austin
+503 roles
+Los Angeles
+842 roles
+Seattle
+523 roles
+Boston
+205 roles
+Chicago
+173 roles
+Washington DC
+403 roles
+Silicon Valley
+1,473 roles
+Orange County
+1,612 roles
+Dallas
+258 roles
+Atlanta
+131 roles
+Toronto
+200 roles
+San Diego
+123 roles
+By level
+Founding engineer
+0 roles
+Founding team
+2 roles
+Senior engineers
+973 roles
+Staff engineers
+551 roles
+Leadership
+750 roles
+Internships
+7,460 roles
+New grad
+3,034 roles
+By pay
+$200k+
+1,165 roles
+$300k+
+170 roles
+© 2026 a16z
+speedrun
+speedrun
+→
+Portfolio →
+Network stats →
+a16z portfolio jobs →
+Layoff tracker →
+Developers →
+State of Talent 2026 →
+Legal
+Report a problem

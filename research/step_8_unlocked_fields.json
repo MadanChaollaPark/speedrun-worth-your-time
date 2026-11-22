@@ -1,0 +1,20 @@
+[
+  {
+    "tag": "TEXTAREA",
+    "type": "textarea",
+    "name": "ideas",
+    "id": "tsp-ideas",
+    "placeholder": "",
+    "maxLength": 1500,
+    "label": "What Should We Change, Improve, or Add?"
+  },
+  {
+    "tag": "TEXTAREA",
+    "type": "textarea",
+    "name": "",
+    "id": "",
+    "placeholder": "What happened? (optional \u2014 we can see the technical details)",
+    "maxLength": 2000,
+    "label": null
+  }
+]

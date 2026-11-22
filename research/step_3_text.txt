@@ -1,0 +1,52 @@
+Companies
+Jobs
+Join the Network
+Apply to
+speedrun
+Sign in
+Step 2 of 8: Where This Could Go
+Where This Could Go
+2
+of
+8
+Where This Could Go
+There are a lot of directions we could take this. The goal is to help both founders and job seekers, and a handful of products out there have really inspired us.
+For job seekers
+career-ops
+(opens in a new tab)
+is an open-source job search agent that runs in your terminal. It scores each job against your CV and tailors your resume, and you still press Submit.
+Tsenta
+(opens in a new tab)
+is an AI career agent that finds roles that fit and applies for you.
+For both sides
+Jack & Jill
+(opens in a new tab)
+gives each side of the market its own AI agent. Jack works for the job seeker, Jill works for the company, and together they make the introduction.
+For founders
+Juicebox
+(opens in a new tab)
+and
+Paraform
+(opens in a new tab)
+help founders hit their hiring goals: Juicebox with AI search and sourcing agents, Paraform by putting their hardest roles in front of a network of expert recruiters.
+And a nod to
+gstack
+(opens in a new tab)
+. It has nothing to do with hiring, but it is genuinely useful to builders, and that kind of usefulness builds a brand people want to work with.
+Next up
+What you'd build.
+←
+Back
+Continue
+© 2026 a16z
+speedrun
+speedrun
+→
+Portfolio →
+Network stats →
+a16z portfolio jobs →
+Layoff tracker →
+Developers →
+State of Talent 2026 →
+Legal
+Report a problem

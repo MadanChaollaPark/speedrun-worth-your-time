@@ -1,0 +1,255 @@
+Companies
+Jobs
+Join the Network
+Apply to
+speedrun
+Sign in
+Talent Network · live snapshot
+The
+speedrun
+talent network so far.
+Builders, designers, researchers, and operators who told us they want to work on early-stage software. Hundreds of placements across the portfolio so far.
+Total in the network
+197,000
++
+Joined this month
+3,146
+Founding-curious
+42
+%
+of recent signups
+Currently students
+17
+%
+of recent signups
+What they do
+Many members span more than one craft, so the mix sums past 100%.
+Engineering
+88,914
++ · 63%
+Design
+58,362
++ · 41%
+Data & ML
+26,029
++ · 18%
+Product
+25,719
++ · 18%
+Marketing
+23,845
++ · 17%
+Sales & GTM
+17,028
++ · 12%
+Operations
+13,940
++ · 10%
+Who's in the network
+Tap a craft to see where those members have worked and studied.
+All crafts
+Engineering
+Design
+Data & ML
+Product
+Marketing
+Sales & GTM
+Operations
+Where they've worked
+Amazon
+6,361+
+Google
+3,858+
+Microsoft
+3,582+
+Meta
+3,059+
+Apple
+1,875+
+IBM
+1,724+
+JPMorgan
+1,359+
+Electronic Arts
+1,123+
+Goldman Sachs
+1,086+
+Oracle
+1,023+
+Riot Games
+929+
+Uber
+918+
+Where they studied
+UC Berkeley
+3,709+
+Stanford
+2,578+
+Harvard
+2,544+
+NYU
+2,522+
+USC
+2,278+
+Columbia
+2,198+
+UPenn
+1,847+
+UCLA
+1,744+
+Georgia Tech
+1,723+
+Northeastern
+1,660+
+UIUC
+1,605+
+Cornell
+1,551+
+Hiring across the portfolio
+Live aggregates from the
+jobs board
+, computed from the jobs database on every render. Counts move as companies open and close roles.
+Live roles
+22,844
+Companies hiring
+761
+Remote friendly
+10
+%
+2,212 roles open to remote
+Posted pay bands
+20
+%
+4,622 roles post a pay range
+Demand by function
+Share of the 22,844 live roles, by function.
+Engineering
+8,298
+· 36%
+Other
+6,086
+· 27%
+Operations
+4,153
+· 18%
+Sales
+1,382
+· 6%
+Marketing
+897
+· 4%
+Research
+836
+· 4%
+Design
+767
+· 3%
+Product
+425
+· 2%
+Posted pay by function
+Midpoints of posted pay bands (annual USD). Bar length tracks the median; only functions with 15 or more posted bands are shown.
+Research
+97 bands
+p25 $161k · median
+$238k
+· p75 $275k
+Product
+176 bands
+p25 $200k · median
+$226k
+· p75 $260k
+Engineering
+2,034 bands
+p25 $170k · median
+$205k
+· p75 $250k
+Design
+165 bands
+p25 $156k · median
+$195k
+· p75 $223k
+Other
+659 bands
+p25 $114k · median
+$190k
+· p75 $215k
+Sales
+499 bands
+p25 $143k · median
+$190k
+· p75 $240k
+Marketing
+200 bands
+p25 $156k · median
+$181k
+· p75 $211k
+Operations
+792 bands
+p25 $125k · median
+$153k
+· p75 $195k
+Top hiring locations
+Cities with the most live roles. Remote roles are counted separately above.
+San Francisco
+1,726
+Costa Mesa
+1,365
+New York
+1,056
+Seattle
+523
+Los Angeles
+517
+Austin
+503
+Singapore
+493
+London
+458
+San Jose
+380
+2 Locations
+368
+Portfolio split
+The board spans
+speedrun
+companies and the wider a16z portfolio.
+a16z portfolio
+12,158
+roles · 53%
+wider market
+10,478
+roles · 46%
+speedrun
+208
+roles · 1%
+Common questions
+How many roles are open across the portfolio right now?
+22,844 live roles across 761 portfolio companies, synced continuously from each company's live job board. Browse them all at https://speedrun-talent-network.com/jobs.
+How many of the open roles are remote?
+2,212 of the 22,844 live roles (10%) are open to remote candidates.
+What do engineering roles at portfolio companies pay?
+Across the 2,034 engineering roles with a posted pay band, the median band midpoint is $205k per year, and the middle half of roles fall between $170k and $250k (annual USD, computed from posted ranges only).
+Which functions are hiring the most?
+Engineering leads with 8,298 open roles (36% of the board), followed by operations (4,153) and sales (1,382).
+Methodology: aggregates over roles currently listed on the jobs board. Pay figures use the midpoint of each posted range, annual USD only, and are shown per function, never per company. Machine-readable feeds:
+jobs.md
+and
+jobs.rss
+.
+Join the network
+Back to the homepage
+Network-wide figures as of 2026-11-03; counts are anonymized lower-bound aggregates, so they read as minimums. No names, emails, or links to individuals.
+© 2026 a16z
+speedrun
+speedrun
+→
+Portfolio →
+Network stats →
+a16z portfolio jobs →
+Layoff tracker →
+Developers →
+State of Talent 2026 →
+Legal
+Report a problem

@@ -1,0 +1,80 @@
+{
+  "heading": "The a16z speedrun Talent Team Is Hiring a Product Engineer",
+  "hash": "#step-1",
+  "progress": null,
+  "url": "https://speedrun-talent-network.com/product-engineer/#step-1",
+  "inputs": [
+    {
+      "tag": "textarea",
+      "type": "textarea",
+      "name": null,
+      "id": null,
+      "placeholder": "What happened? (optional — we can see the technical details)",
+      "required": false,
+      "maxLength": 2000,
+      "accept": null,
+      "label": "What happened?",
+      "describedBy": [],
+      "value": ""
+    }
+  ],
+  "buttons": [
+    {
+      "type": "button",
+      "text": "",
+      "className": "srn-menu-btn",
+      "disabled": false,
+      "aria": "Menu"
+    },
+    {
+      "type": "button",
+      "text": "",
+      "className": "tn-id-trigger",
+      "disabled": false,
+      "aria": "Your account"
+    },
+    {
+      "type": "button",
+      "text": "Sign out",
+      "className": "tn-id-menu-item tn-id-menu-item--signout sr-text-button",
+      "disabled": false,
+      "aria": null
+    },
+    {
+      "type": "submit",
+      "text": "GET STARTED",
+      "className": "sr-btn sr-btn-hud sr-btn--lg tsp-cta",
+      "disabled": false,
+      "aria": null
+    },
+    {
+      "type": "button",
+      "text": "Legal",
+      "className": "tn-footer-legal-btn",
+      "disabled": false,
+      "aria": null
+    },
+    {
+      "type": "button",
+      "text": "REPORT A PROBLEM",
+      "className": "tn-footer-bug-btn",
+      "disabled": false,
+      "aria": null
+    },
+    {
+      "type": "button",
+      "text": "Close",
+      "className": "tn-footer-bug-close",
+      "disabled": false,
+      "aria": null
+    },
+    {
+      "type": "submit",
+      "text": "Submit",
+      "className": "sr-btn sr-btn--md sr-btn-primary",
+      "disabled": false,
+      "aria": null
+    }
+  ],
+  "groups": []
+}

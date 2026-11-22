@@ -1,0 +1,129 @@
+{
+  "heading": "Job Hunting Sux. Here's What We've Built So Far.",
+  "hash": "#step-2",
+  "progress": "WHAT WE'VE BUILT\n1 OF 8",
+  "url": "https://speedrun-talent-network.com/product-engineer/#step-2",
+  "inputs": [
+    {
+      "tag": "textarea",
+      "type": "textarea",
+      "name": null,
+      "id": null,
+      "placeholder": "What happened? (optional — we can see the technical details)",
+      "required": false,
+      "maxLength": 2000,
+      "accept": null,
+      "label": "What happened?",
+      "describedBy": [],
+      "value": ""
+    }
+  ],
+  "buttons": [
+    {
+      "type": "button",
+      "text": "",
+      "className": "srn-menu-btn",
+      "disabled": false,
+      "aria": "Menu"
+    },
+    {
+      "type": "button",
+      "text": "",
+      "className": "tn-id-trigger",
+      "disabled": false,
+      "aria": "Your account"
+    },
+    {
+      "type": "button",
+      "text": "Sign out",
+      "className": "tn-id-menu-item tn-id-menu-item--signout sr-text-button",
+      "disabled": false,
+      "aria": null
+    },
+    {
+      "type": "button",
+      "text": "Jobs board\n/jobs",
+      "className": "",
+      "disabled": false,
+      "aria": null
+    },
+    {
+      "type": "button",
+      "text": "Signup and profiles\n/join",
+      "className": "",
+      "disabled": false,
+      "aria": null
+    },
+    {
+      "type": "button",
+      "text": "Salary tool\n/founding-engineer-salary",
+      "className": "",
+      "disabled": false,
+      "aria": null
+    },
+    {
+      "type": "button",
+      "text": "Layoffs tracker\n/layoffs",
+      "className": "",
+      "disabled": false,
+      "aria": null
+    },
+    {
+      "type": "button",
+      "text": "job hunting sux\njobhuntingsux.com",
+      "className": "",
+      "disabled": false,
+      "aria": null
+    },
+    {
+      "type": "button",
+      "text": "MCP server for AI agents\n/developers",
+      "className": "",
+      "disabled": false,
+      "aria": null
+    },
+    {
+      "type": "button",
+      "text": "←\nBACK",
+      "className": "sr-btn sr-btn-ghost sr-btn--md tsp-back",
+      "disabled": false,
+      "aria": null
+    },
+    {
+      "type": "submit",
+      "text": "CONTINUE",
+      "className": "sr-btn sr-btn-primary sr-btn--lg tsp-next",
+      "disabled": false,
+      "aria": null
+    },
+    {
+      "type": "button",
+      "text": "Legal",
+      "className": "tn-footer-legal-btn",
+      "disabled": false,
+      "aria": null
+    },
+    {
+      "type": "button",
+      "text": "REPORT A PROBLEM",
+      "className": "tn-footer-bug-btn",
+      "disabled": false,
+      "aria": null
+    },
+    {
+      "type": "button",
+      "text": "Close",
+      "className": "tn-footer-bug-close",
+      "disabled": false,
+      "aria": null
+    },
+    {
+      "type": "submit",
+      "text": "Submit",
+      "className": "sr-btn sr-btn--md sr-btn-primary",
+      "disabled": false,
+      "aria": null
+    }
+  ],
+  "groups": []
+}
