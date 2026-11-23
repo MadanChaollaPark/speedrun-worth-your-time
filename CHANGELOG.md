@@ -1,5 +1,12 @@
 # Changelog
 
+## Iteration 8 · 2026-11-23
+
+- Verified the public iteration 7 GitHub Pages build with four Chromium smoke tests and retries disabled.
+- Counted concrete interview steps that mention recording or transcription while continuing to exclude media mentions and scam warnings.
+- Recognized more candidate qualification headings and phrases when assessing hours. Explicit schedule expectations still count.
+- Verified that the four shipped samples and the fictional API fixture retain their scores and bands.
+
 ## Iteration 7 · 2026-11-23
 
 - Verified the public iteration 6 GitHub Pages build with four Chromium smoke tests and retries disabled.

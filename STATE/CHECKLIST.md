@@ -1,6 +1,6 @@
 # Checklist (orchestrator-owned)
 
-Statuses: TODO / IN-PROGRESS / VERIFIED (with evidence). Only mark VERIFIED after a command or inspection actually confirmed it. Last updated: iteration 7 review, 2026-11-23 ~14:40 KST (iteration 7 reviewer verdict PASS). Iterations 2 through 6 verdicts: PASS (every required item below VERIFIED as of the iteration 6 review, 14:31 KST). Items under "Iteration 7 polish" are optional quality work, not Definition of Done gaps. No TODO items remain; iteration 7 code goes live only after the driver pushes.
+Statuses: TODO / IN-PROGRESS / VERIFIED (with evidence). Only mark VERIFIED after a command or inspection actually confirmed it. Last updated: iteration 8 plan, 2026-11-23 15:20 KST. Iterations 2 through 7 verdicts: PASS (every required DoD item below VERIFIED as of the iteration 7 review, 15:19 KST). Items under "Iteration N polish" are optional quality work, not Definition of Done gaps. Open items are iteration 8 polish and the live smoke on `99054aa`.
 
 ## DoD 1 — Research captured
 - [VERIFIED] RESEARCH.md records live page, role/values, wizard map, existing products, inspiration board (#step-3), exact step-2 (`demo_url`, `ideas` ≤1500) and step-3 (About You, Last Few Questions) prompts and fields, with sources. Evidence: read in full at iter 1; screenshots and text dumps present under `research/`.
@@ -32,6 +32,8 @@ Statuses: TODO / IN-PROGRESS / VERIFIED (with evidence). Only mark VERIFIED afte
 - [VERIFIED] Live browser smoke re-run against the iteration 5 deploy (`9b46781`). Evidence: iter 6 reviewer 2026-11-23 ~14:30 KST `npm run test:live -- --retries=0` exit 0 (4 passed); Pages `built` at `9b46781`; `curl` → 200. Builder run also 4 passed.
 - [VERIFIED] Iteration 6 build is what Pages serves. Evidence: iter 7 orchestrator, 2026-11-23 14:33 KST: `gh api .../pages/builds/latest` → `built`, commit `19ba82c5d88b…` (v06-iter06), updated 05:32:01Z, equal to local `HEAD`; unauthenticated `curl` of the live URL → 200.
 - [VERIFIED] Live browser smoke re-run against the iteration 6 deploy (`19ba82c`). Evidence: iter 7 reviewer 2026-11-23 ~14:40 KST `npm run test:live -- --retries=0` exit 0 (4 passed); Pages `built` at `19ba82c`; unauthenticated `curl` → 200. Builder run also 4 passed.
+- [VERIFIED] Iteration 7 build is what Pages serves. Evidence: iter 8 orchestrator, 2026-11-23 15:20 KST: `gh api .../pages/builds/latest` → `built`, commit `99054aa144df…` (v07-iter07), updated 06:19:39Z, equal to local `HEAD`; unauthenticated `curl` of the live URL → 200.
+- [IN-PROGRESS] Live browser smoke re-run against the iteration 7 deploy (`99054aa`). Planned: iter 8 PLAN Step 1 (`npm run test:live -- --retries=0`).
 - [VERIFIED] Live browser smoke re-run against the iteration 3 deploy (`8c64674`). Evidence: iter 4 reviewer 2026-11-23 09:12 KST `npm run test:live -- --retries=0` exit 0 (4 passed); Pages `built` at `8c64674`; `curl` → 200.
 - [VERIFIED] Live browser smoke re-run against the iteration 2 deploy (`abecb71`), with the founder test stabilized. Evidence: iter 3 reviewer `npm run test:live -- --retries=0` exit 0 (4 passed); `tests/live/live.spec.js:60` waits for `#founder-company`; Pages `built` at `abecb71`.
 - [VERIFIED] App works end-to-end on the live URL (sample → brief, paste → brief, founder template) in a real browser. Evidence: iter 2 reviewer `npm run test:live` exit 0 (4 passed with --retries=0; an earlier run had 1 flaky founder test that passed on retry), screenshots `tests/screenshots/live-*.png`; deployed commit 6fff783.
@@ -81,3 +83,10 @@ Statuses: TODO / IN-PROGRESS / VERIFIED (with evidence). Only mark VERIFIED afte
 - [VERIFIED] Optional: soft intensity wording inside a requirement ("experience in a fast-paced environment") does not mark Hours as risk. (Review iter 6 issue 4.) Evidence: iter 7 reviewer 2026-11-23 ~14:40 KST `CI=1 npm run test:unit` exit 0 (61 pass), `CI=1 npx playwright test --retries=0` exit 0 (19 passed); ad hoc node checks; see STATE/REVIEW.md. Moonbutton still 26 · Proceed with caution.
 - [VERIFIED] Calibration scratch files stay outside the repo (`/tmp`). (Review iter 6 issue 2.) Evidence: iter 7 reviewer `git status --short --untracked-files=all` shows no untracked files; `ls /tmp/wyt* .wyt*` → `no temp files`.
 - [VERIFIED] CHANGELOG iteration 7 entry listing only verified changes. Evidence: iter 7 reviewer read CHANGELOG.md:3-8 against the diff.
+
+## Iteration 8 polish (optional quality; see STATE/PLAN.md)
+- [IN-PROGRESS] Interview row: concrete stage detail overrides the soft recording/transcription exclusion; scam/media exclusions still win. (Review iter 7 issue 1.) Planned: PLAN Step 2 with fictional tests.
+- [IN-PROGRESS] Hours row: qualifications headings (`What you'll bring`, `About you`, …) and prefixes (`Comfort in`, `Ability to`, …) recognized; strong schedule pressure still counts. (Review iter 7 issue 2.) Planned: PLAN Step 3 with fictional tests.
+- [VERIFIED] Builder/driver conflict over `STATE/TEST_COMMANDS` resolved. (Review iter 7 issue 3.) Evidence: iter 8 PLAN rules allow the builder to edit it only when a command changes, with README kept identical.
+- [IN-PROGRESS] Pre-package consistency: README test commands = `STATE/TEST_COMMANDS`, live URL in README and draft, `ideas` ≤1500 chars, ALL-CAPS placeholders, README shortcuts = in-app dialog. Planned: PLAN Step 4.
+- [IN-PROGRESS] CHANGELOG iteration 8 entry listing only verified changes. Planned: PLAN Step 5.

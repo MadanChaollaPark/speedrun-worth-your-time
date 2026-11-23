@@ -189,6 +189,37 @@ test('soft intensity in candidate qualifications leaves hours unknown', () => {
   }
 });
 
+test('expanded qualifications headings keep soft intensity out of hours evidence', () => {
+  for (const text of [
+    "What you'll bring:\n- Comfort in a fast-paced startup",
+    'About you\n- Ability to thrive in a fast-paced team',
+    '## What we’re looking for:\n- A portfolio of fast-paced projects',
+    'You might be a fit if\n- A fast-paced studio sounds appealing',
+    'Who you are\n- A maker who enjoys a fast-paced team',
+  ]) {
+    assert.equal(row(fromText(text), 'hours').status, 'unknown', text);
+  }
+});
+
+test('qualification prefixes keep soft intensity out of hours evidence without a heading', () => {
+  for (const text of [
+    '- Comfort in a fast-paced startup',
+    '- Comfort with a fast-paced schedule',
+    '- Comfortable working in a fast-paced studio',
+    '- Strong judgment in fast-paced teams',
+    '- Proven results in fast-paced teams',
+    '- Ability to thrive in a fast-paced team',
+  ]) {
+    assert.equal(row(fromText(text), 'hours').status, 'unknown', text);
+  }
+});
+
+test('nights and weekends still count under What you’ll bring', () => {
+  const hours = row(fromText("What you'll bring:\n- Happy to work nights and weekends during launches"), 'hours');
+  assert.equal(hours.status, 'risk');
+  assert.match(hours.evidence, /nights and weekends/);
+});
+
 test('schedule pressure still counts under requirements and soft wording counts after the section', () => {
   const explicit = row(fromText('Requirements:\n- Comfortable working nights and weekends'), 'hours');
   assert.equal(explicit.status, 'risk');
@@ -246,6 +277,30 @@ test('scam warnings are excluded even when they mention hiring steps', () => {
     assert.equal(interview.status, 'unknown');
     assert.equal(interview.evidence, 'Not mentioned in the posting');
   }
+});
+
+test('concrete interview steps count when a call is recorded', () => {
+  const line = 'Interview: take-home, then a recorded 30 minute founder call.';
+  const interview = row(fromText(line), 'interview');
+  assert.equal(interview.status, 'signal');
+  assert.match(interview.evidence, /take-home/);
+});
+
+test('a recording or transcription policy alone leaves interview steps unknown', () => {
+  for (const line of [
+    'Interviews may be recorded for note-taking.',
+    'Candidates can request an interview transcript.',
+  ]) {
+    const interview = row(fromText(line), 'interview');
+    assert.equal(interview.status, 'unknown');
+    assert.equal(interview.evidence, 'Not mentioned in the posting');
+  }
+});
+
+test('a scam warning below an interview heading does not count as a step', () => {
+  const interview = row(fromText('Interview process\n- We will never ask for payment during the 30-minute interview.'), 'interview');
+  assert.equal(interview.status, 'unknown');
+  assert.equal(interview.evidence, 'Interview process');
 });
 
 test('an interview heading quotes the introductory call after an unrelated interview mention', () => {

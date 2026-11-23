@@ -158,13 +158,14 @@ const equityCompContext = /\b(?:salary|pay|compensation|offer(?:ed|s)?|vest(?:in
 const vagueScope = /\b(?:wear (?:many|multiple|all) hats|whatever it takes|do it all|everything from(?= .* to .*\b)|anything and everything|no job is too small)\b/i;
 const schedulePressure = /\b(?:nights and weekends|weekends (?:expected|required)|long hours|(?:50|55|60|65|70|80)\+?\s*hours|six[- ]days|6[- ]days?|crunch|always on)\b/i;
 const softPressure = /\b(?:rockstar|fast[ -]paced|hustle|grind|work hard|breakneck speed)\b/i;
-const requirementsHeading = /^(?:#{1,6}\s+)?(?:requirements|qualifications|what you bring|nice to have)\s*:?$/i;
-const requirementPrefix = /^(?:experience|\d+\+?\s+years|you have|you['’]ve|comfortable|thrive|background in|familiar)\b/i;
+const requirementsHeading = /^(?:#{1,6}\s+)?(?:requirements|qualifications|what you bring|what you['’]?ll bring|what we['’]?re looking for|about you|you might be a fit if|who you are|nice to have)\s*:?$/i;
+const requirementPrefix = /^(?:experience|\d+\+?\s+years|you have|you['’]ve|comfort(?:able| (?:in|with))|strong|proven|ability to|thrive|background in|familiar)\b/i;
 const regularHours = /\b(?:no (?:routine )?(?:nights|weekends|after-hours|overtime)|standard (?:working|business) hours|\d{1,2}[- ]hour (?:work)?week|on-call (?:rotation|schedule))\b/i;
 const interview = /\b(?:interview(?:s|ing)?|hiring process|recruiter screen|phone screen|take[- ]home|technical screen|onsite loop)\b/i;
 const stageDetail = /\b(?:screen|intro(?:ductory)? call|(?:founder|team|technical|panel|final|pairing) (?:call|chat|session|interview)|portfolio review|take[- ]home|\d+\s*(?:minutes?|hours?|weeks?|days?|rounds?|steps?)|\d+\s*min\b|paid exercise|work sample|pair programming|→)\b/i;
 const hiringContext = /\b(?:process|stages?|steps?|rounds?|candidates?|apply|applicants?|application|hiring|recruit\w*|loop|timeline|schedule)\b/i;
-const nonHiringContext = /\b(?:media|press|podcast|journalist|scam|fraud|phishing|impersonat\w*|never ask|record(?:ed|ing)?|transcri\w*)\b/i;
+const nonHiringContext = /\b(?:media|press|podcast|journalist|scam|fraud|phishing|impersonat\w*|never ask)\b/i;
+const recordingContext = /\b(?:record(?:ed|ing)?|transcri\w*)\b/i;
 const placeholder = /^(?:tbd|tba|unknown|n\/a|not (?:provided|specified|disclosed)|to be (?:determined|announced))\.?$/i;
 const negated = /\b(?:no|never|without|not expected to|don['’]t|do not|won['’]t|will not)\b/i;
 
@@ -384,10 +385,10 @@ function inspect(posting, lines, responsibilities) {
     action.test(stripBullet(lines[goalAt + 1] ?? '')) ||
     !goalText && /\b(?:ship|launch|own|deliver|reduce|complete|build|publish|roll out|success looks like)\b/i.test(goal));
   const processAt = lines.findIndex(line => interview.test(line) && !nonHiringContext.test(line) &&
-    (stageDetail.test(line) || otherHeading.test(line) || hiringContext.test(line)));
+    (stageDetail.test(line) || (!recordingContext.test(line) && (otherHeading.test(line) || hiringContext.test(line)))));
   const processLine = lines[processAt];
   const nearby = processLine ? lines.slice(processAt, processAt + 5) : [];
-  const stepLines = nearby.filter(line => stageDetail.test(line) && !/^[\w /&'-]+:\s/.test(line));
+  const stepLines = nearby.filter(line => stageDetail.test(line) && !nonHiringContext.test(line) && !/^[\w /&'-]+:\s/.test(line));
   const interviewEvidence = processLine && (stageDetail.test(processLine) ? processLine : stepLines[0]);
   const officePattern = /\b(?:\d+\s+days?\s+(?:a|per)\s+week\s+(?:in (?:the )?office|on[- ]?site)|office\s+(?:\d+\s+days?|attendance)|fully remote|remote[- ]first)\b/i;
   const office = hits(officePattern);
