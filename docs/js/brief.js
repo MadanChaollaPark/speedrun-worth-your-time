@@ -85,6 +85,25 @@ export function normalizeFromText(text) {
 
 const validAmount = value => typeof value === 'number' && Number.isFinite(value) && value >= 0;
 const formatAmount = value => value.toLocaleString('en-US', { maximumFractionDigits: 4 });
+const namedEntities = new Map([
+  ['amp', '&'], ['lt', '<'], ['gt', '>'], ['quot', '"'], ['apos', "'"], ['nbsp', ' '],
+  ['ndash', '–'], ['mdash', '—'], ['lsquo', '‘'], ['rsquo', '’'], ['ldquo', '“'], ['rdquo', '”'],
+  ['hellip', '…'], ['bull', '•'],
+]);
+
+export function decodeEntities(text) {
+  return text.replace(/&(?:([a-z]+)|#([0-9]+)|#[xX]([0-9a-fA-F]+));/g, (entity, name, decimal, hex) => {
+    if (name) return namedEntities.get(name) ?? entity;
+
+    const codePoint = hex ? Number.parseInt(hex, 16) : Number(decimal);
+    const control = (codePoint < 0x20 && codePoint !== 0x09 && codePoint !== 0x0a) ||
+      (codePoint >= 0x7f && codePoint <= 0x9f);
+    const surrogate = codePoint >= 0xd800 && codePoint <= 0xdfff;
+    return control || surrogate || codePoint > 0x10ffff ? entity : String.fromCodePoint(codePoint);
+  });
+}
+
+const apiTextValue = value => typeof value === 'string' ? textValue(decodeEntities(value)) : null;
 
 export function normalizeFromApi(job) {
   const { comp_min: low, comp_max: high } = job ?? {};
@@ -98,12 +117,12 @@ export function normalizeFromApi(job) {
   else if (compMin !== null && compMax === compMin) amountText = formatAmount(compMin);
   else if (compMin !== null && compMax === null) amountText = 'From ' + formatAmount(compMin);
   else if (compMax !== null && compMin === null) amountText = 'Up to ' + formatAmount(compMax);
-  const summary = textValue(job?.comp_summary);
+  const summary = apiTextValue(job?.comp_summary);
   return {
     source: 'api',
-    title: textValue(job?.title),
-    company: textValue(job?.company),
-    location: textValue(job?.location),
+    title: apiTextValue(job?.title),
+    company: apiTextValue(job?.company),
+    location: apiTextValue(job?.location),
     workplace: textValue(job?.workplace_type) ?? (job?.remote === true ? 'remote' : null),
     employment: textValue(job?.employment_type),
     comp: summary ?? (amountText ? [amountText, currency, period ? '/ ' + period : null].filter(Boolean).join(' ') : null),
@@ -113,7 +132,7 @@ export function normalizeFromApi(job) {
     compMax,
     compCurrency: currency,
     compPeriod: period,
-    description: textValue(job?.description_text) ?? '',
+    description: apiTextValue(job?.description_text) ?? '',
     labels: job?.labels && typeof job.labels === 'object' && !Array.isArray(job.labels) ? job.labels : null,
     url: safeHttpsUrl(job?.url),
     applyUrl: safeHttpsUrl(job?.apply?.url),
@@ -139,9 +158,13 @@ const equityCompContext = /\b(?:salary|pay|compensation|offer(?:ed|s)?|vest(?:in
 const vagueScope = /\b(?:wear (?:many|multiple|all) hats|whatever it takes|do it all|everything from(?= .* to .*\b)|anything and everything|no job is too small)\b/i;
 const schedulePressure = /\b(?:nights and weekends|weekends (?:expected|required)|long hours|(?:50|55|60|65|70|80)\+?\s*hours|six[- ]days|6[- ]days?|crunch|always on)\b/i;
 const softPressure = /\b(?:rockstar|fast[ -]paced|hustle|grind|work hard|breakneck speed)\b/i;
+const requirementsHeading = /^(?:#{1,6}\s+)?(?:requirements|qualifications|what you bring|nice to have)\s*:?$/i;
+const requirementPrefix = /^(?:experience|\d+\+?\s+years|you have|you['’]ve|comfortable|thrive|background in|familiar)\b/i;
 const regularHours = /\b(?:no (?:routine )?(?:nights|weekends|after-hours|overtime)|standard (?:working|business) hours|\d{1,2}[- ]hour (?:work)?week|on-call (?:rotation|schedule))\b/i;
 const interview = /\b(?:interview(?:s|ing)?|hiring process|recruiter screen|phone screen|take[- ]home|technical screen|onsite loop)\b/i;
 const stageDetail = /\b(?:screen|intro(?:ductory)? call|(?:founder|team|technical|panel|final|pairing) (?:call|chat|session|interview)|portfolio review|take[- ]home|\d+\s*(?:minutes?|hours?|weeks?|days?|rounds?|steps?)|\d+\s*min\b|paid exercise|work sample|pair programming|→)\b/i;
+const hiringContext = /\b(?:process|stages?|steps?|rounds?|candidates?|apply|applicants?|application|hiring|recruit\w*|loop|timeline|schedule)\b/i;
+const nonHiringContext = /\b(?:media|press|podcast|journalist|scam|fraud|phishing|impersonat\w*|never ask|record(?:ed|ing)?|transcri\w*)\b/i;
 const placeholder = /^(?:tbd|tba|unknown|n\/a|not (?:provided|specified|disclosed)|to be (?:determined|announced))\.?$/i;
 const negated = /\b(?:no|never|without|not expected to|don['’]t|do not|won['’]t|will not)\b/i;
 
@@ -234,6 +257,15 @@ export const criteria = [
 export const BASELINE = 100 - criteria.reduce((total, { reward }) => total + reward, 0);
 
 const stripBullet = line => line.replace(/^(?:[-*•]|\d+[.)])\s+/, '');
+
+function softPressureCandidates(lines) {
+  let inRequirements = false;
+  return lines.filter(line => {
+    if (requirementsHeading.test(line)) inRequirements = true;
+    else if (otherHeading.test(line) || roleHeading.test(line)) inRequirements = false;
+    return !inRequirements && !requirementPrefix.test(stripBullet(line));
+  });
+}
 
 function employmentInDescription(lines) {
   const details = lines.map(stripBullet).filter(line => !action.test(line));
@@ -351,7 +383,8 @@ function inspect(posting, lines, responsibilities) {
   const goals = goal && (goalText && !placeholder.test(goalText) ||
     action.test(stripBullet(lines[goalAt + 1] ?? '')) ||
     !goalText && /\b(?:ship|launch|own|deliver|reduce|complete|build|publish|roll out|success looks like)\b/i.test(goal));
-  const processAt = lines.findIndex(line => interview.test(line));
+  const processAt = lines.findIndex(line => interview.test(line) && !nonHiringContext.test(line) &&
+    (stageDetail.test(line) || otherHeading.test(line) || hiringContext.test(line)));
   const processLine = lines[processAt];
   const nearby = processLine ? lines.slice(processAt, processAt + 5) : [];
   const stepLines = nearby.filter(line => stageDetail.test(line) && !/^[\w /&'-]+:\s/.test(line));
@@ -363,12 +396,12 @@ function inspect(posting, lines, responsibilities) {
     return label ? !placeholder.test(label[1]) : (workMode.test(line) || officePattern.test(line)) &&
       !/\b(?:remote teams?|remote sensing|remote control|remote access|remote support)\b/i.test(line);
   });
-  const pressureHits = pattern => lines.filter(line => {
+  const pressureHits = (pattern, candidates = lines) => candidates.filter(line => {
     const at = line.search(pattern);
     return at >= 0 && !negated.test(line.slice(Math.max(0, at - 28), at));
   });
   const schedule = pressureHits(schedulePressure);
-  const pressure = schedule.length ? schedule : pressureHits(softPressure);
+  const pressure = schedule.length ? schedule : pressureHits(softPressure, softPressureCandidates(lines));
   const hours = hits(regularHours);
   const visaPattern = /\b(?:visa(?:s| sponsorship)?|sponsor(?:ship)? (?:work )?visa|work (?:permit|authorization)|h[- ]?1b)\b/i;
   const visa = hit(visaPattern);

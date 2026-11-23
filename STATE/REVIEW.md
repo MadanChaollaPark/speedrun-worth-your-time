@@ -1,65 +1,65 @@
-# Review · Iteration 6 · 2026-11-23 KST
+# Review · Iteration 7 · 2026-11-23 ~14:40 KST
 
-Reviewer: Kiro Claude Opus 5.5. Orchestrator and reviewer are Kiro Claude Opus 5.5; builder is Codex gpt-6.2-sol at high reasoning effort / slow mode, by owner decision 2026-11-22; do not revert
+Reviewer: Kiro Claude Opus 5.5. Builder: Codex gpt-6.2-sol (high reasoning / slow mode), by owner decision 2026-11-22.
 
 ## Verdict: PASS
 
-Every Definition of Done item is verified this round. The reviewer ran both required suites and the live suite, and all passed with nothing skipped. The public link opens without a login. Pages still serves the iteration 5 commit `9b46781`, and the live suite passed against it. The iteration 6 tree goes live when the driver pushes after this review.
+Every Definition of Done item was checked this round, and the required suites passed when the driver ran them and again when I ran them. The public link opened without a login and passed the live browser suite. The live site serves iteration 6 (`19ba82c`). The iteration 7 logic changes go live once the driver pushes.
 
-## Commands run by the reviewer (from `/workspace/speedrun-pe`, 2026-11-23 ~14:30 KST)
+## Commands I ran (reviewer, this round)
 
 | Command | Exit | Result |
 | --- | ---: | --- |
-| `CI=1 npm run test:unit` | 0 | 52 tests, 52 pass, 0 fail, 0 skipped |
-| `CI=1 npx playwright test --retries=0` | 0 | 19 passed (6.6 s), includes the axe scans |
-| `curl -sS -o /dev/null -w '%{http_code}' -L https://madanchaollapark.github.io/speedrun-worth-your-time/` | 0 | `200`, no redirect, no auth |
-| `GH_PROMPT_DISABLED=1 gh api repos/MadanChaollaPark/speedrun-worth-your-time/pages/builds/latest --jq '{status,commit,updated_at}'` | 0 | `built`, commit `9b46781cf3f5aa871df9a914ef04489b722f3773`, updated 00:57:10Z. This matches local `HEAD`. |
-| `npm run test:live -- --retries=0` | 0 | 4 passed (2.7 s) against the live iteration 5 deploy |
-| unsafe-sink grep (PLAN Step 6) | 0 | `no unsafe sinks` |
-| role-line `grep -c` | 0 | `GOAL.md:1`, `STATE/PLAN.md:2` |
-| `git diff --name-only -- GOAL.md RESEARCH.md APPLICATION_DRAFT.md speedrun_pe_loop.py STATE/TEST_COMMANDS` | 0 | empty |
-| `git diff --check -- docs tests PRODUCT.md CHANGELOG.md README.md STATE/BUILD_REPORT.md` | 0 | empty |
-| `ls .wyt* /tmp/wyt*` and `git status --short --untracked-files=all` | 0 | no temp files; only modified tracked files, no untracked files |
-| secret-pattern grep over the repo | 0 | matches only regex text inside gitignored builder logs; no secrets |
-| ad hoc `node` probe of Moonbutton rows and of an API posting with `&ndash;` and `<img onerror>` | 0 | see the findings below |
+| `CI=1 npm run test:unit` | 0 | 61 tests, 61 pass, 0 fail, 0 skipped |
+| `CI=1 npx playwright test --retries=0` | 0 | 19 passed (28.5s), including the axe scans and the hostile-markup walkthrough |
+| `GH_PROMPT_DISABLED=1 gh api repos/MadanChaollaPark/speedrun-worth-your-time/pages/builds/latest --jq '{status,commit,updated_at}'` | 0 | `built`, `19ba82c5d88b…`, 2026-11-23T05:32:01Z |
+| `curl -sS -o /dev/null -w '%{http_code}\n' https://madanchaollapark.github.io/speedrun-worth-your-time/` | 0 | `200` (no auth) |
+| `npm run test:live -- --retries=0` | 0 | 4 passed (6.3s) against the public URL |
+| unsafe-sink grep (`innerHTML\|outerHTML\|insertAdjacentHTML\|document.write\|eval(\|new Function\|DOMParser` in `docs/js`) | 0 | `no unsafe sinks` |
+| role-line `grep -c` on GOAL.md, STATE/PLAN.md | 0 | 1 and 2 |
+| `git diff --name-only -- GOAL.md RESEARCH.md APPLICATION_DRAFT.md speedrun_pe_loop.py STATE/ALL_DONE` | 0 | no output |
+| `git diff --check -- docs tests PRODUCT.md CHANGELOG.md README.md` | 0 | no output |
+| `ls /tmp/wyt* .wyt*` and `git status --short --untracked-files=all` | 0 | `no temp files`, no untracked files |
+| token-pattern grep (`ghp_`, `github_pat_`, `sk-…`, `AKIA…`) outside `.git`, `node_modules`, logs | 0 | no matches |
+| ad hoc `node` score and edge-case script (scratch heredoc, nothing written) | 0 | scores unchanged, see below |
 
-The driver's fresh logs agree: `STATE/logs/iter06_tests_1.txt` (EXIT=0, 0 skipped) and `STATE/logs/iter06_tests_2.txt` (19 passed, EXIT=0). The driver ran these; the reviewer reproduced both.
+Driver's fresh run: cmd1 exit 0 (`STATE/logs/iter07_tests_1.txt`, 61/61 unit), cmd2 exit 0 (`STATE/logs/iter07_tests_2.txt`, 19 passed). These match my run.
 
-## Plan steps against the claims in BUILD_REPORT
+Scores after the change: Figment Ferry 81 · Worth a conversation, Moonbutton 26 · Proceed with caution, Paper Comet 91 · Worth a conversation, Puddle Satellite 42 · Not enough to judge, and the API fixture 91. All match the BUILD_REPORT table. `decodeEntities` returned exactly the plan's expected string for the plan's test vector. I opened `tests/screenshots/a-sample-brief.png`. It shows the full brief: the 81 score, the plain-language reading, four open questions, the 13-row checklist and the export actions.
 
-- **Step 1, live re-check:** holds. The reviewer reproduced `built` at `9b46781`, HTTP 200, and 4/4 live tests with retries off.
-- **Step 2, hours tiers:** holds. `docs/js/brief.js` splits `schedulePressure` and `softPressure`. Hours uses the strong tier first, and the anchor matches the tier that chose the line. Reviewer dump of Moonbutton: Hours `… expect nights and weekends when it takes them to make a launch happen.`, Equity `… This is an equity-heavy opportunity for a rockstar who wants to get in on the ground floor.`, Scope `You'll wear many hats.` The Moonbutton score stays at 26. Unit tests `Moonbutton quotes the schedule separately…` and `soft intensity wording still earns a risk…` cover this.
-- **Step 3, sentence-bounded excerpts:** holds. Both new fictional tests (three-sentence line, single long sentence) pass, and the verbatim-substring test still passes.
-- **Step 4, no `. …`:** holds. A unit test loops over every sample and every row. The reviewer viewed `tests/screenshots/a-sample-brief.png` (Team: `… work with our product designer and the dispatch team at a pilot operator.`) and `b-paste-brief.png` (Funding: `We are a Series B vendor portal company.`). Both match the report.
-- **Step 5, calibration:** the reported counts were not independently re-fetched by the reviewer. They are plausible and internally consistent (each row sums to 20). Both fixes are small, and each has a fictional regression that passes. No real posting text is in the diff or in the working tree.
-- **Step 6, docs:** holds. CHANGELOG has an Iteration 6 entry, and PRODUCT.md describes the new excerpt and hours behavior. README did not need changes.
+## Definition of Done
 
-## Definition of Done grades
+1. **Research captured: VERIFIED.** RESEARCH.md was not changed this round (`git diff` shows nothing). Earlier rounds verified it.
+2. **Working product: VERIFIED.** The 19 local browser tests cover sample → brief, paste → brief, the API path and its fallback, the founder template, keyboard flow and exports. The 4 live tests cover sample, paste and founder on the public URL.
+3. **Tests: VERIFIED.** 61 unit tests (9 new this round, 1 updated) and 19 Playwright tests passed, none skipped. The commands in README.md:31-32 match `STATE/TEST_COMMANDS`.
+4. **Live public link: VERIFIED.** Pages reports `built` at `19ba82c`, an unauthenticated request returns 200, and the live suite passed 4 of 4. The URL appears in README.md and APPLICATION_DRAFT.md.
+5. **Quality and original design: VERIFIED.** The design is unchanged and still original. For security, `decodeEntities` (`docs/js/brief.js:94-104`) uses a string map with no DOM parsing. Decoded `<`/`>` stay as text, the sink grep is clean, and the hostile-markup tests pass. Decoding applies only to API fields. Pasted text is left as written, which a test confirms.
+6. **Application draft only: VERIFIED.** The draft is unchanged and was not submitted. It contains the live URL.
+7. **Docs: VERIFIED.** CHANGELOG has an iteration 7 entry that matches the diff. The PRODUCT.md paragraph matches the new behavior. The README commands were updated to the stricter `CI=1 … --retries=0` form.
 
-| # | Item | Grade | Evidence |
-| --- | --- | --- | --- |
-| 1 | Research captured | PASS | `RESEARCH.md` is unchanged this round (`git diff` empty). It still covers the live page, the products, the `#step-3` board and the step 2 and 3 fields, with sources. |
-| 2 | Working product | PASS | Playwright 19/19 covers sample, paste, API mock and fallback, the founder template, keyboard flows and the shortcuts dialog. The screenshots show a complete brief with actions (copy Markdown, download, print, share link). Moonbutton (first-hire) and Figment Ferry (founding) are early-hire samples. |
-| 3 | Tests | PASS | 52/52 unit, 19/19 Playwright, 0 skipped, reproduced by the reviewer. Screenshots a, b and c were regenerated. `STATE/TEST_COMMANDS` has two lines and is unchanged; the README documents them. |
-| 4 | Live public link | PASS | HTTP 200 without auth; Pages `built` at `9b46781`; live suite 4/4. The URL is in `README.md:5` and `APPLICATION_DRAFT.md:5`. |
-| 5 | Quality and original design | PASS | The design is original (see screenshots); it is not a framework default and not the talent-network look. `no unsafe sinks`. Hostile markup in an API description stays inert text (reviewer probe; Playwright hostile-markup test). No secrets. See issue 1 for a cosmetic entity leak. |
-| 6 | Application draft only | PASS | The `ideas` text is 926 characters (≤1500) and is followed by the demo link. Unknowns are ALL-CAPS placeholders. The file is marked "DRAFT — not submitted" and is unchanged this round. |
-| 7 | Docs | PASS | README, PRODUCT.md (idea, scoring, what is not in v1) and CHANGELOG are present and current. |
+## Claims in BUILD_REPORT checked
 
-## Issues (non-blocking)
+- The test counts, Pages commit, HTTP 200, live 4/4 and score table all reproduce.
+- The report says only `live-a-sample-brief.png` changed in bytes. `git status` agrees.
+- The wall clock of 14:33:39–14:37:30 is plausible: PLAN.md mtime is 14:33:13 and BUILD_REPORT.md mtime is 14:37:30.
 
-1. **HTML entities from the API show literally in evidence.** `docs/js/brief.js` `normalizeFromApi` does not decode entities. The new pay-range rule accepts `&ndash;`, so an API posting shows `Pay $90,000&ndash;$120,000 USD` in the Salary row (reviewer probe). The text is safe because it renders as text, but it reads badly. Fix: decode a small allowlist of entities (`&ndash; &mdash; &amp; &nbsp; &#NNNN; &#xHHHH;`) in `normalizeFromApi` with a string map, never through the DOM. Then keep the verbatim test on the decoded text.
-2. **The calibration dump was written inside the repo.** The plan asked for `/tmp`, but BUILD_REPORT shows `.wyt-calibration-iter6.json` written to the repo root. It was deleted, never tracked, and the reviewer confirmed it is gone. Next time, write it outside the repo or add the pattern to `.gitignore`.
-3. **Unknown Interview row quotes unrelated "interview" lines** (media interviews, scam warnings, recording policy; `docs/js/brief.js:354-399`, where `unknown(..., processLine, interview)` passes the line through). The builder found this and deferred it. It is misleading on real postings. A small guard could require a hiring context (`process`, `stage`, `candidate`, `apply`) before quoting.
-4. **Soft intensity in a requirement reads as a current schedule risk.** For example, "experience in a fast-paced environment" (deferred in BUILD_REPORT). Consider skipping soft-tier hits on lines under requirements or qualifications.
-5. **Iteration 6 is not live yet.** This is expected because the driver pushes after the review. The next round should re-run `npm run test:live -- --retries=0` against the iteration 6 commit.
+## Issues (none block the DoD)
 
-## Prioritized must-fix list
+1. **The interview exclusion list overrides concrete steps** (`docs/js/brief.js:386-387`, `nonHiringContext` at :167). `Interview: take-home, then a recorded 30 minute founder call.` now gives Interview `unknown` with no evidence, so a disclosed process loses its signal. The plan specified that the failure check wins, so this was built as planned. The fix is to apply the exclusion only when the line has no `stageDetail` match, or to drop `record*` and `transcri*` from the list. Add a fictional regression test.
+2. **The qualifications filter misses common variants** (`docs/js/brief.js:161-162`). The heading `What you'll bring:` is not recognized, and neither is the bullet prefix `Comfort in`. `- Comfort in a fast-paced startup` under that heading still gives Hours `risk`. The fix is to add `what you['’]?ll bring` and `comfort(?:able)? (?:in|with)`.
+3. **The builder edited `STATE/TEST_COMMANDS` and `README.md`, which PLAN.md listed as off-limits.** The driver's builder prompt does say "Write or update STATE/TEST_COMMANDS", and the change only makes the commands stricter (`CI=1`, `--retries=0`). The driver ran them green. I am accepting the change. The orchestrator should resolve the conflict between the two instructions in the next plan.
+4. **`STATE/ALL_DONE` exists in the tree.** It belongs to the driver. I did not touch it.
 
-No Definition of Done blockers. For the next plan, in order:
-1. Re-check that the iteration 6 deploy is live and passes the live suite (issue 5).
-2. Decode API HTML entities for display (issue 1), with a fictional unit test.
-3. Interview unknown-row evidence guard (issue 3), with a fictional unit test.
-4. Optional: soft-tier hours in requirements context (issue 4).
+## Must-fix list (prioritized, for next plan)
 
-Trivial fixes made by the reviewer: none. `STATE/CHECKLIST.md` statuses were updated where this round's evidence supports them.
+1. After the driver pushes iteration 7, run the Pages build check and `npm run test:live -- --retries=0` against the new commit.
+2. Issue 1: don't let `record*`/`transcri*` exclusions override lines that list concrete interview stages. Add a fictional test.
+3. Issue 2: widen the qualifications heading and prefix patterns. Add a fictional test.
+4. Resolve the PLAN/driver conflict over whether the builder may edit `STATE/TEST_COMMANDS`.
+
+Package mode starts at 17:47 KST. Items 2 and 3 are optional polish and should go in only if they fit before then.
+
+## Files the reviewer changed
+
+- `STATE/REVIEW.md` (this file).
+- `STATE/CHECKLIST.md`: live smoke on `19ba82c` and the five iteration 7 polish items set to VERIFIED with evidence, and the header updated.

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
-  analyze, BASELINE, briefToMarkdown, criteria, decodeShare, encodeShare,
+  analyze, BASELINE, briefToMarkdown, criteria, decodeEntities, decodeShare, encodeShare,
   normalizeFromApi, normalizeFromText, parseSpeedrunJobUrl,
 } from '../../docs/js/brief.js';
 import { founderToMarkdown, founderToText } from '../../docs/js/founder.js';
@@ -176,6 +176,29 @@ test('soft intensity wording still earns a risk without a schedule match', () =>
   assert.match(hours.evidence, /rockstar/);
 });
 
+test('soft intensity in candidate qualifications leaves hours unknown', () => {
+  for (const text of [
+    'Requirements:\n- Experience in a fast-paced environment',
+    '## Qualifications\n- Ability to navigate a fast-paced environment',
+    'What you bring\n- Motivation to keep up with a fast-paced environment',
+    'Nice to have:\n- Previous work at a fast-paced company',
+    '1. 3+ years in a fast-paced environment',
+    '- You’ve worked in fast-paced teams',
+  ]) {
+    assert.equal(row(fromText(text), 'hours').status, 'unknown', text);
+  }
+});
+
+test('schedule pressure still counts under requirements and soft wording counts after the section', () => {
+  const explicit = row(fromText('Requirements:\n- Comfortable working nights and weekends'), 'hours');
+  assert.equal(explicit.status, 'risk');
+  assert.match(explicit.evidence, /nights and weekends/);
+
+  const soft = row(fromText('Requirements:\n- Work in a fast-paced environment\nAbout us\nWe move fast and want a rockstar.'), 'hours');
+  assert.equal(soft.status, 'risk');
+  assert.equal(soft.evidence, 'We move fast and want a rockstar.');
+});
+
 test('an explicit Series B stage supersedes a small squad size', () => {
   const brief = fromText(samples[2].text);
   assert.equal(brief.isEarlyStage, false);
@@ -208,6 +231,38 @@ The design system is maintained by the adjacent checkout group. We plan to depre
   assert.ok(brief.unanswered.some(item => /Where can I work/.test(item.question)));
 });
 
+test('media interviews leave the interview row unknown without a quote', () => {
+  const interview = row(fromText('Our founder has given media interviews about logistics.'), 'interview');
+  assert.equal(interview.status, 'unknown');
+  assert.equal(interview.evidence, 'Not mentioned in the posting');
+});
+
+test('scam warnings are excluded even when they mention hiring steps', () => {
+  for (const line of [
+    'We will never ask for payment or bank details during interviews.',
+    'We will never ask candidates for payment during the 30-minute interview.',
+  ]) {
+    const interview = row(fromText(line), 'interview');
+    assert.equal(interview.status, 'unknown');
+    assert.equal(interview.evidence, 'Not mentioned in the posting');
+  }
+});
+
+test('an interview heading quotes the introductory call after an unrelated interview mention', () => {
+  const line = '30 minute intro call with the founder';
+  const posting = `Our founder has given media interviews about logistics.\nInterview process\n- ${line}`;
+  const interview = row(fromText(posting), 'interview');
+  assert.equal(interview.status, 'signal');
+  assert.equal(interview.evidence, line);
+});
+
+test('undisclosed hiring steps leave the interview row unknown with a quote', () => {
+  const line = 'We share the interview steps after you apply.';
+  const interview = row(fromText(line), 'interview');
+  assert.equal(interview.status, 'unknown');
+  assert.equal(interview.evidence, line);
+});
+
 test('structured API fields normalize and missing fields remain null', () => {
   const job = normalizeFromApi(apiFixture);
   assert.equal(job.source, 'api');
@@ -229,6 +284,41 @@ test('structured API fields normalize and missing fields remain null', () => {
   assert.equal(partial.comp, null);
   assert.equal(analyze(partial).status, 'empty');
   assert.equal(normalizeFromApi(null).description, '');
+});
+
+test('API salary evidence decodes an encoded dash', () => {
+  const job = normalizeFromApi({ description_text: 'Pay $90,000&ndash;$120,000 USD' });
+  const salary = row(analyze(job), 'salary');
+  assert.equal(salary.status, 'signal');
+  assert.match(salary.evidence, /\$90,000–\$120,000/);
+  assert.doesNotMatch(salary.evidence, /&ndash;/);
+});
+
+test('HTML entities decode once and invalid or unknown entities stay literal', () => {
+  assert.equal(decodeEntities('Tom &amp; Jerry&nbsp;Inc &#8212; &#x2019; &amp;lt; &bogus; &#0; &#xD800;'),
+    'Tom & Jerry Inc — ’ &lt; &bogus; &#0; &#xD800;');
+  assert.equal(decodeEntities('&amp;&lt;&gt;&quot;&#39;&apos;&nbsp;&ndash;&mdash;&lsquo;&rsquo;&ldquo;&rdquo;&hellip;&bull;'),
+    '&<>"\'\' –—‘’“”…•');
+  assert.equal(decodeEntities('&#9;&#xA;&#x1F680;'), '\t\n🚀');
+  const invalid = '&#13; &#x1F; &#127; &#x9F; &#xDFFF; &#x110000;';
+  assert.equal(decodeEntities(invalid), invalid);
+});
+
+test('API text fields decode entities and preserve decoded markup as text', () => {
+  const encodedMarkup = '&lt;img src=x onerror=alert(1)&gt;';
+  const job = normalizeFromApi({
+    title: 'Design &amp; Product Engineer',
+    company: 'Aster &amp; Elm',
+    location: 'Remote&nbsp;EU',
+    comp_summary: '$90,000&ndash;$120,000 USD',
+    description_text: encodedMarkup,
+  });
+  assert.equal(job.title, 'Design & Product Engineer');
+  assert.equal(job.company, 'Aster & Elm');
+  assert.equal(job.location, 'Remote EU');
+  assert.equal(job.comp, '$90,000–$120,000 USD');
+  assert.equal(job.description, '<img src=x onerror=alert(1)>');
+  assert.equal(normalizeFromText(encodedMarkup).description, encodedMarkup);
 });
 
 test('board job URLs permit only exact hosts and public slug routes', () => {
@@ -388,12 +478,16 @@ test('pasted won ranges are preserved verbatim', () => {
   }
 });
 
-test('salary ranges with encoded dash separators are recognized and quoted verbatim', () => {
-  for (const separator of ['&ndash;', '&mdash;', '&#8211;', '&#x2014;']) {
-    const pay = '$93,500' + separator + '$118,250 USD';
-    const brief = analyze(normalizeFromApi({ description_text: 'Annual Salary Range\n' + pay }));
-    assert.equal(row(brief, 'salary').status, 'signal', separator);
-    assert.equal(row(brief, 'salary').evidence, pay);
+test('salary ranges with encoded dashes are recognized in API and pasted text', () => {
+  for (const [entity, dash] of [['&ndash;', '–'], ['&mdash;', '—'], ['&#8211;', '–'], ['&#x2014;', '—']]) {
+    const pay = `$93,500${entity}$118,250 USD`;
+    const description = 'Annual Salary Range\n' + pay;
+    const apiSalary = row(analyze(normalizeFromApi({ description_text: description })), 'salary');
+    const pastedSalary = row(fromText(description), 'salary');
+    assert.equal(apiSalary.status, 'signal', entity);
+    assert.equal(apiSalary.evidence, `$93,500${dash}$118,250 USD`);
+    assert.equal(pastedSalary.status, 'signal', entity);
+    assert.equal(pastedSalary.evidence, pay);
   }
 });
 

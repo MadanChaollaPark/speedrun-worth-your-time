@@ -1,5 +1,12 @@
 # Changelog
 
+## Iteration 7 · 2026-11-23
+
+- Verified the public iteration 6 GitHub Pages build with four Chromium smoke tests and retries disabled.
+- Decoded supported HTML entities in API-supplied text before extracting evidence.
+- Restricted interview evidence anchors to hiring context and excluded soft intensity wording in candidate qualifications.
+- Checked score and band parity across all four shipped postings and the fictional API fixture.
+
 ## Iteration 6 · 2026-11-23
 
 - Verified the public iteration 5 GitHub Pages build with four Chromium smoke tests and retries disabled.

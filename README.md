@@ -28,8 +28,8 @@ npx playwright install chromium
 Run these from the repository root. Playwright starts and cleans up its own server when port 4173 is free.
 
 ```sh
-npm run test:unit
-npx playwright test
+CI=1 npm run test:unit
+CI=1 npx playwright test --retries=0
 ```
 
 The two commands are also in [STATE/TEST_COMMANDS](STATE/TEST_COMMANDS). The browser suite tests keyboard, clipboard, exports, and jobs API behavior with fixtures. It runs axe in light and dark modes and writes six full-page PNGs to [tests/screenshots](tests/screenshots/).

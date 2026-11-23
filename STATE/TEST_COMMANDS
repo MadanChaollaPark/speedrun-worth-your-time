@@ -1,2 +1,2 @@
-npm run test:unit
-npx playwright test
+CI=1 npm run test:unit
+CI=1 npx playwright test --retries=0
