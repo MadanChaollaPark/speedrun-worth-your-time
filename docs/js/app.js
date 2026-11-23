@@ -1,5 +1,5 @@
 import {
-  analyze, briefToMarkdown, criteria, decodeShare, encodeShare, isJobSlug,
+  analyze, BASELINE, briefToMarkdown, criteria, decodeShare, encodeShare, isJobSlug,
   normalizeFromApi, normalizeFromText, parseSpeedrunJobUrl,
 } from './brief.js';
 import { founderFields, founderToMarkdown, founderToText } from './founder.js';
@@ -239,7 +239,8 @@ function makeLedger(brief) {
     line.append(node('strong', brief.checklist[index].label), node('span', points, 'points'), node('span', reason, 'muted'));
     rows.append(line);
   });
-  details.append(node('summary', 'Why this score'), node('p', 'Starts at 50. The final score stays between 0 and 100.', 'muted'), rows);
+  details.append(node('summary', 'Why this score'),
+    node('p', `Starts at ${BASELINE}. A posting with a signal on every checklist row scores 100.`, 'muted'), rows);
   return details;
 }
 
@@ -493,6 +494,7 @@ $('check-founder').addEventListener('click', () => {
   location.hash = '/';
 });
 
+$('score-baseline').textContent = BASELINE;
 for (const { label, reward, penalty } of criteria) {
   const row = node('tr');
   const criterion = node('th', label);

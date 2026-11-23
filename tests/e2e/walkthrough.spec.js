@@ -56,7 +56,10 @@ test('pasted posting shortcut and hostile markup rendered as text', async ({ pag
   await expect(resultTitle(page)).toBeFocused();
   await expect(resultTitle(page)).toHaveText('Product Engineer');
   await expect(page.getByText('Pencil Cloud Studio', { exact: true })).toBeVisible();
+  await expect(page.locator('.score strong')).toHaveText('91');
   await screenshot(page, 'b-paste-brief');
+  await page.getByText('Why this score', { exact: true }).click();
+  await expect(page.getByText('Starts at 42. A posting with a signal on every checklist row scores 100.')).toBeVisible();
 
   await page.getByRole('button', { name: 'Check another' }).click();
   await expect(field).toBeFocused();
@@ -66,6 +69,8 @@ test('pasted posting shortcut and hostile markup rendered as text', async ({ pag
   await expect(page.getByText('Build ' + hostileText, { exact: true }).first()).toBeVisible();
   await expect(page.locator('#result-view script, #result-view img')).toHaveCount(0);
   expect(dialogAppeared).toBe(false);
+  await page.getByRole('link', { name: 'How it works' }).click();
+  await expect(page.getByText(/The score starts at 42\./)).toBeVisible();
 });
 
 test('founder fields, preview updates, autosave and analyzer handoff', async ({ page }) => {

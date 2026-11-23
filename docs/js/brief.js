@@ -147,44 +147,58 @@ function evidenceFor(line, match, otherMatches = []) {
   const limit = 160;
   if (!line) return missing;
 
-  const matchStart = match?.index ?? 0;
+  const contentStart = line.length - stripBullet(line).length;
+  const matchStart = match?.index ?? contentStart;
   const matchEnd = matchStart + (match?.[0].length ?? 0);
-  let before = 0;
+  let before = contentStart;
   let after = line.length;
-  if (match) {
-    // Keep a shared excerpt clear of other criteria's anchors when they don't overlap.
+  if (match && otherMatches.length > 1) {
+    let earlierAnchor = false;
+    let nextAnchor = line.length;
     for (const other of otherMatches) {
-      const otherEnd = other.index + other[0].length;
-      if (otherEnd <= matchStart) before = Math.max(before, otherEnd);
-      if (other.index >= matchEnd) after = Math.min(after, other.index);
+      if (other === match) continue;
+      earlierAnchor ||= other.index + other[0].length <= matchStart;
+      if (other.index >= matchEnd) nextAnchor = Math.min(nextAnchor, other.index);
     }
-    const sentenceBreak = /(?<=[.!?])\s+(?=[A-Z])/g;
-    if (before > 0) {
-      const boundary = [...line.slice(before, matchStart).matchAll(sentenceBreak)].at(-1);
-      if (boundary) before += boundary.index + boundary[0].length;
+    const clauseBreak = /[.!?](?=\s)|;|,(?=\s)|\s+(?:and|but|while|then|so)(?=\s)/gi;
+    clauseBreak.lastIndex = contentStart;
+    const boundaries = [...line.matchAll(clauseBreak)].map(({ 0: separator, index }) => ({
+      end: index + (/^[.!?]$/.test(separator) ? 1 : 0),
+      next: index + separator.length,
+    }));
+    if (earlierAnchor || nextAnchor < line.length) {
+      before = boundaries.findLast(boundary => boundary.next <= matchStart)?.next ?? contentStart;
     }
-    if (after < line.length) {
-      const boundary = sentenceBreak.exec(line.slice(matchEnd, after));
-      if (boundary) after = matchEnd + boundary.index;
+    if (nextAnchor < line.length) {
+      // Keep the complete clause when it contains more than one anchor.
+      const following = boundaries.filter(boundary => boundary.end >= matchEnd);
+      after = (following.findLast(boundary => boundary.next <= nextAnchor) ?? following[0])?.end ?? line.length;
     }
   }
-  if (line.length <= limit && before === 0 && after === line.length) return line;
 
-  const words = [...line.matchAll(/\S+/g)];
+  const formatExcerpt = (start, end) => {
+    let excerpt = line.slice(start, end).trim();
+    if (start > contentStart) excerpt = '… ' + excerpt.replace(/^(?:and|but|while|then|so)\s+/i, '');
+    if (end < line.length) excerpt = excerpt.replace(/(?:\s+(?:and|but|while|then|so)|,)$/i, '').trimEnd() + ' …';
+    return excerpt;
+  };
+  const quote = line.slice(before, after);
+  const excerpt = formatExcerpt(before, after);
+  if (excerpt.length <= limit) return excerpt;
+
+  const words = [...quote.matchAll(/\S+/g)];
   if (!words.length) return missing;
   const wordEnd = word => word.index + word[0].length;
-  const anchorStart = words.findLast(word => word.index <= matchStart) ?? words[0];
-  const anchorEnd = words.findLast(word => word.index < matchEnd) ?? anchorStart;
+  const anchorStart = words.findLast(word => word.index <= matchStart - before) ?? words[0];
+  const anchorEnd = words.findLast(word => word.index < matchEnd - before) ?? anchorStart;
   const capacity = limit - 4; // Leave room for an ellipsis and space on either side.
-  const minStart = Math.max(before, matchStart - 42, wordEnd(anchorEnd) - capacity);
+  const minStart = Math.max(matchStart - before - 42, wordEnd(anchorEnd) - capacity);
   const first = words.find(word => word.index >= minStart && word.index <= anchorStart.index) ?? anchorStart;
-  const maxEnd = Math.min(Math.max(after, wordEnd(anchorEnd)), first.index + capacity);
+  const maxEnd = first.index + capacity;
   const last = words.findLast(word => word.index >= first.index && wordEnd(word) <= maxEnd);
   if (!last) return '…';
 
-  const start = first.index;
-  const end = wordEnd(last);
-  return (start > 0 ? '… ' : '') + line.slice(start, end) + (end < line.length ? ' …' : '');
+  return formatExcerpt(before + first.index, before + wordEnd(last));
 }
 
 export const criteria = [
@@ -203,6 +217,8 @@ export const criteria = [
   { id: 'stack', label: 'Technical stack', reward: 2, penalty: 2, question: 'What would I build with, and which parts of the stack are still being decided?' },
 ];
 
+export const BASELINE = 100 - criteria.reduce((total, { reward }) => total + reward, 0);
+
 const stripBullet = line => line.replace(/^(?:[-*•]|\d+[.)])\s+/, '');
 
 function employmentInDescription(lines) {
@@ -211,8 +227,7 @@ function employmentInDescription(lines) {
   const fixedTerm = matchLine(details, fixedTermContract)?.match(fixedTermContract);
   const role = matchLine(details, roleEmployment)?.match(roleEmployment);
   return employmentName(labeled?.replace(/[.!]$/, '')) ??
-    employmentName(labeled?.match(employmentType)?.[0] ?? fixedTerm?.[1] ?? role?.[1] ?? role?.[2]) ??
-    details.map(line => employmentName(line.replace(/[.!]$/, ''))).find(Boolean);
+    employmentName(labeled?.match(employmentType)?.[0] ?? fixedTerm?.[1] ?? role?.[1] ?? role?.[2]);
 }
 
 function extractResponsibilities(lines) {
@@ -344,7 +359,7 @@ function inspect(posting, lines, responsibilities) {
   const visaClear = /\b(?:yes|no|case[- ]by[- ]case|available|provided|offered|sponsor\b|cannot|can['’]t|unable|without|must (?:already )?have|required|consider)\b/i;
   const tractionPattern = /\b(?:\d[\d.,kKmM]*\+?\s*(?:(?:paying |active |pilot |enterprise |existing )?(?:customers|users|pilots|design partners|deployments)|(?:companies|organi[sz]ations)\s+(?:use|run on))|paying customers|pre[- ]launch|pre[- ]revenue|no (?:paying )?customers|\barr\s*(?::| of| reached)|revenue\s*(?::| of| reached)|customers? (?:include|are|across)|used by \S+)\b/i;
   const traction = hits(tractionPattern);
-  const fundingLines = [...new Set([...runwayLines, ...hits(fundingPattern)])];
+  const fundingLines = [...hits(fundingPattern).filter(line => !runwayPattern.test(line)), ...runwayLines];
   const fundingOnly = fundingLines.filter(line => !teamPattern.test(line) && !tractionPattern.test(line));
   const funding = preferUnused(fundingOnly.concat(fundingLines));
   const fundingHasRunway = funding && runwayPattern.test(funding);
@@ -434,7 +449,7 @@ export function analyze(posting) {
     const { status: finding, why } = observations[id];
     return { id, delta: finding === 'signal' ? reward : finding === 'risk' ? -penalty : 0, reason: why };
   });
-  const score = Math.min(100, Math.max(0, 50 + ledger.reduce((total, row) => total + row.delta, 0)));
+  const score = Math.min(100, Math.max(0, ledger.reduce((total, row) => total + row.delta, BASELINE)));
   const band = status !== 'ok' ? 'Not enough to judge' : score >= 70 ? 'Worth a conversation' :
     score >= 50 ? 'Worth it if they answer the open questions' : 'Proceed with caution';
   const known = checklist.filter(row => row.status !== 'unknown').length;
@@ -470,8 +485,9 @@ export function briefToMarkdown(brief) {
     '# ' + escapeMarkdown(reading.headline),
     '## ' + assessment.band,
     assessment.score + '/100 · ' + assessment.confidence + ' confidence',
-    'The score starts at 50 and measures what the posting discloses. It reflects the wording of the posting, without verifying its claims.',
+    'The score measures what the posting discloses. It reflects the wording of the posting, without verifying its claims.',
     '## Why this score',
+    `Starts at ${BASELINE}. A posting with a signal on every checklist row scores 100.`,
     ...assessment.ledger.map(({ id, delta, reason }, index) =>
       '- ' + (delta > 0 ? '+' : '') + delta + ' ' + brief.checklist[index].label + ' · ' + escapeMarkdown(reason)),
     '## Plain-language reading',

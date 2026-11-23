@@ -1,5 +1,12 @@
 # Changelog
 
+## Iteration 5 · 2026-11-23
+
+- Verified the public iteration 4 GitHub Pages deployment with four Chromium smoke tests and retries disabled.
+- Quoted complete clauses around shared evidence and removed leading list markers from checklist excerpts.
+- Derived the starting score from the checklist weights so a posting with a signal on every row scores 100. Updated the score explanation in the app and Markdown export.
+- Kept API employment metadata when the description only includes a bare employment heading, and quoted funding details when the runway figure appears on a separate line.
+
 ## Iteration 4 · 2026-11-23
 
 - Confirmed the iteration 3 GitHub Pages build opens publicly and passes all four live Chromium smoke tests.

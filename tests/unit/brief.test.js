@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
-  analyze, briefToMarkdown, criteria, decodeShare, encodeShare,
+  analyze, BASELINE, briefToMarkdown, criteria, decodeShare, encodeShare,
   normalizeFromApi, normalizeFromText, parseSpeedrunJobUrl,
 } from '../../docs/js/brief.js';
 import { founderToMarkdown, founderToText } from '../../docs/js/founder.js';
@@ -11,6 +11,8 @@ import { founderDraft, hostileText } from '../fixtures.js';
 const fromText = text => analyze(normalizeFromText(text));
 const row = (brief, id) => brief.checklist.find(item => item.id === id);
 const excerptText = evidence => evidence.replace(/^… | …$/g, '');
+const pastedSample = samples[2].text.replace('Paper Comet Systems', 'Pencil Cloud Studio');
+const ledgerTotal = brief => brief.assessment.ledger.reduce((total, { delta }) => total + delta, BASELINE);
 
 test('founding role is detailed, early and supported by verbatim evidence', () => {
   const { text } = samples[0];
@@ -56,16 +58,38 @@ test('short evidence is returned unchanged', () => {
 });
 
 test('shared evidence has a distinct excerpt around each criterion’s anchor', () => {
-  const line = 'We are a team of 6 at seed stage with 12 paying customers.';
+  const line = 'We are a team of 6; we are at seed stage, and we have 12 paying customers.';
   const brief = fromText(line);
-  const excerpts = [row(brief, 'funding').evidence, row(brief, 'team').evidence, row(brief, 'traction').evidence];
-  assert.equal(new Set(excerpts).size, 3);
-  assert.match(excerpts[0], /\bseed stage\b/);
-  assert.match(excerpts[1], /\bteam of 6\b/);
-  assert.match(excerpts[2], /\b12 paying customers\b/);
-  for (const excerpt of excerpts) {
+  const expected = {
+    team: 'We are a team of 6 …',
+    funding: '… we are at seed stage …',
+    traction: '… we have 12 paying customers.',
+  };
+  for (const [id, excerpt] of Object.entries(expected)) {
+    assert.equal(row(brief, id).evidence, excerpt);
     assert.ok(line.includes(excerptText(excerpt)), excerpt);
-    assert.match(excerpt, /…/);
+  }
+});
+
+test('founding sample reporting stops at the clause before the team anchor', () => {
+  assert.equal(row(fromText(samples[0].text), 'reporting').evidence, 'You report directly to the CTO …');
+});
+
+test('founding sample team evidence begins at its own clause and includes both collaborators', () => {
+  assert.equal(row(fromText(samples[0].text), 'team').evidence,
+    '… work with our product designer and the dispatch team at a pilot operator. …');
+});
+
+test('paste sample keeps the customer count in the milestone and traction excerpts', () => {
+  const brief = fromText(pastedSample);
+  assert.equal(row(brief, 'success').evidence, 'First 90 days: Launch the guided importer to 30 existing customers …');
+  assert.match(row(brief, 'traction').evidence, /30 existing customers/);
+});
+
+test('list markers are omitted from the displayed stack evidence', () => {
+  const line = 'Build the import tool in TypeScript';
+  for (const marker of ['- ', '* ', '• ', '1. ', '1) ']) {
+    assert.equal(row(fromText(marker + line), 'stack').evidence, line, marker);
   }
 });
 
@@ -75,6 +99,17 @@ test('funding prefers a separate evidence line even when the shared line comes f
   assert.equal(row(brief, 'funding').evidence, funding);
   assert.match(row(brief, 'team').evidence, /team of 6/);
   assert.match(row(brief, 'traction').evidence, /12 paying customers/);
+});
+
+test('funding quotes the seed round when runway is stated on a separate line', () => {
+  const funding = 'We raised a $4M seed round.';
+  const runway = 'We have 22 months of runway.';
+  for (const posting of [funding + '\n' + runway, runway + '\n' + funding]) {
+    const finding = row(fromText(posting), 'funding');
+    assert.equal(finding.status, 'signal');
+    assert.equal(finding.evidence, funding);
+    assert.equal(finding.why, 'The posting gives a funding detail and also states a runway figure.');
+  }
 });
 
 test('later criteria prefer unused lines that support the same finding', () => {
@@ -192,9 +227,26 @@ test('analysis is deterministic and the score equals its ledger', () => {
   const posting = normalizeFromText(samples[0].text);
   const brief = analyze(posting);
   assert.deepEqual(analyze(posting), brief);
-  const sum = brief.assessment.ledger.reduce((total, row) => total + row.delta, 50);
+  const sum = ledgerTotal(brief);
   assert.equal(brief.assessment.score, Math.min(100, Math.max(0, sum)));
   assert.equal(brief.assessment.ledger.length, criteria.length);
+});
+
+test('a fictional posting with all signals reaches 100 without the clamp', () => {
+  const brief = fromText(pastedSample + '\nEquity: 0.4% options with four-year vesting.\nWe work a 40-hour week.');
+  assert.equal(brief.status, 'ok');
+  assert.deepEqual(brief.checklist.filter(item => item.status !== 'signal'), []);
+  assert.equal(ledgerTotal(brief), 100);
+  assert.equal(brief.assessment.score, 100);
+  assert.ok(briefToMarkdown(brief).includes(`Starts at ${BASELINE}. A posting with a signal on every checklist row scores 100.`));
+});
+
+test('paste sample score reflects its missing equity and hours', () => {
+  const brief = fromText(pastedSample);
+  assert.equal(row(brief, 'equity').status, 'unknown');
+  assert.equal(row(brief, 'hours').status, 'unknown');
+  assert.ok(brief.assessment.score < 95);
+  assert.equal(ledgerTotal(brief), brief.assessment.score);
 });
 
 test('founder template maps complete fields to a top-band brief and omits empty fields', () => {
@@ -336,6 +388,13 @@ test('API and description employment aliases agree without an extra question', (
   const description_text = apiFixture.description_text + '\nEmployment: full time.';
   const brief = analyze(normalizeFromApi({ ...apiFixture, description_text }));
   assert.match(brief.reading.summary.find(fact => fact.label === 'Where and how').text, /Full-time$/);
+  assert.ok(!brief.unanswered.some(item => item.question.startsWith('The listing says')));
+});
+
+test('a bare Contract heading does not override the API listing type', () => {
+  const description_text = apiFixture.description_text + '\nContract\nWe sign a standard offer letter and IP agreement.';
+  const brief = analyze(normalizeFromApi({ ...apiFixture, employment_type: 'full_time', description_text }));
+  assert.equal(brief.reading.summary.find(fact => fact.label === 'Where and how').text, 'Chicago, IL · hybrid · full_time');
   assert.ok(!brief.unanswered.some(item => item.question.startsWith('The listing says')));
 });
 

@@ -9,7 +9,7 @@ Job discovery gets a candidate to a posting. Worth Your Time helps with the next
 
 ## How the assessment is computed
 
-The engine starts at 50, adds or subtracts the weights below, and caps the result between 0 and 100. Unknown criteria add zero. Each criterion includes a reason and a short excerpt when there is one. Pay and location may also come from structured API fields. Exposure to risk depends on the candidate’s own circumstances.
+The score starts at 42, which is 100 minus the sum of the signal weights. A posting with a signal on every checklist row scores 100. The engine adds or subtracts the weights below and keeps the result between 0 and 100. Unknown criteria add zero. Each criterion includes a reason and a short excerpt when there is one. Pay and location may also come from structured API fields. Exposure to risk depends on the candidate’s own circumstances.
 
 | Criterion | Signal | Risk | Unknown |
 | --- | ---: | ---: | ---: |
