@@ -29,19 +29,35 @@ test('founding role is detailed, early and supported by verbatim evidence', () =
   }
 });
 
-test('long evidence trims whole words on both sides of its match', () => {
+test('long evidence starts at a sentence boundary when it fits before the match', () => {
   const line = 'Our onboarding includes a series of hands-on workshops for new engineers across the product organization. ' +
     'We use TypeScript for the scheduling tools that help dispatchers coordinate multiple locations and give clinic administrators a reliable view of their queue. ' +
     'The systems are deployed weekly alongside improvements proposed by clinic staff across the pilot program.';
   const { evidence } = row(fromText(line), 'stack');
-  assert.match(evidence, /^… .+ …$/);
+  assert.match(evidence, /^… We use TypeScript\b/);
   assert.ok(evidence.length <= 160);
-  const excerpt = evidence.slice(2, -2);
-  assert.match(excerpt, /\bTypeScript\b/);
-  const start = line.indexOf(excerpt);
-  assert.ok(start > 0);
-  assert.match(line[start - 1], /\s/);
-  assert.match(line[start + excerpt.length], /\s/);
+  assert.ok(line.includes(excerptText(evidence)));
+});
+
+test('a long three-sentence line ends at the last complete sentence that fits', () => {
+  const first = 'We use TypeScript for the intake tools.';
+  const second = 'The tools help clinic staff track available appointments.';
+  const third = 'The operations group also keeps a shared calendar for weekly planning and coordinates schedule changes with the outreach group.';
+  const line = [first, second, third].join(' ');
+  assert.ok(line.length >= 220);
+  assert.equal(row(fromText(line), 'stack').evidence, `${first} ${second}`);
+});
+
+test('a single long sentence cuts at a whole word and adds an ellipsis', () => {
+  const line = 'We use TypeScript to help clinic administrators find and remove duplicate bookings across multiple locations during busy seasons ' +
+    'when patients call about changes and need staff to confirm their updated appointment details by phone.';
+  const { evidence } = row(fromText(line), 'stack');
+  assert.ok(line.length >= 200);
+  assert.match(evidence, / …$/);
+  assert.ok(evidence.length <= 160);
+  const excerpt = excerptText(evidence);
+  assert.ok(line.startsWith(excerpt));
+  assert.match(line[excerpt.length], /\s/);
 });
 
 test('a long line keeps the complete salary range near the end', () => {
@@ -77,7 +93,19 @@ test('founding sample reporting stops at the clause before the team anchor', () 
 
 test('founding sample team evidence begins at its own clause and includes both collaborators', () => {
   assert.equal(row(fromText(samples[0].text), 'team').evidence,
-    '… work with our product designer and the dispatch team at a pilot operator. …');
+    '… work with our product designer and the dispatch team at a pilot operator.');
+});
+
+test('paste sample funding excerpt ends at the sentence punctuation', () => {
+  assert.equal(row(fromText(pastedSample), 'funding').evidence, 'We are a Series B vendor portal company.');
+});
+
+test('sample evidence never puts an ellipsis after sentence punctuation', () => {
+  for (const { title, text } of samples) {
+    for (const { label, evidence } of fromText(text).checklist) {
+      assert.doesNotMatch(evidence, /[.!?] …$/, `${title}: ${label}`);
+    }
+  }
 });
 
 test('paste sample keeps the customer count in the milestone and traction excerpts', () => {
@@ -129,6 +157,23 @@ test('rockstar language earns a caution with useful questions about missing term
   assert.equal(row(brief, 'hours').status, 'risk');
   assert.ok(text.includes(excerptText(row(brief, 'hours').evidence)));
   assert.ok(brief.unanswered.some(item => item.question.includes('next funding round')));
+});
+
+test('Moonbutton quotes the schedule separately from equity and broad scope', () => {
+  const brief = fromText(samples[1].text);
+  const hours = row(brief, 'hours').evidence;
+  const equity = row(brief, 'equity').evidence;
+  assert.equal(brief.assessment.score, 26);
+  assert.match(hours, /nights and weekends/);
+  assert.notEqual(hours, equity);
+  assert.match(equity, /equity-heavy/);
+  assert.equal(row(brief, 'scope').evidence, "You'll wear many hats.");
+});
+
+test('soft intensity wording still earns a risk without a schedule match', () => {
+  const hours = row(fromText('We move fast and want a rockstar.'), 'hours');
+  assert.equal(hours.status, 'risk');
+  assert.match(hours.evidence, /rockstar/);
 });
 
 test('an explicit Series B stage supersedes a small squad size', () => {
@@ -343,6 +388,15 @@ test('pasted won ranges are preserved verbatim', () => {
   }
 });
 
+test('salary ranges with encoded dash separators are recognized and quoted verbatim', () => {
+  for (const separator of ['&ndash;', '&mdash;', '&#8211;', '&#x2014;']) {
+    const pay = '$93,500' + separator + '$118,250 USD';
+    const brief = analyze(normalizeFromApi({ description_text: 'Annual Salary Range\n' + pay }));
+    assert.equal(row(brief, 'salary').status, 'signal', separator);
+    assert.equal(row(brief, 'salary').evidence, pay);
+  }
+});
+
 test('competitive salary without amounts leaves the range unknown and asks for it', () => {
   const brief = fromText('Role: Product Engineer\nCompetitive salary');
   assert.equal(row(brief, 'salary').status, 'unknown');
@@ -370,6 +424,18 @@ test('candidate equity in a compensation line takes precedence over product duti
 test('equity without a percentage prefers an offer line to product context', () => {
   const offer = 'Benefits: We offer stock options.';
   const brief = fromText('Our software helps customers understand equity.\n' + offer);
+  assert.equal(row(brief, 'equity').status, 'risk');
+  assert.equal(row(brief, 'equity').evidence, offer);
+});
+
+test('investor names and internal pay equity do not describe candidate ownership', () => {
+  const company = 'Funding came from Tern Harbor Equity Partners.';
+  const compensation = 'Base salary reflects leveling and internal equity.';
+  for (const line of [company, compensation]) {
+    assert.equal(row(fromText(line), 'equity').status, 'unknown', line);
+  }
+  const offer = 'Employees can receive stock options.';
+  const brief = fromText([company, compensation, offer].join('\n'));
   assert.equal(row(brief, 'equity').status, 'risk');
   assert.equal(row(brief, 'equity').evidence, offer);
 });

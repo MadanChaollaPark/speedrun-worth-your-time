@@ -1,4 +1,4 @@
-# Plan · Iteration 5 · 2026-11-23 09:15 KST
+# Plan · Iteration 6 · 2026-11-23 09:58 KST
 
 Orchestrator and reviewer are Kiro Claude Opus 5.5; builder is Codex gpt-6.2-sol at high reasoning effort / slow mode, by owner decision 2026-11-22; do not revert
 
@@ -6,16 +6,23 @@ Only the owner may change role assignments or loop configuration.
 
 ## Context
 
-- Iterations 2, 3 and 4 were PASS. Every Definition of Done item is VERIFIED in `STATE/CHECKLIST.md`.
-- Orchestrator check at 09:14 KST: `gh api repos/MadanChaollaPark/speedrun-worth-your-time/pages/builds/latest` returned `built` at commit `90a9a4b721b9…` (v04-iter04). An unauthenticated `curl` of the live URL returned 200. The live browser suite has not yet run against `90a9a4b`.
-- Package mode starts at 17:47 KST. This round falls well before that, so small logic and display fixes are allowed. Do not add features, pages, routes or dependencies.
-- This round polishes the brief so its output reads well and its score stays honest. It covers the three non-blocking issues in `STATE/REVIEW.md` (iteration 4) plus two problems the orchestrator found in the screenshots. Budget roughly 50–70 minutes.
+- Iterations 2 through 5 were PASS. Every Definition of Done item is VERIFIED in `STATE/CHECKLIST.md`.
+- Orchestrator check at 09:57 KST: `gh api repos/MadanChaollaPark/speedrun-worth-your-time/pages/builds/latest` returned `built` at commit `9b46781cf3f5…` (v05-iter05). An unauthenticated `curl` of the live URL returned 200. The live browser suite has not yet run against `9b46781`.
+- Package mode starts at 17:47 KST. This round is well before that, so small logic and display fixes are allowed. Do not add features, pages, routes or dependencies.
+- Budget: roughly 50–70 minutes. This round fixes the three non-blocking excerpt issues from `STATE/REVIEW.md` (iteration 5) and runs a bounded calibration against real public postings, which earlier rounds deferred.
 
-What the screenshots show today:
-- `tests/screenshots/a-sample-brief.png`, founding sample: Reporting reads "You report directly to the CTO and …". Team reads "… the CTO and work with our product designer…", so the Team excerpt starts inside the reporting clause.
-- `tests/screenshots/b-paste-brief.png`, paste sample: First-quarter outcomes reads "First 90 days: Launch the guided importer to …". The excerpt stops before the object of the sentence because the traction anchor ("30 existing customers") sits on the same line.
-- Scope and Technical stack excerpts begin with a raw list marker ("- Build…", "- Integrate…").
-- The paste sample scores **99/100** although equity and hours are both unknown and both appear as open questions. The engine starts at 50 and the rewards sum to 58, so the result hits the 100 cap and missing details stop counting. That undercuts the "explained, not magical" promise.
+What the engine shows today for the Moonbutton sample (`docs/js/samples.js:27-44`), from an orchestrator `node` dump of `analyze(normalizeFromText(text))`:
+
+| Row | Status | Evidence today |
+| --- | --- | --- |
+| Equity and terms | risk | `… This is an equity-heavy opportunity for a rockstar who wants to get in on the ground floor.` |
+| Hours and intensity | risk | `… This is an equity-heavy opportunity for a rockstar who wants to get in on the ground floor.` (same as Equity) |
+| Scope clarity | risk | `You'll wear many hats. This is a fast-paced environment where we work hard and expect nights and weekends when it takes them to make a launch happen. We are …` |
+
+Causes, in `docs/js/brief.js`:
+- `timePressure` treats `rockstar` and `fast-paced` the same as `nights and weekends`. `pressure` keeps document order, so the rockstar line comes first. Both pressure lines are already in `shown` (Equity took the rockstar line and Scope took the paragraph), so `preferUnused` falls back to `candidates[0]`.
+- `evidenceFor`'s long-clause path trims at a word boundary near 160 characters, which leaves the fragment `We are …`.
+- Other samples show `… pilot operator. …` and `Series B vendor portal company. …`, a period followed by an ellipsis.
 
 ## Rules for the builder (unchanged)
 
@@ -25,11 +32,11 @@ What the screenshots show today:
 - Never submit any form, never sign in to speedrun-talent-network.com, never contact anyone.
 - Every regression fixture must be fictional. Do not commit text copied from real API postings.
 - Claim a result only after you run the command and read its output.
-- Leave no temp files (`/tmp/wyt*`, scratch scripts, stray `test-results/` artifacts beyond what `.gitignore` covers). `git status --short --untracked-files=all` must show only intended files.
+- Leave no temp files (`/tmp/wyt*`, scratch scripts, calibration dumps, stray `test-results/` artifacts beyond what `.gitignore` covers). `git status --short --untracked-files=all` must show only intended files.
 
 ## Ordered work package
 
-### Step 1 — Re-check the live iteration 4 deploy (≈5 min)
+### Step 1 — Re-check the live iteration 5 deploy (≈5 min)
 
 ```sh
 gh api repos/MadanChaollaPark/speedrun-worth-your-time/pages/builds/latest --jq '{status,commit}'
@@ -37,56 +44,56 @@ curl -sS -o /dev/null -w '%{http_code}\n' https://madanchaollapark.github.io/spe
 npm run test:live -- --retries=0
 ```
 
-Acceptance: status is `built` at commit `90a9a4b…`, HTTP is 200, and the live suite passes 4 of 4 with retries off. Record all three outputs in BUILD_REPORT. If the live suite fails, diagnose it and fix the test or app before Step 2, then report the cause.
+Acceptance: status is `built` at commit `9b46781…`, HTTP is 200, and the live suite passes 4 of 4 with retries off. Record all three outputs in BUILD_REPORT. If the live suite fails, diagnose it and fix the test or app before Step 2, then report the cause.
 
-### Step 2 — Clause-aware excerpts on shared lines (≈20 min)
+### Step 2 — Hours row uses the strongest schedule phrase (≈15 min)
 
-File: `docs/js/brief.js`, `evidenceFor`. When the function trims a shared line to keep clear of another row's anchor, it currently cuts at that anchor's index. Change the cut so it snaps to a clause boundary:
+File: `docs/js/brief.js`, `inspect`.
 
-- Clause boundaries: sentence end (`. ! ?` followed by a space), `;`, `, ` and the connector words ` and `, ` but `, ` while `, ` then `, ` so `.
-- **After** the row's own anchor, the excerpt must continue at least to the first clause boundary after `matchEnd`. Cut there, not mid-clause, even if another anchor starts earlier inside that clause.
-- **Before** the row's own anchor, start at the last clause boundary before `matchStart`. Never start inside a clause that belongs to an earlier anchor.
-- Drop a dangling connector or comma at the cut so excerpts never end in "and …" or start with "and …". Keep the existing `… ` and ` …` markers wherever text is omitted.
-- Keep the 160-character limit and the word-boundary trimming for long single clauses. Each excerpt must remain a verbatim substring of the posting once the ellipses are removed. The existing test at `tests/unit/brief.test.js:13-26` checks this.
+- Split the hours wording into two tiers. Strong: `nights and weekends`, `weekends expected/required`, `long hours`, `50+ … 80+ hours`, `six days` / `6-day`, `crunch`, `always on`. Soft: `rockstar`, `fast-paced`, `hustle`, `grind`, `work hard`, `breakneck speed`. Keep the same negation guard (`negated` within 28 characters before the match) for both tiers.
+- The Hours row stays `risk` when either tier matches, as today. Choose the line and anchor from the strong tier first. Use the soft tier only when no line has a strong match. The anchor passed to `item` must be the pattern of the tier that chose the line, so the excerpt centers on that phrase.
+- Keep the reason text, status logic and score unchanged. The point is better evidence, not a new rule.
 
-Acceptance (use the shipped samples in `docs/js/samples.js`; add unit tests that assert these exact strings):
-- Founding sample, Reporting row: `You report directly to the CTO …` (no trailing "and").
-- Founding sample, Team row: starts with `… work with our product designer` and contains `dispatch team at a pilot operator`.
-- Paste sample (the Pencil Cloud Studio posting), First-quarter outcomes row: contains `Launch the guided importer to 30 existing customers`.
-- Paste sample, Customers and traction row still contains `30 existing customers`.
-- The iteration 4 distinct-excerpt tests still pass. If one asserted a mid-clause cut that the new rule replaces, update the expected string. Say which test changed, and why, in BUILD_REPORT.
-- Open the regenerated `a-sample-brief.png` and `b-paste-brief.png` and quote the four rows above in BUILD_REPORT.
+Acceptance (add unit tests that assert these on the shipped Moonbutton sample):
+- Hours evidence contains `nights and weekends`.
+- Hours evidence differs from Equity evidence, and Equity evidence still contains `equity-heavy`.
+- Scope evidence starts with `You'll wear many hats.` and does not contain `nights and weekends`. If the Step 3 sentence rule alone does not get there, the shared-line clause logic must cut the Scope row before the Hours anchor.
+- Moonbutton score and band stay `26 · Proceed with caution`. No other sample's score or band changes. Show a before/after table in BUILD_REPORT for all four samples.
+- New fictional unit test: a posting that has only `We move fast and want a rockstar.` still yields Hours `risk` with an excerpt containing `rockstar`.
 
-### Step 3 — Drop list markers from evidence (≈5 min)
+### Step 3 — Long excerpts end at a sentence (≈15 min)
 
-In `evidenceFor` (or right before it is called), strip one leading list marker matching `stripBullet` (`- `, `* `, `• `, `1. `, `1) `) from the displayed excerpt. Analysis must still use the original line.
+File: `docs/js/brief.js`, `evidenceFor`, the long-clause path (the code after `if (excerpt.length <= limit) return excerpt;`).
 
-Acceptance:
-- New unit test: a posting with the bullet `- Build the import tool in TypeScript` yields a Technical stack evidence of `Build the import tool in TypeScript` (no leading `- `).
-- The founding sample's Scope and Technical stack excerpts no longer start with `- ` in `a-sample-brief.png`.
-- The verbatim-substring test still passes.
-
-### Step 4 — Score that does not saturate (≈15 min)
-
-File: `docs/js/brief.js`, around line 437. Today `score = clamp(50 + Σdelta)`, and the rewards sum to 58, so a posting can miss two criteria and still reach 99–100.
-
-Change: derive the baseline from the weights so that a posting with every criterion a signal scores exactly 100. The baseline is `100 − (the maximum total positive delta the ledger can produce)`. Compute it from `criteria` (and any other positive ledger rows, if they exist) rather than hard-coding it. Today that is 42. Keep the clamp to 0–100 and keep the ledger additive: the score must equal baseline + Σdelta, clamped. Leave the band thresholds (70 / 50) and the confidence rules unchanged.
-
-Update every place that says "starts at 50" so it shows the actual baseline: `docs/js/app.js:242`, the Markdown export at `docs/js/brief.js:473`, and `PRODUCT.md:12`. Also update the unit test at `tests/unit/brief.test.js:191-196` so it uses the exported baseline, not 50. Export the baseline from `brief.js` (for example `export const BASELINE`).
+- When the excerpt must be trimmed to 160 characters, first look for the last sentence end (`.`, `!` or `?` followed by whitespace or the end of the line) that falls after `matchEnd` and keeps the excerpt within the limit. If one exists, end the excerpt there. Otherwise keep today's word-boundary trim with ` …`.
+- Apply the same preference to the start: if a sentence start lies between `minStart` and the anchor, begin there, so the excerpt does not open mid-sentence when a clean start fits.
+- Keep the rule that each excerpt, with the `… ` and ` …` markers removed, is a verbatim substring of the posting line. The existing verbatim-substring test must still pass.
 
 Acceptance:
-- New unit test: a fictional posting where every criterion is a signal scores exactly 100, with no clamping needed (baseline + Σdelta === 100).
-- New unit test: the paste sample scores below 95, and its ledger plus baseline equals its score.
-- In BUILD_REPORT, add a table of before and after score and band for each shipped sample in `docs/js/samples.js`. The founding sample must stay "Worth a conversation". If any other sample changes band, say so and explain whether the new band is more accurate. Do not retune thresholds to hide a change.
-- "Why this score" in the app and the Markdown export state the new baseline in plain words, for example "Starts at 42, so a posting that answers every question scores 100."
+- Moonbutton Scope evidence does not end with `We are …` and does not end with any word fragment followed by ` …` when a sentence end was available within the limit.
+- New fictional unit test: a single 220-character line made of three sentences, with the anchor in the first sentence, yields evidence that ends with that line's first or second sentence's final period, and has no trailing ` …`.
+- New fictional unit test: a single 200-character sentence with no internal period still trims at a word boundary and ends with ` …`.
 
-### Step 5 — Close the two remaining review gaps (≈10 min)
+### Step 4 — No period followed by an ellipsis (≈5 min)
 
-a) Review issue 2, in `employmentInDescription`: for `source === 'api'` postings, ignore the final bare-line fallback (a line that is only an employment word, such as "Contract"). The API's `employment_type` stays authoritative unless the description states a type explicitly: a labeled field, a fixed-term contract, or a "this is a … role" statement. Paste-only postings keep the current behavior.
+In `evidenceFor`'s `formatExcerpt` and in the Step 3 path: when the excerpt ends with `.`, `!` or `?`, do not append ` …`. Keep the leading `… ` whenever text before the excerpt is omitted.
 
-Acceptance: a new fictional API-shaped fixture (same shape as the existing API tests) with `employment_type: 'full_time'` and a description containing the heading line `Contract` followed by `We sign a standard offer letter and IP agreement.` produces no conflict question, and "Where and how" shows only the listing type. The existing 6-month-contract conflict test still passes unchanged.
+Acceptance:
+- No shipped sample has evidence matching `/[.!?] …$/`. Add one unit test that loops over every sample in `docs/js/samples.js` and every checklist row and asserts this.
+- Founding Team evidence reads `… work with our product designer and the dispatch team at a pilot operator.` Paste Funding evidence reads `We are a Series B vendor portal company.` Update any existing unit test that asserted the old trailing ` …`, and name it in BUILD_REPORT.
 
-b) Review issue 3: add a unit test where funding ("We raised a $4M seed round.") and runway ("We have 22 months of runway.") sit on separate lines. Assert that the Funding row has status `signal`, quotes the seed line, and has the reason `The posting gives a funding detail and also states a runway figure.`
+### Step 5 — Bounded live calibration on public postings (≈15 min, report-first)
+
+Use only the public no-auth API. The orchestrator confirmed at 09:58 KST that `GET https://speedrun-talent-network.com/api/v1/jobs?limit=3` returns 50 jobs (the `limit` parameter is ignored) and that list items have no `description_text`. Fetch the list once, take the first 20 ids, and fetch each detail with `GET /api/v1/jobs/{id}`. Wait at least 0.5 s between requests. Do not use any other endpoint and do not open the site in a browser for this step.
+
+Run a scratch script from outside the repo (for example `/tmp/wyt-calibrate.mjs`, importing `docs/js/brief.js` by absolute path) that calls `normalizeFromApi(detail.job)` and `analyze(...)` for each job. Delete the script and any dump when done.
+
+Report in BUILD_REPORT, without quoting any posting text longer than 12 words:
+- The band count (how many of the 20 are Worth a conversation, Proceed with caution, Not enough to judge) and the min, median and max score.
+- For each of the 13 checklist rows, the count of signal, risk and unknown.
+- A spot-check of 5 jobs (identify each by its 8-hex short id and title only). For each, read the description and list any row whose status is clearly wrong (a false signal, a false risk, or a missed explicit statement).
+
+Fixes: fix at most two clear misfires, and only if each fix is small (roughly 10 lines or fewer in `brief.js`). Each fix needs a fictional unit regression that fails before the fix and passes after it. List every other finding under "Deferred" with the reason. If a fix changes a shipped sample's score or band, show it in the Step 2 table and explain it.
 
 ### Step 6 — Full test run, docs, report (≈10 min)
 
@@ -96,24 +103,24 @@ Run these from `/workspace/speedrun-pe`:
 CI=1 npm run test:unit
 CI=1 npx playwright test
 grep -rnE 'innerHTML|outerHTML|insertAdjacentHTML|document\.write|eval\(|new Function' docs/js || echo 'no unsafe sinks'
-grep -rn 'starts at 50\|Starts at 50' docs PRODUCT.md README.md || echo 'no stale baseline'
 grep -c 'Orchestrator and reviewer are Kiro Claude Opus 5.5; builder is Codex gpt-6.2-sol at high reasoning effort / slow mode, by owner decision 2026-11-22; do not revert' GOAL.md STATE/PLAN.md
 git diff --name-only -- GOAL.md RESEARCH.md APPLICATION_DRAFT.md speedrun_pe_loop.py STATE/ALL_DONE STATE/TEST_COMMANDS
 git diff --check -- docs tests PRODUCT.md CHANGELOG.md README.md
+ls /tmp/wyt* 2>/dev/null || echo 'no temp files'
 git status --short --untracked-files=all
 ```
 
 Acceptance:
-- Unit tests: 0 fail and 0 skipped, with at least 36 plus the new tests (expect ≥ 43).
-- Playwright: at least 19 passed, 0 failed, 0 skipped, including the axe scans. The screenshots in `tests/screenshots/` are regenerated. If an e2e test asserted the old score, update it to the new value and list it in BUILD_REPORT.
-- The checks print `no unsafe sinks` and `no stale baseline`. The role line count is 1 in GOAL.md and at least 1 in STATE/PLAN.md. The `git diff --name-only` and `git diff --check` commands print nothing.
-- CHANGELOG.md gets an "Iteration 5 · 2026-11-23" entry that lists only verified changes. Update PRODUCT.md's scoring paragraph to match Step 4. Update the README only if a behavior or command it documents changed. The README screenshot path stays the same.
-- Write `STATE/BUILD_REPORT.md` covering: the steps done; each command with its exit code and key output line; the sample before/after score table; the quoted excerpts from the screenshots; the files changed; and anything deferred, with the reason.
+- Unit tests: 0 fail and 0 skipped, with at least 44 plus the new tests (expect ≥ 50).
+- Playwright: at least 19 passed, 0 failed, 0 skipped, including the axe scans. The screenshots in `tests/screenshots/` are regenerated. Open `a-sample-brief.png` and `b-paste-brief.png` and quote the Team row (screenshot a) and the Funding row (screenshot b) in BUILD_REPORT. There is no Moonbutton screenshot, so quote its Equity, Hours and Scope rows from a `node` dump.
+- The checks print `no unsafe sinks` and `no temp files`. The role line count is 1 in GOAL.md and at least 1 in STATE/PLAN.md. The `git diff --name-only` and `git diff --check` commands print nothing.
+- CHANGELOG.md gets an "Iteration 6 · 2026-11-23" entry that lists only verified changes. Update PRODUCT.md only if it describes excerpt or hours behavior that changed. Update the README only if a documented behavior or command changed.
+- Write `STATE/BUILD_REPORT.md` covering: the steps done; each command with its exit code and key output line; the sample before/after table; the quoted excerpts; the calibration summary and spot-check; the files changed; and anything deferred, with the reason.
 
 ## Out of scope this round
 
 - New UI features, pages or dependencies.
 - Changes to APPLICATION_DRAFT.md.
 - CI workflows. `.github/` stays absent because the token lacks `workflow` scope.
-- Band threshold retuning.
-- Re-running the 25-posting live API calibration.
+- Band threshold or weight retuning.
+- Committing any real posting text, ids lists or calibration dumps.

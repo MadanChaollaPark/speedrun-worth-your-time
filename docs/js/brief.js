@@ -19,9 +19,10 @@ const employmentNames = new Map([
 const employmentName = value => employmentNames.get(value?.toLowerCase().replace(/[-_\s]/g, ''));
 const moneyUnit = '(?:[$€£¥₩]\\s*|(?:USD|CAD|AUD|GBP|EUR|KRW)\\s+)';
 const amount = '\\d+(?:[,.]\\d+)*\\s*[kKmM]?';
+const payRangeSeparator = '(?:[-–—~]|to|and|&(?:[mn]dash|#(?:8211|8212)|#x201[34]);)';
 const payRange = new RegExp(
-  moneyUnit + amount + '\\s*(?:[-–—~]|to|and)\\s*(?:' + moneyUnit + ')?' + amount +
-  '|' + amount + '\\s*(?:[-–—~]|to|and)\\s*' + amount + '\\s*(?:USD|CAD|AUD|GBP|EUR|KRW|\\/\\s*(?:h|hr|hour|year|yr|month)\\b)',
+  moneyUnit + amount + '\\s*' + payRangeSeparator + '\\s*(?:' + moneyUnit + ')?' + amount +
+  '|' + amount + '\\s*' + payRangeSeparator + '\\s*' + amount + '\\s*(?:USD|CAD|AUD|GBP|EUR|KRW|\\/\\s*(?:h|hr|hour|year|yr|month)\\b)',
   'i',
 );
 const cashAmount = new RegExp(moneyUnit + amount, 'i');
@@ -131,12 +132,13 @@ const fundingPattern = /\b(?:pre[ -]?seed|seed(?:[- ](?:stage|funded|round)|\b(?
 const runwayPattern = /\b(?:\d+(?:\s*[-–]\s*\d+)?\s*(?:months?|years?)\s+(?:of\s+)?(?:cash\s+)?runway|runway\s*(?::|is|of|today)?\s*\d)/i;
 const numericEquity = /\d+(?:\.\d+)?\s*%/;
 const optionTerms = /\b(?:exercis\w*|strike(?: price)?|409a)\b/i;
-const equityPattern = /\b(?:equity|stock options|share options|employee options|rsus?)\b/i;
+const equityPattern = /\b(?:(?<!\binternal\s+)equity(?!\s+partners\b)|stock options|share options|employee options|rsus?)\b/i;
 const noEquity = /\b(?:no (?:equity|stock options)|equity\s*:\s*(?:none|no)\b|(?:equity|stock options) (?:is |are )?not (?:offered|included|available))\b/i;
 const vesting = /\b(?:vest(?:ing|s|ed)?|cliff)\b/i;
 const equityCompContext = /\b(?:salary|pay|compensation|offer(?:ed|s)?|vest(?:ing|s|ed)?|cliff|ownership|benefits)\b|\d\s*%/i;
 const vagueScope = /\b(?:wear (?:many|multiple|all) hats|whatever it takes|do it all|everything from(?= .* to .*\b)|anything and everything|no job is too small)\b/i;
-const timePressure = /\b(?:crunch|hustle|grind|work hard|(?:move|work) at breakneck speed|(?:6|six)[ -]days|(?:nights and weekends|weekends (?:expected|required))|long hours|(?:50|55|60|65|70|80)\+?\s*hours|always on|rockstar|fast[ -]paced)\b/i;
+const schedulePressure = /\b(?:nights and weekends|weekends (?:expected|required)|long hours|(?:50|55|60|65|70|80)\+?\s*hours|six[- ]days|6[- ]days?|crunch|always on)\b/i;
+const softPressure = /\b(?:rockstar|fast[ -]paced|hustle|grind|work hard|breakneck speed)\b/i;
 const regularHours = /\b(?:no (?:routine )?(?:nights|weekends|after-hours|overtime)|standard (?:working|business) hours|\d{1,2}[- ]hour (?:work)?week|on-call (?:rotation|schedule))\b/i;
 const interview = /\b(?:interview(?:s|ing)?|hiring process|recruiter screen|phone screen|take[- ]home|technical screen|onsite loop)\b/i;
 const stageDetail = /\b(?:screen|intro(?:ductory)? call|(?:founder|team|technical|panel|final|pairing) (?:call|chat|session|interview)|portfolio review|take[- ]home|\d+\s*(?:minutes?|hours?|weeks?|days?|rounds?|steps?)|\d+\s*min\b|paid exercise|work sample|pair programming|→)\b/i;
@@ -162,24 +164,28 @@ function evidenceFor(line, match, otherMatches = []) {
     }
     const clauseBreak = /[.!?](?=\s)|;|,(?=\s)|\s+(?:and|but|while|then|so)(?=\s)/gi;
     clauseBreak.lastIndex = contentStart;
-    const boundaries = [...line.matchAll(clauseBreak)].map(({ 0: separator, index }) => ({
-      end: index + (/^[.!?]$/.test(separator) ? 1 : 0),
-      next: index + separator.length,
-    }));
+    const boundaries = [...line.matchAll(clauseBreak)].map(({ 0: separator, index }) => {
+      const sentenceEnd = /^[.!?]$/.test(separator);
+      return { end: index + Number(sentenceEnd), next: index + separator.length, sentenceEnd };
+    });
     if (earlierAnchor || nextAnchor < line.length) {
       before = boundaries.findLast(boundary => boundary.next <= matchStart)?.next ?? contentStart;
     }
     if (nextAnchor < line.length) {
       // Keep the complete clause when it contains more than one anchor.
       const following = boundaries.filter(boundary => boundary.end >= matchEnd);
-      after = (following.findLast(boundary => boundary.next <= nextAnchor) ?? following[0])?.end ?? line.length;
+      const between = following.filter(boundary => boundary.next <= nextAnchor);
+      after = (between.findLast(boundary => boundary.sentenceEnd) ?? between.at(-1) ?? following[0])?.end ?? line.length;
     }
   }
 
   const formatExcerpt = (start, end) => {
     let excerpt = line.slice(start, end).trim();
     if (start > contentStart) excerpt = '… ' + excerpt.replace(/^(?:and|but|while|then|so)\s+/i, '');
-    if (end < line.length) excerpt = excerpt.replace(/(?:\s+(?:and|but|while|then|so)|,)$/i, '').trimEnd() + ' …';
+    if (end < line.length) {
+      excerpt = excerpt.replace(/(?:\s+(?:and|but|while|then|so)|,)$/i, '').trimEnd();
+      if (!/[.!?]$/.test(excerpt)) excerpt += ' …';
+    }
     return excerpt;
   };
   const quote = line.slice(before, after);
@@ -193,12 +199,20 @@ function evidenceFor(line, match, otherMatches = []) {
   const anchorEnd = words.findLast(word => word.index < matchEnd - before) ?? anchorStart;
   const capacity = limit - 4; // Leave room for an ellipsis and space on either side.
   const minStart = Math.max(matchStart - before - 42, wordEnd(anchorEnd) - capacity);
-  const first = words.find(word => word.index >= minStart && word.index <= anchorStart.index) ?? anchorStart;
-  const maxEnd = first.index + capacity;
-  const last = words.findLast(word => word.index >= first.index && wordEnd(word) <= maxEnd);
+  const sentenceBreaks = [...quote.matchAll(/[.!?](?=\s|$)\s*/g)];
+  const sentenceStart = sentenceBreaks.map(breakMatch => breakMatch.index + breakMatch[0].length)
+    .findLast(start => start >= minStart && start <= anchorStart.index);
+  const firstWord = words.find(word => word.index >= minStart && word.index <= anchorStart.index) ?? anchorStart;
+  const first = sentenceStart ?? firstWord.index;
+  const sentenceLimit = first + limit - (before + first > contentStart ? 2 : 0);
+  const sentenceEnd = sentenceBreaks.findLast(({ index }) => index + 1 >= matchEnd - before && index + 1 <= sentenceLimit);
+  if (sentenceEnd) return formatExcerpt(before + first, before + sentenceEnd.index + 1);
+
+  const maxEnd = first + capacity;
+  const last = words.findLast(word => word.index >= first && wordEnd(word) <= maxEnd);
   if (!last) return '…';
 
-  return formatExcerpt(before + first.index, before + wordEnd(last));
+  return formatExcerpt(before + first, before + wordEnd(last));
 }
 
 export const criteria = [
@@ -349,10 +363,12 @@ function inspect(posting, lines, responsibilities) {
     return label ? !placeholder.test(label[1]) : (workMode.test(line) || officePattern.test(line)) &&
       !/\b(?:remote teams?|remote sensing|remote control|remote access|remote support)\b/i.test(line);
   });
-  const pressure = lines.filter(line => {
-    const at = line.search(timePressure);
+  const pressureHits = pattern => lines.filter(line => {
+    const at = line.search(pattern);
     return at >= 0 && !negated.test(line.slice(Math.max(0, at - 28), at));
   });
+  const schedule = pressureHits(schedulePressure);
+  const pressure = schedule.length ? schedule : pressureHits(softPressure);
   const hours = hits(regularHours);
   const visaPattern = /\b(?:visa(?:s| sponsorship)?|sponsor(?:ship)? (?:work )?visa|work (?:permit|authorization)|h[- ]?1b)\b/i;
   const visa = hit(visaPattern);
@@ -384,7 +400,7 @@ function inspect(posting, lines, responsibilities) {
     location: loc || office.length || posting.location || posting.workplace
       ? signal(office.length ? office : posting.location ?? posting.workplace ?? loc, 'The posting gives a location or work arrangement. Confirm any office days or geographic limits.', office.length ? officePattern : workMode)
       : unknown('Office expectations are a practical deal-breaker for some candidates.'),
-    hours: pressure.length ? risk(pressure, 'The wording suggests intensity. Ask for the actual schedule and examples of crunch.', timePressure)
+    hours: pressure.length ? risk(pressure, 'The wording suggests intensity. Ask for the actual schedule and examples of crunch.', schedule.length ? schedulePressure : softPressure)
       : hours.length ? signal(hours, 'The posting sets an expectation about hours, nights, weekends or on-call work.', regularHours)
         : unknown('An explicit schedule helps you judge whether the role is sustainable for you.'),
     visa: visa && visaClear.test(visa) ? signal(visa, 'The posting states a sponsorship policy. Check how it applies to you.', visaPattern)

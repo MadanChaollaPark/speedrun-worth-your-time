@@ -1,5 +1,12 @@
 # Changelog
 
+## Iteration 6 · 2026-11-23
+
+- Verified the public iteration 5 GitHub Pages build with four Chromium smoke tests and retries disabled.
+- Quoted explicit schedule expectations ahead of softer intensity wording and separated Moonbutton’s scope, hours, and equity evidence. All four sample scores stayed the same.
+- Preferred sentence boundaries in shortened evidence and dropped trailing ellipses after sentence punctuation.
+- Checked 20 public job postings. Recognized pay ranges with encoded dash separators and excluded internal pay equity and investor names from ownership evidence.
+
 ## Iteration 5 · 2026-11-23
 
 - Verified the public iteration 4 GitHub Pages deployment with four Chromium smoke tests and retries disabled.
