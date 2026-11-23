@@ -1,5 +1,13 @@
 # Changelog
 
+## Iteration 4 · 2026-11-23
+
+- Confirmed the iteration 3 GitHub Pages build opens publicly and passes all four live Chromium smoke tests.
+- Improved checklist excerpts by favoring separate lines and focusing shared excerpts on the wording each criterion matched.
+- Prioritized compensation language for equity evidence and excluded extracted responsibilities.
+- Added an employment-type follow-up when the listing and description disagree. The conflict has no effect on the score.
+- Flagged explicit pay nondisclosure while keeping bare competitive-pay wording unknown.
+
 ## Iteration 3 · 2026-11-23
 
 - Rechecked the public iteration 2 deployment in Chromium. The live founder test waits for the form and retains a trace if a run fails.

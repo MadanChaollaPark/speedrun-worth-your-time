@@ -10,6 +10,13 @@ const workMode = /\b(?:hybrid(?![- ]+(?:multi[- ]?cloud|cloud)\b)|remote|on[- ]?
 const apiEmploymentLabels = new Map([['FullTime', 'Full-time'], ['PartTime', 'Part-time'], ['Intern', 'Internship']]);
 const employmentType = /\b(?:full[- ]time|part[- ]time|contract(?:or)?|internship|temporary)\b/i;
 const fixedTermContract = /\b\d+[- ](?:days?|weeks?|months?|years?)[- ](contract)\b/i;
+const employmentField = /^(?:employment(?: type)?|job type)\s*[:：]\s*/i;
+const roleEmployment = /\b(?:(?:this (?:is|will be)|the (?:role|job|position) is)\s+(?:an?\s+)?(full[- ]time|part[- ]time|contract(?:or)?|internship|temporary)\b|(full[- ]time|part[- ]time|contract|temporary)\s+(?:role|job|position)\b)/i;
+const employmentNames = new Map([
+  ['fulltime', 'full-time'], ['parttime', 'part-time'], ['contract', 'contract'], ['contractor', 'contract'],
+  ['intern', 'internship'], ['internship', 'internship'], ['temporary', 'temporary'],
+]);
+const employmentName = value => employmentNames.get(value?.toLowerCase().replace(/[-_\s]/g, ''));
 const moneyUnit = '(?:[$€£¥₩]\\s*|(?:USD|CAD|AUD|GBP|EUR|KRW)\\s+)';
 const amount = '\\d+(?:[,.]\\d+)*\\s*[kKmM]?';
 const payRange = new RegExp(
@@ -20,6 +27,8 @@ const payRange = new RegExp(
 const cashAmount = new RegExp(moneyUnit + amount, 'i');
 const payHeading = /^(?:base )?(?:compensation|salary|pay range|pay band)\s*:?$/i;
 const payLabel = /\b(?:base (?:pay|salary)|salar(?:y|ies)|(?:cash |base )?compensation|pay (?:range|band|rate)|hourly (?:pay|rate)|annual pay)\b/i;
+const undisclosedRange = /^(?:no range|range (?:is )?not shared)[.!]?$/i;
+const weakPay = /\b(?:market rate|depends on experience|unpaid|equity[- ]only|no (?:cash|salary|base pay|range)|not disclosed|range (?:is )?not shared|salary(?:\s*:\s*|\s+)tbd|to be discussed)\b/i;
 
 export function parseSpeedrunJobUrl(input) {
   if (typeof input !== 'string' || !/^https?:\/\//i.test(input.trim())) return null;
@@ -59,7 +68,7 @@ export function normalizeFromText(text) {
   const location = field(/^(?:location(?: and on-site days)?|based in)\s*[:：]\s*/i) ??
     first.find(line => line.length < 100 && workMode.exec(line)?.index === 0) ?? null;
   const comp = getPayLine(linesOf(description)) ?? null;
-  const employment = field(/^(?:employment(?: type)?|job type)\s*[:：]\s*/i) ||
+  const employment = field(employmentField) ||
     first[1]?.match(employmentType)?.[0] || comp?.match(fixedTermContract)?.[1] || null;
   return {
     source: 'paste',
@@ -125,6 +134,7 @@ const optionTerms = /\b(?:exercis\w*|strike(?: price)?|409a)\b/i;
 const equityPattern = /\b(?:equity|stock options|share options|employee options|rsus?)\b/i;
 const noEquity = /\b(?:no (?:equity|stock options)|equity\s*:\s*(?:none|no)\b|(?:equity|stock options) (?:is |are )?not (?:offered|included|available))\b/i;
 const vesting = /\b(?:vest(?:ing|s|ed)?|cliff)\b/i;
+const equityCompContext = /\b(?:salary|pay|compensation|offer(?:ed|s)?|vest(?:ing|s|ed)?|cliff|ownership|benefits)\b|\d\s*%/i;
 const vagueScope = /\b(?:wear (?:many|multiple|all) hats|whatever it takes|do it all|everything from(?= .* to .*\b)|anything and everything|no job is too small)\b/i;
 const timePressure = /\b(?:crunch|hustle|grind|work hard|(?:move|work) at breakneck speed|(?:6|six)[ -]days|(?:nights and weekends|weekends (?:expected|required))|long hours|(?:50|55|60|65|70|80)\+?\s*hours|always on|rockstar|fast[ -]paced)\b/i;
 const regularHours = /\b(?:no (?:routine )?(?:nights|weekends|after-hours|overtime)|standard (?:working|business) hours|\d{1,2}[- ]hour (?:work)?week|on-call (?:rotation|schedule))\b/i;
@@ -133,23 +143,43 @@ const stageDetail = /\b(?:screen|intro(?:ductory)? call|(?:founder|team|technica
 const placeholder = /^(?:tbd|tba|unknown|n\/a|not (?:provided|specified|disclosed)|to be (?:determined|announced))\.?$/i;
 const negated = /\b(?:no|never|without|not expected to|don['’]t|do not|won['’]t|will not)\b/i;
 
-function evidenceFor(line, anchor) {
+function evidenceFor(line, match, otherMatches = []) {
   const limit = 160;
   if (!line) return missing;
-  if (line.length <= limit) return line;
 
-  const match = anchor?.exec(line);
   const matchStart = match?.index ?? 0;
   const matchEnd = matchStart + (match?.[0].length ?? 0);
+  let before = 0;
+  let after = line.length;
+  if (match) {
+    // Keep a shared excerpt clear of other criteria's anchors when they don't overlap.
+    for (const other of otherMatches) {
+      const otherEnd = other.index + other[0].length;
+      if (otherEnd <= matchStart) before = Math.max(before, otherEnd);
+      if (other.index >= matchEnd) after = Math.min(after, other.index);
+    }
+    const sentenceBreak = /(?<=[.!?])\s+(?=[A-Z])/g;
+    if (before > 0) {
+      const boundary = [...line.slice(before, matchStart).matchAll(sentenceBreak)].at(-1);
+      if (boundary) before += boundary.index + boundary[0].length;
+    }
+    if (after < line.length) {
+      const boundary = sentenceBreak.exec(line.slice(matchEnd, after));
+      if (boundary) after = matchEnd + boundary.index;
+    }
+  }
+  if (line.length <= limit && before === 0 && after === line.length) return line;
+
   const words = [...line.matchAll(/\S+/g)];
   if (!words.length) return missing;
   const wordEnd = word => word.index + word[0].length;
   const anchorStart = words.findLast(word => word.index <= matchStart) ?? words[0];
   const anchorEnd = words.findLast(word => word.index < matchEnd) ?? anchorStart;
   const capacity = limit - 4; // Leave room for an ellipsis and space on either side.
-  const minStart = Math.max(matchStart - 42, wordEnd(anchorEnd) - capacity);
+  const minStart = Math.max(before, matchStart - 42, wordEnd(anchorEnd) - capacity);
   const first = words.find(word => word.index >= minStart && word.index <= anchorStart.index) ?? anchorStart;
-  const last = words.findLast(word => word.index >= first.index && wordEnd(word) <= first.index + capacity);
+  const maxEnd = Math.min(Math.max(after, wordEnd(anchorEnd)), first.index + capacity);
+  const last = words.findLast(word => word.index >= first.index && wordEnd(word) <= maxEnd);
   if (!last) return '…';
 
   const start = first.index;
@@ -173,6 +203,18 @@ export const criteria = [
   { id: 'stack', label: 'Technical stack', reward: 2, penalty: 2, question: 'What would I build with, and which parts of the stack are still being decided?' },
 ];
 
+const stripBullet = line => line.replace(/^(?:[-*•]|\d+[.)])\s+/, '');
+
+function employmentInDescription(lines) {
+  const details = lines.map(stripBullet).filter(line => !action.test(line));
+  const labeled = matchLine(details, employmentField)?.replace(employmentField, '');
+  const fixedTerm = matchLine(details, fixedTermContract)?.match(fixedTermContract);
+  const role = matchLine(details, roleEmployment)?.match(roleEmployment);
+  return employmentName(labeled?.replace(/[.!]$/, '')) ??
+    employmentName(labeled?.match(employmentType)?.[0] ?? fixedTerm?.[1] ?? role?.[1] ?? role?.[2]) ??
+    details.map(line => employmentName(line.replace(/[.!]$/, ''))).find(Boolean);
+}
+
 function extractResponsibilities(lines) {
   const responsibilities = [];
   let inSection = false;
@@ -182,7 +224,7 @@ function extractResponsibilities(lines) {
       continue;
     }
     if (otherHeading.test(line)) inSection = false;
-    const stripped = line.replace(/^(?:[-*•]|\d+[.)])\s+/, '');
+    const stripped = stripBullet(line);
     if (action.test(stripped) || (inSection && stripped.length >= 12 && !stripped.includes(':'))) {
       responsibilities.push(stripped);
     }
@@ -192,26 +234,41 @@ function extractResponsibilities(lines) {
 
 function getPayLine(lines) {
   const candidates = lines.flatMap((line, index) => {
-    if (!payLabel.test(line)) return [];
-    if (!payHeading.test(line)) return [line];
-    const next = lines[index + 1];
-    return next && (payRange.test(next) || cashAmount.test(next)) ? [next] : [];
+    if (payHeading.test(line)) {
+      const next = lines[index + 1];
+      return next && (cashAmount.test(next) || payRange.test(next) || undisclosedRange.test(next) ||
+        /^(?:not disclosed|to be discussed)[.!]?$/i.test(next)) ? [next] : [];
+    }
+    if (payLabel.test(line) || /\bcompetitive pay\b/i.test(line) ||
+        (/\bpay\b/i.test(line) && weakPay.test(line)) || undisclosedRange.test(line)) return [line];
+    return [];
   });
   return candidates.find(line => payRange.test(line)) ??
     lines.find(line => payRange.test(line) && !/\b(?:raised|funding|runway|arr|revenue|equity|valuation|budget|bonus|commission)\b/i.test(line)) ??
+    candidates.find(line => weakPay.test(line)) ??
     candidates[0];
 }
 
 function inspect(posting, lines, responsibilities) {
   const hit = pattern => matchLine(lines, pattern);
-  const item = (status, line, why, anchor) => ({ status, evidence: evidenceFor(line, anchor), why });
+  const hits = pattern => lines.filter(line => pattern.test(line));
+  const shown = new Map();
+  const preferUnused = candidates => candidates.find(line => !shown.has(line)) ?? candidates[0];
+  const item = (status, source, why, anchor) => {
+    const line = Array.isArray(source) ? preferUnused(source) : source;
+    const match = line ? anchor?.exec(line) : null;
+    if (line) {
+      if (!shown.has(line)) shown.set(line, []);
+      if (match) shown.get(line).push(match);
+    }
+    return { status, line, match, why };
+  };
   const signal = (line, why, anchor) => item('signal', line, why, anchor);
   const risk = (line, why, anchor) => item('risk', line, why, anchor);
   const unknown = (why, line, anchor) => item('unknown', line, why, anchor);
 
   const pay = getPayLine(lines);
   const apiPay = posting.source === 'api' ? posting.compSummary : null;
-  const weakPay = /\b(?:market rate|depends on experience|unpaid|equity[- ]only|no (?:cash|salary|base pay)|not disclosed)\b/i;
   const boundedPay = [pay, apiPay].find(line =>
     line && payRange.test(line) && !/\b(?:bonus|commission|equity)[- ](?:only|range)\b/i.test(line),
   );
@@ -221,14 +278,18 @@ function inspect(posting, lines, responsibilities) {
       ? risk(pay ?? apiPay, 'The post describes pay without usable cash bounds.', weakPay)
       : unknown(pay || posting.comp ? 'Pay is referenced without a clear range.' : 'A posted range helps you decide whether to invest time.', pay ?? apiPay, payLabel);
 
-  const equityLines = lines.filter(line => equityPattern.test(line));
-  const equityName = equityLines.find(line => !noEquity.test(line));
+  const nonDutyLines = lines.filter(line => !responsibilities.includes(stripBullet(line)));
+  const equityLines = nonDutyLines.filter(line => equityPattern.test(line));
+  const equityName = equityLines.find(line => equityCompContext.test(line) && !noEquity.test(line)) ??
+    equityLines.find(line => !noEquity.test(line));
+  const equityContinuation = /^equity\s*:?$/i.test(equityName ?? '') ? lines[lines.indexOf(equityName) + 1] : null;
   const equityPercent = equityLines.find(line => numericEquity.test(line)) ??
-    (equityName && /^equity\s*:?$/i.test(equityName) && numericEquity.test(lines[lines.indexOf(equityName) + 1] ?? '') ? lines[lines.indexOf(equityName) + 1] : null);
-  const terms = hit(vesting);
-  const exercise = hit(optionTerms);
-  const equity = equityLines.some(line => noEquity.test(line))
-    ? signal(equityLines.find(line => noEquity.test(line)), 'The posting explicitly says equity is unavailable.', noEquity)
+    (nonDutyLines.includes(equityContinuation) && numericEquity.test(equityContinuation) ? equityContinuation : null);
+  const terms = nonDutyLines.some(line => vesting.test(line));
+  const exercise = nonDutyLines.some(line => optionTerms.test(line));
+  const excludedEquity = matchLine(equityLines, noEquity);
+  const equity = excludedEquity
+    ? signal(excludedEquity, 'The posting explicitly says equity is unavailable.', noEquity)
     : equityName && equityPercent && terms
       ? signal(equityPercent, exercise ? 'An ownership percentage, vesting and exercise or pricing terms are stated.' : 'An ownership percentage and vesting are stated. Ask about the strike price, 409A and exercise window.', numericEquity)
       : equityName
@@ -236,20 +297,20 @@ function inspect(posting, lines, responsibilities) {
           equityPercent ? 'An ownership percentage is given.' : 'The posting mentions equity without a clear ownership percentage.',
           terms ? 'Vesting is mentioned.' : 'Vesting terms are missing.',
           exercise ? 'Exercise or pricing is mentioned.' : 'Exercise and pricing terms are missing.',
-        ].join(' '), equityPattern)
+        ].join(' '), equityPercent ? numericEquity : equityPattern)
         : unknown('Ownership and the cost of exercising can change the value of an offer.');
 
-  const funding = hit(fundingPattern);
-  const runway = hit(runwayPattern);
+  const runwayLines = hits(runwayPattern);
+  const runway = runwayLines[0];
   const shortRunway = runway && /\b[1-5]\s*months?\b/i.test(runway) && !/\d\s*[-–]/.test(runway);
   const teamPattern = /\b(?:\d+[- ]person team|team of\s+\d+|\d+\s+(?:people|employees|engineers)\b|team size(?: today)?\s*:\s*\d+|work (?:directly |closely )?with (?:our |the )?(?:co[- ]?founders?|[\w-]+ team|product|design|engineering|customers))\b/i;
-  const team = hit(teamPattern);
+  const team = hits(teamPattern);
   const reportingPattern = /\b(?:reports? (?:directly )?to|you(?: (?:will be|are)|['’]ll be) reporting (?:directly )?to|reporting\s+line|^reporting\s+to(?=\s*:)|your manager(?: will be| is))\s*:?\s*(?=([^:\s].*))/i;
-  const reporting = lines.find(line => {
+  const reporting = lines.filter(line => {
     const value = line.match(reportingPattern)?.[1];
     return value && !placeholder.test(value);
   });
-  const scope = lines.find(line => {
+  const scope = lines.filter(line => {
     const at = line.search(vagueScope);
     return at >= 0 && !negated.test(line.slice(Math.max(0, at - 28), at));
   });
@@ -259,7 +320,7 @@ function inspect(posting, lines, responsibilities) {
   const goal = lines[goalAt];
   const goalText = goal?.includes(':') ? goal.slice(goal.indexOf(':') + 1).trim() : null;
   const goals = goal && (goalText && !placeholder.test(goalText) ||
-    action.test(lines[goalAt + 1]?.replace(/^(?:[-*•]|\d+[.)])\s+/, '') ?? '') ||
+    action.test(stripBullet(lines[goalAt + 1] ?? '')) ||
     !goalText && /\b(?:ship|launch|own|deliver|reduce|complete|build|publish|roll out|success looks like)\b/i.test(goal));
   const processAt = lines.findIndex(line => interview.test(line));
   const processLine = lines[processAt];
@@ -267,53 +328,60 @@ function inspect(posting, lines, responsibilities) {
   const stepLines = nearby.filter(line => stageDetail.test(line) && !/^[\w /&'-]+:\s/.test(line));
   const interviewEvidence = processLine && (stageDetail.test(processLine) ? processLine : stepLines[0]);
   const officePattern = /\b(?:\d+\s+days?\s+(?:a|per)\s+week\s+(?:in (?:the )?office|on[- ]?site)|office\s+(?:\d+\s+days?|attendance)|fully remote|remote[- ]first)\b/i;
-  const office = hit(officePattern);
+  const office = hits(officePattern);
   const loc = lines.find(line => {
     const label = line.match(/^(?:location(?: and on-site days)?|based in)\s*[:：]\s*(.+)/i);
     return label ? !placeholder.test(label[1]) : (workMode.test(line) || officePattern.test(line)) &&
       !/\b(?:remote teams?|remote sensing|remote control|remote access|remote support)\b/i.test(line);
   });
-  const pressure = lines.find(line => {
+  const pressure = lines.filter(line => {
     const at = line.search(timePressure);
     return at >= 0 && !negated.test(line.slice(Math.max(0, at - 28), at));
   });
-  const hours = hit(regularHours);
+  const hours = hits(regularHours);
   const visaPattern = /\b(?:visa(?:s| sponsorship)?|sponsor(?:ship)? (?:work )?visa|work (?:permit|authorization)|h[- ]?1b)\b/i;
   const visa = hit(visaPattern);
   const visaClear = /\b(?:yes|no|case[- ]by[- ]case|available|provided|offered|sponsor\b|cannot|can['’]t|unable|without|must (?:already )?have|required|consider)\b/i;
   const tractionPattern = /\b(?:\d[\d.,kKmM]*\+?\s*(?:(?:paying |active |pilot |enterprise |existing )?(?:customers|users|pilots|design partners|deployments)|(?:companies|organi[sz]ations)\s+(?:use|run on))|paying customers|pre[- ]launch|pre[- ]revenue|no (?:paying )?customers|\barr\s*(?::| of| reached)|revenue\s*(?::| of| reached)|customers? (?:include|are|across)|used by \S+)\b/i;
-  const traction = hit(tractionPattern);
+  const traction = hits(tractionPattern);
+  const fundingLines = [...new Set([...runwayLines, ...hits(fundingPattern)])];
+  const fundingOnly = fundingLines.filter(line => !teamPattern.test(line) && !tractionPattern.test(line));
+  const funding = preferUnused(fundingOnly.concat(fundingLines));
+  const fundingHasRunway = funding && runwayPattern.test(funding);
   const stackPattern = /\b(?:typescript|javascript|python|rust|golang|react|vue|angular|svelte|postgres(?:ql)?|mysql|redis|sqlite|ruby|rails|django|flask|kubernetes|docker|kotlin|swift|jvm|java|terraform|aws|gcp|azure|node\.js|next\.js|graphql|supabase|grpc|elixir|phoenix)\b|(?:c\+\+|c#|\.net)\b/i;
-  const stack = hit(stackPattern);
+  const stack = hits(stackPattern);
 
-  return {
+  const observations = {
     salary,
     equity,
     funding: shortRunway ? risk(runway, 'The posted runway is under six months. Ask how hiring is funded.', runwayPattern)
-      : funding || runway ? signal(runway ?? funding, runway ? 'The posting gives a runway figure.' : 'The posting gives a funding detail. Ask how many months of runway remain.', runway ? runwayPattern : fundingPattern)
+      : funding ? signal(funding, fundingHasRunway ? 'The posting gives a runway figure.' : runway ? 'The posting gives a funding detail and also states a runway figure.' : 'The posting gives a funding detail. Ask how many months of runway remain.', fundingHasRunway ? runwayPattern : fundingPattern)
         : unknown('Funding and runway affect how much time the team has to make the plan work.'),
-    team: team ? signal(team, 'The posting names a team size or day-to-day collaborators.', teamPattern) : unknown('It is hard to estimate support and ownership without a picture of the team.'),
-    reporting: reporting ? signal(reporting, 'The posting tells you who manages the role.', reportingPattern) : unknown('A reporting line tells you who sets priorities and evaluates your work.'),
-    scope: scope ? risk(scope, 'Broad ownership language makes it worth establishing boundaries.', vagueScope)
+    team: team.length ? signal(team, 'The posting names a team size or day-to-day collaborators.', teamPattern) : unknown('It is hard to estimate support and ownership without a picture of the team.'),
+    reporting: reporting.length ? signal(reporting, 'The posting tells you who manages the role.', reportingPattern) : unknown('A reporting line tells you who sets priorities and evaluates your work.'),
+    scope: scope.length ? risk(scope, 'Broad ownership language makes it worth establishing boundaries.', vagueScope)
       : responsibilities.length >= 2 ? signal(responsibilityLine, responsibilities.length + ' distinct responsibilities are stated.')
         : unknown('Concrete responsibilities make it easier to understand what you would own.', responsibilityLine),
     success: goals ? signal(goal, 'The posting describes an outcome or milestone for the first quarter.', successPattern)
       : unknown('Without early milestones, expectations can be hard to compare.', goal, successPattern),
     interview: interviewEvidence ? signal(interviewEvidence, 'The posting gives interview steps or timing. Confirm the full commitment before starting.', stageDetail)
       : unknown('Steps and timing help you budget your time.', processLine, interview),
-    location: loc || office || posting.location || posting.workplace
-      ? signal(office ?? posting.location ?? posting.workplace ?? loc, 'The posting gives a location or work arrangement. Confirm any office days or geographic limits.', office ? officePattern : workMode)
+    location: loc || office.length || posting.location || posting.workplace
+      ? signal(office.length ? office : posting.location ?? posting.workplace ?? loc, 'The posting gives a location or work arrangement. Confirm any office days or geographic limits.', office.length ? officePattern : workMode)
       : unknown('Office expectations are a practical deal-breaker for some candidates.'),
-    hours: pressure ? risk(pressure, 'The wording suggests intensity. Ask for the actual schedule and examples of crunch.', timePressure)
-      : hours ? signal(hours, 'The posting sets an expectation about hours, nights, weekends or on-call work.', regularHours)
+    hours: pressure.length ? risk(pressure, 'The wording suggests intensity. Ask for the actual schedule and examples of crunch.', timePressure)
+      : hours.length ? signal(hours, 'The posting sets an expectation about hours, nights, weekends or on-call work.', regularHours)
         : unknown('An explicit schedule helps you judge whether the role is sustainable for you.'),
     visa: visa && visaClear.test(visa) ? signal(visa, 'The posting states a sponsorship policy. Check how it applies to you.', visaPattern)
       : unknown('Eligibility depends on your situation and the employer’s policy.', visa, visaPattern),
-    traction: traction ? signal(traction, 'The posting describes current customers, usage or commercial stage.', tractionPattern)
+    traction: traction.length ? signal(traction, 'The posting describes current customers, usage or commercial stage.', tractionPattern)
       : unknown('Product usage and traction help you understand what is already working.'),
-    stack: stack ? signal(stack, 'The posting names at least one technology you would encounter.', stackPattern)
+    stack: stack.length ? signal(stack, 'The posting names at least one technology you would encounter.', stackPattern)
       : unknown('A named stack helps you estimate how you would get started.'),
   };
+  return Object.fromEntries(Object.entries(observations).map(([id, { status, line, match, why }]) =>
+    [id, { status, evidence: evidenceFor(line, match, shown.get(line)), why }],
+  ));
 }
 
 export function analyze(posting) {
@@ -326,7 +394,7 @@ export function analyze(posting) {
     earlyLines.unshift(posting.title);
   }
   const isEarlyStage = earlyLines.length > 0 || posting?.labels?.founding_role === true;
-  const earlyEvidence = earlyLines.slice(0, 4).map(line => evidenceFor(line, earlyPattern.test(line) ? earlyPattern : smallTeam));
+  const earlyEvidence = earlyLines.slice(0, 4).map(line => evidenceFor(line, earlyPattern.exec(line) ?? smallTeam.exec(line)));
   if (!earlyEvidence.length && isEarlyStage) earlyEvidence.push('The public job record classifies this as a founding role.');
 
   const observations = inspect(posting ?? {}, lines, responsibilities);
@@ -342,6 +410,16 @@ export function analyze(posting) {
   const unanswered = criteria.filter(({ id }) => observations[id].status !== 'signal' ||
     (id === 'equity' && observations.equity.why.includes('Ask about')))
     .map(({ id, question }) => ({ question, why: observations[id].why }));
+  const employment = apiEmploymentLabels.get(posting?.employment) ?? posting?.employment;
+  const listingEmployment = posting?.source === 'api' ? employmentName(posting.employment) : null;
+  const descriptionEmployment = listingEmployment ? employmentInDescription(lines) : null;
+  const employmentConflict = descriptionEmployment && descriptionEmployment !== listingEmployment;
+  if (employmentConflict) {
+    unanswered.unshift({
+      question: `The listing says ${listingEmployment} but the description says ${descriptionEmployment}. Which is it, and does it convert?`,
+      why: 'Confirm the employment terms before committing time to interviews.',
+    });
+  }
   if (isEarlyStage) {
     if (observations.funding.status === 'signal' && !lines.some(line => runwayPattern.test(line))) {
       unanswered.push({ question: 'How many months of runway do you have at current burn?', why: 'A funding stage alone does not say how much time is left.' });
@@ -366,10 +444,10 @@ export function analyze(posting) {
   const place = location && workplace && !location.toLowerCase().includes(workplace.toLowerCase())
     ? location + ' · ' + workplace : location ?? workplace;
   const compensation = status === 'empty' ? null : posting?.comp ?? getPayLine(lines);
-  const employment = apiEmploymentLabels.get(posting?.employment) ?? posting?.employment;
+  const engagement = employmentConflict ? `${employment} (listing) · ${descriptionEmployment} (description)` : employment;
   const summary = [
     { label: 'Company', text: posting?.company ?? 'Company not named' },
-    { label: 'Where and how', text: [place, employment].filter(Boolean).join(' · ') || 'Location and work arrangement not stated' },
+    { label: 'Where and how', text: [place, engagement].filter(Boolean).join(' · ') || 'Location and work arrangement not stated' },
     { label: 'Pay', text: compensation ?? 'Pay not posted' },
   ];
   return {

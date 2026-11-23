@@ -55,6 +55,36 @@ test('short evidence is returned unchanged', () => {
   assert.equal(row(fromText(line), 'stack').evidence, line);
 });
 
+test('shared evidence has a distinct excerpt around each criterion’s anchor', () => {
+  const line = 'We are a team of 6 at seed stage with 12 paying customers.';
+  const brief = fromText(line);
+  const excerpts = [row(brief, 'funding').evidence, row(brief, 'team').evidence, row(brief, 'traction').evidence];
+  assert.equal(new Set(excerpts).size, 3);
+  assert.match(excerpts[0], /\bseed stage\b/);
+  assert.match(excerpts[1], /\bteam of 6\b/);
+  assert.match(excerpts[2], /\b12 paying customers\b/);
+  for (const excerpt of excerpts) {
+    assert.ok(line.includes(excerptText(excerpt)), excerpt);
+    assert.match(excerpt, /…/);
+  }
+});
+
+test('funding prefers a separate evidence line even when the shared line comes first', () => {
+  const funding = 'Funding stage: seed.';
+  const brief = fromText('We are a team of 6 at seed stage with 12 paying customers.\n' + funding);
+  assert.equal(row(brief, 'funding').evidence, funding);
+  assert.match(row(brief, 'team').evidence, /team of 6/);
+  assert.match(row(brief, 'traction').evidence, /12 paying customers/);
+});
+
+test('later criteria prefer unused lines that support the same finding', () => {
+  const team = 'The product team has 6 engineers.';
+  const traction = 'Over 12 organizations use our scheduling service.';
+  const brief = fromText(`We are a team of 6 at seed stage with 12 paying customers.\n${team}\n${traction}`);
+  assert.equal(row(brief, 'team').evidence, team);
+  assert.equal(row(brief, 'traction').evidence, traction);
+});
+
 test('rockstar language earns a caution with useful questions about missing terms', () => {
   const { text } = samples[1];
   const brief = fromText(text);
@@ -266,4 +296,65 @@ test('competitive salary without amounts leaves the range unknown and asks for i
   assert.equal(row(brief, 'salary').status, 'unknown');
   assert.equal(row(brief, 'salary').evidence, 'Competitive salary');
   assert.ok(brief.unanswered.some(item => item.question === 'What is the salary range for this role?'));
+});
+
+test('an equity product responsibility leaves the candidate’s equity unknown', () => {
+  const duty = 'Build the equity cap table view for our customers';
+  const brief = fromText(`Role: Product Engineer\nResponsibilities\n- ${duty}`);
+  assert.ok(brief.reading.responsibilities.includes(duty));
+  assert.equal(row(brief, 'equity').status, 'unknown');
+  assert.doesNotMatch(row(brief, 'equity').evidence, /cap table/);
+  assert.ok(brief.unanswered.some(item => /equity range/.test(item.question)));
+});
+
+test('candidate equity in a compensation line takes precedence over product duties', () => {
+  const pay = 'Compensation: $150k–$180k + 0.5%–1.0% equity, 4-year vesting, 1-year cliff';
+  const brief = fromText('Role: Product Engineer\nResponsibilities\n- Build the equity cap table view for our customers\n' + pay);
+  assert.equal(row(brief, 'equity').status, 'signal');
+  assert.match(row(brief, 'equity').evidence, /0\.5%–1\.0% equity/);
+  assert.doesNotMatch(row(brief, 'equity').evidence, /cap table/);
+});
+
+test('equity without a percentage prefers an offer line to product context', () => {
+  const offer = 'Benefits: We offer stock options.';
+  const brief = fromText('Our software helps customers understand equity.\n' + offer);
+  assert.equal(row(brief, 'equity').status, 'risk');
+  assert.equal(row(brief, 'equity').evidence, offer);
+});
+
+test('API employment conflicts show both sources and a question without affecting the score', () => {
+  const description_text = apiFixture.description_text + '\nThis is a 6-month contract.';
+  const brief = analyze(normalizeFromApi({ ...apiFixture, description_text }));
+  const matching = analyze(normalizeFromApi({ ...apiFixture, description_text, employment_type: 'Contractor' }));
+  assert.match(brief.reading.summary.find(fact => fact.label === 'Where and how').text,
+    /Full-time \(listing\) · contract \(description\)/);
+  assert.ok(brief.unanswered.some(item => item.question === 'The listing says full-time but the description says contract. Which is it, and does it convert?'));
+  assert.deepEqual(brief.assessment, matching.assessment);
+});
+
+test('API and description employment aliases agree without an extra question', () => {
+  const description_text = apiFixture.description_text + '\nEmployment: full time.';
+  const brief = analyze(normalizeFromApi({ ...apiFixture, description_text }));
+  assert.match(brief.reading.summary.find(fact => fact.label === 'Where and how').text, /Full-time$/);
+  assert.ok(!brief.unanswered.some(item => item.question.startsWith('The listing says')));
+});
+
+test('a client contract in the responsibilities does not describe the job type', () => {
+  const description_text = apiFixture.description_text + '\nResponsibilities\n- Manage a 6-month contract with the client.';
+  const brief = analyze(normalizeFromApi({ ...apiFixture, description_text }));
+  assert.ok(!brief.unanswered.some(item => item.question.startsWith('The listing says')));
+});
+
+test('competitive pay with an explicitly withheld range is a risk', () => {
+  const line = 'Competitive pay, no range';
+  const brief = fromText('Role: Product Engineer\n' + line);
+  assert.equal(row(brief, 'salary').status, 'risk');
+  assert.equal(row(brief, 'salary').evidence, line);
+});
+
+test('TBD and expressly undisclosed pay are risks; unrelated discussion is not', () => {
+  for (const line of ['Salary TBD', 'Salary: TBD', 'Range not shared', 'Pay is to be discussed']) {
+    assert.equal(row(fromText('Role: Product Engineer\n' + line), 'salary').status, 'risk', line);
+  }
+  assert.equal(row(fromText('Interview steps to be discussed.'), 'salary').status, 'unknown');
 });
